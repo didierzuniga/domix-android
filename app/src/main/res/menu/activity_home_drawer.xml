@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_menu_user"
+            android:title="@string/title_activity_user_profile"/>
+        <item
+            android:id="@+id/nav_earnecoin"
+            android:icon="@drawable/ic_menu_ad"
+            android:title="@string/text_ad_drawer"/>
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_menu_history"
+            android:title="@string/text_history_drawer"/>
+        <item
+            android:id="@+id/nav_payment"
+            android:icon="@drawable/ic_menu_payment"
+            android:title="@string/text_make_payment" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_menu_setting"
+            android:title="@string/text_setup_drawer" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_menu_exit"
+            android:title="@string/text_logout" />
+    </group>
+
+</menu>

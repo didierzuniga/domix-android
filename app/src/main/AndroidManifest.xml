@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="co.domix.android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+
+    <application
+        android:name=".DomixApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/GOOGLE_MAPS_KEY_DEBUG" />
+
+        <service android:name=".domiciliary.service.NotificationService" />
+        <service android:name=".domiciliary.service.CoordinateService" />
+
+        <activity
+            android:name=".login.view.Splash"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".login.view.Login"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".home.view.Home"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".user.view.User"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".home.view.Home">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.home.view.Home" />
+        </activity>
+        <activity
+            android:name=".user.view.PickMap"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".user.view.Requested"
+            android:parentActivityName=".user.view.User"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.user.view.User" />
+        </activity>
+        <activity
+            android:name=".user.view.UserScore"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:noHistory="true" />
+        <activity
+            android:name=".domiciliary.view.Domiciliary"
+            android:label="@string/title_search_deliveries"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".home.view.Home">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.home.view.Home" />
+        </activity>
+        <activity
+            android:name=".domiciliary.view.PreviewRouteOrder"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".domiciliary.view.OrderCatched"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".domiciliary.view.DomiciliaryScore"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+        <activity
+            android:name=".customizer.view.Profile"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".home.view.Home">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.home.view.Home" />
+        </activity>
+        <activity
+            android:name=".customizer.view.Pay"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".home.view.Home">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.home.view.Home" />
+        </activity>
+        <activity
+            android:name=".customizer.view.EarnEcoin"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".home.view.Home">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.home.view.Home" />
+        </activity>
+        <activity
+            android:name=".customizer.view.History"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".home.view.Home">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.home.view.Home" />
+        </activity>
+    </application>
+
+</manifest>

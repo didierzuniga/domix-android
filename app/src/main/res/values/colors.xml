@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#F57C00</color>
+    <color name="colorPrimaryDark">#E65100</color>
+    <color name="colorBackground">#FFF</color>
+    <color name="colorSecundary">#4FC3F7</color>
+    <color name="colorSecundaryDark">#0277BD</color>
+    <color name="colorAccent">#448AFF</color>
+    <color name="colorPrimaryLight">#FFFFFF</color>
+    <color name="colorBackgroundSelectDestine">#FBECE9</color>
+    <color name="colorButton1">#FF9100</color>
+    <color name="colorButton2">#E65100</color>
+    <color name="colorStarActive">#FFFF00</color>
+
+    <!--FONTS-->
+    <color name="colorFontLogin">#616161</color>
+    <color name="editTextColorGrey">#616161</color>
+    <color name="colorBorderLine">#636262</color>
+
+    <color name="colorBackgroundCardView">#26A69A</color>
+    <color name="colorTextCardView">#424242</color>
+
+    <color name="colorLineRoute">#636262</color>
+
+    <color name="button_red_dark">#C62828</color>
+    <color name="button_red_light">#F44336</color>
+    <color name="background_white_opacity">#CCFFFFFF</color>
+    <color name="button_green_dark">#388E3C</color>
+    <color name="button_green_light">#4CAF50</color>
+    <color name="colorTransparent">#80000000</color>
+
+</resources>

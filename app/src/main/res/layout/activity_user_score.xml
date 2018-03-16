@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:fitsSystemWindows="true"
+tools:context="co.domix.android.user.view.UserScore">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/user_margin_relative_score"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/user_padding"
+        android:paddingRight="@dimen/user_padding"
+        android:paddingTop="@dimen/user_margin_separator_vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/text_how_much_deliveryman_star"
+            android:textSize="23sp" />
+
+        <RatingBar
+            android:id="@+id/ratingBarUserToDomi"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/user_margin_top"
+            android:numStars="5"
+            android:rating="0"
+            android:stepSize="1.0" />
+
+        <Button
+            android:id="@+id/buttonSendScoreUsToDo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/user_margin_top_form"
+            android:background="@drawable/corner_radius_buttons"
+            android:text="@string/button_sent_rate"
+            android:theme="@style/RaiseButtonDark" />
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

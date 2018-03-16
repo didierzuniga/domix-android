@@ -1,0 +1,180 @@
+package co.domix.android.login.view;
+
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.LocationManager;
+import android.os.Handler;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import co.domix.android.DomixApplication;
+import co.domix.android.R;
+import co.domix.android.domiciliary.view.DomiciliaryScore;
+import co.domix.android.domiciliary.view.OrderCatched;
+import co.domix.android.home.view.Home;
+import co.domix.android.login.presenter.SplashPresenter;
+import co.domix.android.login.presenter.SplashPresenterImpl;
+import co.domix.android.user.view.Requested;
+import co.domix.android.user.view.UserScore;
+
+public class Splash extends AppCompatActivity implements SplashView {
+
+    private ProgressBar progressBarSplash;
+
+    private AlertDialog alert = null;
+    private DomixApplication app;
+    private SplashPresenter presenter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+        app = (DomixApplication) getApplicationContext();
+        presenter = new SplashPresenterImpl(this);
+        progressBarSplash = (ProgressBar) findViewById(R.id.progressBarSplash);
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBarSplash.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBarSplash.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void queryStatePosition(String uid) {
+        presenter.queryStatePosition(uid, this);
+    }
+
+    @Override
+    public void goOrderCatched(int idOrder) {
+        hideProgressBar();
+        app.idOrder = idOrder;
+        Intent intent = new Intent(this, OrderCatched.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void goOrderRequested(int idOrder) {
+        hideProgressBar();
+        app.idOrder = idOrder;
+        Intent intent = new Intent(this, Requested.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void goUserScore(int idOrder) {
+        hideProgressBar();
+        app.idOrder = idOrder;
+        Intent intent = new Intent(this, UserScore.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void goDomiciliaryScore(int idOrder) {
+        hideProgressBar();
+        app.idOrder = idOrder;
+        Intent intent = new Intent(this, DomiciliaryScore.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void goHome() {
+        hideProgressBar();
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void goLogin() {
+        hideProgressBar();
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void alertNoNetwork() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.message_location_deactivate)
+                .setCancelable(false)
+                .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Splash.super.finish();
+            }
+        });
+        alert = builder.create();
+        alert.show();
+    }
+
+    @Override
+    public void notInternetConnection() {
+        hideProgressBar();
+        Toast.makeText(this, getResources().getString(R.string.text_no_internet_connection), Toast.LENGTH_SHORT).show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 1000);
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showProgressBar();
+        presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        firebaseAuth.removeAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+}

@@ -1,0 +1,167 @@
+<resources>
+    <string name="app_name">Domix</string>
+
+    <string name="hint_email">Correo</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="hint_order_title">Título:</string>
+    <string name="hint_order_description">Descripción:</string>
+    <string name="hint_payment">Costo de servicio: </string>
+    <string name="hint_first_name">Nombres</string>
+    <string name="hint_last_name">Apellidos</string>
+    <string name="hint_phone">Celular</string>
+    <string name="hint_what_should_domiciliary">¿Qué debe hacer el domiciliario aquí?</string>
+    <string name="hint_select_initial_point">Seleccionar punto inicial</string>
+    <string name="hint_select_final_point">Seleccionar punto final</string>
+
+    <string name="text_dont_have_account">¿No tienes una cuenta?</string>
+    <string name="text_create_here"><u>Crea una aquí</u></string>
+    <string name="text_welcome_user">Bienvenido</string>
+    <string name="text_what_do_you_want_to_do">¿Que quieres hacer?</string>
+    <string name="text_from"><b>Desde:</b></string>
+    <string name="text_to"><b>Hasta:</b></string>
+    <string name="text_header">Título:</string>
+    <string name="text_make_initial_point"><b>En el punto inicial:</b></string>
+    <string name="text_make_final_point"><b>En el punto final:</b></string>
+    <string name="text_description">Descripción:</string>
+    <string name="text_proffer">Costo del domicilio</string>
+    <string name="text_city">Ciudad:</string>
+    <string name="text_requested"><b>Solicitado:</b></string>
+    <string name="text_domiciliary_attend_you">Datos del domiciliario que te atenderá</string>
+    <string name="text_comming_soon">Esperando un domiciliario...</string>
+    <string name="text_name_domiciliary">Domiciliario</string>
+    <string name="text_number_phone_domiciliary">Celular</string>
+    <string name="text_marker_from">Desde aquí</string>
+    <string name="text_marker_to">Hasta aquí</string>
+    <string name="text_qualify_user">Califica al usuario</string>
+    <string name="text_qualify_deliveryman">Califica al domiciliario</string>
+    <string name="text_user_name_request">Solicitó:</string>
+    <string name="text_user_phone_request">Teléfono:</string>
+    <string name="text_how_much_user_star">Dale la cantidad de estrellas que merece el usuario en este servicio</string>
+    <string name="text_how_much_deliveryman_star">Dale la cantidad de estrellas que merece el domiciliario en este servicio</string>
+    <string name="text_logout">Cerrar sesión</string>
+    <string name="text_item_settings">Configuración</string>
+    <string name="text_history_drawer">Historial</string>
+    <string name="text_ad_drawer">Ganar eCoins</string>
+    <string name="text_promotions_drawer">Promociones</string>
+    <string name="text_notifications_drawer">Notificaciones</string>
+    <string name="text_setup_drawer">Configuración</string>
+    <string name="text_registro">Registro</string>
+    <string name="text_contact_user">Diligencia los campos</string>
+    <string name="text_choose_from_gallery">Galería</string>
+    <string name="text_make_your_order">¡Haz tu pedido!</string>
+    <string name="text_looking_order_near">Buscando domicilios cerca...</string>
+    <string name="text_make_payment">Realizar pago</string>
+    <string name="text_no_internet_connection">No hay conexión a Internet</string>
+    <string name="text_your_rating">Tu Calificación: </string>
+    <string name="text_user_with">Usuario </string>
+    <string name="text_domiciliary_with">Domiciliario </string>
+    <string name="text_new">Nuevo</string>
+    <string name="text_ecoin">eCoin</string>
+    <string name="text_credit_card">Tarjeta de crédito</string>
+    <string name="text_cash">Efectivo</string>
+    <string name="text_dimensions">Dimensiones: </string>
+    <string name="text_message_earn_ecoin">Gana 100 eCoins por cada video que veas</string>
+    <string name="text_payment_method">Método de pago</string>
+    <string name="text_terms_condictions">Acepto <u>Términos y Condiciones</u></string>
+    <string name="text_pay_through">Pagar a través de:</string>
+    <string name="text_method_payment_efecty">Puntos Efecty</string>
+    <string name="text_method_payment_pse">PSE</string>
+    <string name="text_method_payment_creditcard">Tarjeta de crédito</string>
+    <string name="text_method_payment_ecoin">eCoin</string>
+    <string name="text_my_rate">Mi puntaje</string>
+    <string name="text_as_deliveryman">Como domiciliario:</string>
+    <string name="text_as_user">Como usuario:</string>
+    <string name="text_forgot_password"><u>Olvidé mi contraseña</u></string>
+
+    <string name="button_text_login">Ingresar</string>
+    <string name="button_text_createaccount">Únete</string>
+    <string name="button_text_request">Solicitar</string>
+    <string name="button_be_user">Solicitar</string>
+    <string name="button_be_domiciliary">Entregar</string>
+    <string name="button_see_route_to_follow">Ver ruta</string>
+    <string name="button_take_service">Tomar servicio</string>
+    <string name="button_cancel_delivery">Cancelar solicitud</string>
+    <string name="button_cancel_service">Cancelar servicio</string>
+    <string name="button_close_service">Finalizar servicio</string>
+    <string name="button_send_contact_data">Listo</string>
+    <string name="button_accept_delivery">Aceptar</string>
+    <string name="button_dismiss_delivery">Rechazar</string>
+    <string name="button_refresh">Refrescar</string>
+    <string name="button_watch_video">Ver video</string>
+    <string name="button_pick_location">Ubicar</string>
+    <string name="button_next">Siguiente</string>
+    <string name="button_pay">Pagar</string>
+    <string name="button_reset_password">Restablecer</string>
+    <string name="button_sent_rate">Enviar</string>
+    <string name="button_upload">Subir</string>
+    <string name="button_back">Volver</string>
+
+    <string name="toast_unmatch_password">Las contraseñas no coinciden</string>
+    <string name="toast_please_complete_all_files">Diligencie todos los campos</string>
+    <string name="toast_account_created">Hemos enviado un enlace de verificación al correo registrado</string>
+    <string name="toast_account_not_created">Ha ocurrido un error, por favor vuelve a intentarlo</string>
+    <string name="toast_error_signin">¡Debes registrarte!</string>
+    <string name="toast_indicate_starting_point">Indique un punto de partida</string>
+    <string name="toast_specify_destination_point">Indique un punto de destino</string>
+    <string name="toast_enter_description1">Falta campo del punto de partida</string>
+    <string name="toast_enter_description2">Falta campo del punto final</string>
+    <string name="toast_enter_payment_amount">Indique un monto de pago</string>
+    <string name="toast_order_registered">Orden Registrada!</string>
+    <string name="toast_error_request">No se pudo registrar la orden, intentelo de nuevo por favor</string>
+    <string name="toast_domiciliary_has_cancelled_order">¡El domiciliario se ha retirado!</string>
+    <string name="toast_can_not_backpressed">No puedes salir de la vista hasta que finalice tu solicitud</string>
+    <string name="toast_action_not_allowed">¡Acción no permitida!</string>
+    <string name="toast_you_has_cancelled_order">¡Has cancelado el transporte de la orden!</string>
+    <string name="toast_user_has_cancelled_order">¡El usuario ha cancelado el domicilio!</string>
+    <string name="toast_can_not_backpressed_domiciliary">No puedes salir de la vista hasta que finalices el servicio</string>
+    <string name="toast_order_has_been_taken">La orden ha sido tomada</string>
+    <string name="toast_not_verify_email">Verifica el enlace en tu correo electrónico</string>
+    <string name="toast_sent_contact_data">¡Listo!</string>
+    <string name="toast_success_upload">¡Subida exitosa!</string>
+    <string name="toast_restored_password">Te hemos enviado un correo de restablecimiento de contraseña</string>
+    <string name="toast_please_enter_email">Ingresa tu correo electrónico</string>
+
+    <string name="title_home">Inicio</string>
+    <string name="title_requested">Tu solicitud</string>
+    <string name="title_activity_tester">TesterActivity</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_create_account">CreateAccountActivity</string>
+    <string name="title_activity_user_home">Hola</string>
+    <string name="title_activity_user_profile">Perfíl</string>
+    <string name="title_activity_user_history">Tu historial</string>
+    <string name="title_activity_user_setting">Configuración</string>
+    <string name="title_activity_user_about">Acerca</string>
+    <string name="title_activity_user_promotion">Promociones</string>
+    <string name="title_activity_user_notification">Notificaciones</string>
+    <string name="title_activity_earn_ecoin">Gana eCoins</string>
+    <string name="title_search_deliveries">Buscar domicilios</string>
+    <string name="title_type_email">Ingresa tu correo electrónico asociado a Domix</string>
+    <string name="title_delivery_detail">Detalles de la entrega</string>
+
+    <string name="font_montserrat_regular">fonts/Montserrat-Regular.ttf</string>
+    <string name="font_shrikhand_regular">fonts/Shrikhand-Regular.ttf</string>
+    <string name="font_cabin_regular">fonts/Cabin-Regular.ttf</string>
+
+    <string name="message_location_deactivate">Activa la ubicación de precisión alta</string>
+    <string name="message_yes">Si</string>
+    <string name="message_no">No</string>
+    <string name="message_cancel_request">¿Quieres cancelar la solicitud?</string>
+    <string name="message_finish_request">¿Haz finalizado el servicio?</string>
+
+    <!--DRAWER NAVIGATION-->
+    <string name="title_activity_home"></string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="spinner_dimensions">Dimensiones</string>
+    <string-array name="options_dimensions">
+        <item>Sobre (Carta u Oficio)</item>
+        <item>Baúl o maletero (30x30x30 cms)</item>
+        <item>Maleta (40x38x38 cms)</item>
+        <item>Parrilla</item>
+    </string-array>
+
+</resources>

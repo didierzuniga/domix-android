@@ -1,0 +1,48 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="RaiseButtonDark" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="RaiseButtonDark2" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/colorSecundary</item>
+        <item name="colorControlHighlight">@color/colorSecundaryDark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="EditTextGrey" parent="TextAppearance.AppCompat">
+        <item name="android:textColorHint">@color/editTextColorGrey</item>
+        <item name="android:textSize">@dimen/style_edit_text_textsize_login</item>
+        <item name="android:textColorPrimary">@color/editTextColorGrey</item>
+        <item name="colorAccent">@color/editTextColorGrey</item>
+        <item name="colorControlNormal">@color/editTextColorGrey</item>
+        <item name="colorControlActivated">@color/editTextColorGrey</item>
+    </style>
+
+    <style name="RaiseButtonGreen" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/button_green_dark</item>
+        <item name="colorControlHighlight">@color/button_green_light</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="RaiseButtonRed" parent="Theme.AppCompat.Light">
+        <item name="colorButtonNormal">@color/button_red_light</item>
+        <item name="colorControlHighlight">@color/button_red_dark</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>

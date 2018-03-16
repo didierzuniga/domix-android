@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Domix</string>
+
+    <string name="hint_first_name">Firstname</string>
+    <string name="hint_last_name">Lastname</string>
+    <string name="hint_phone">Cellphone</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm password</string>
+    <string name="hint_order_title">Title:</string>
+    <string name="hint_order_description">Description:</string>
+    <string name="hint_payment">Service cost: </string>
+    <string name="hint_what_should_domiciliary">What should the domiciliary do here?</string>
+    <string name="hint_select_initial_point">Select starting point</string>
+    <string name="hint_select_final_point">Select endpoint</string>
+
+    <string name="text_dont_have_account">Don´t have account?</string>
+    <string name="text_create_here"><u>Create here</u></string>
+    <string name="text_welcome_user">Welcome</string>
+    <string name="text_what_do_you_want_to_do">What do you want to do?</string>
+    <string name="text_from"><b>From:</b></string>
+    <string name="text_to"><b>To:</b></string>
+    <string name="text_header">Title:</string>
+    <string name="text_make_initial_point"><b>In the initial point:</b></string>
+    <string name="text_make_final_point"><b>At the end point:</b></string>
+    <string name="text_description">Description:</string>
+    <string name="text_proffer">Delivery cost</string>
+    <string name="text_city">City:</string>
+    <string name="text_requested"><b>Requested by:</b></string>
+    <string name="text_domiciliary_attend_you">Domiciliary that will attend you</string>
+    <string name="text_comming_soon">Waiting for a domiciliary...</string>
+    <string name="text_name_domiciliary">Domiciliary</string>
+    <string name="text_number_phone_domiciliary">Cellphone</string>
+    <string name="text_marker_from">From here</string>
+    <string name="text_marker_to">Up to this point</string>
+    <string name="text_qualify_user">Rate the user</string>
+    <string name="text_qualify_deliveryman">Rate the deliveryman</string>
+    <string name="text_user_name_request">Requested by:</string>
+    <string name="text_user_phone_request">Phone number:</string>
+    <string name="text_how_much_user_star">Give the number of stars that the user deserves in this service</string>
+    <string name="text_how_much_deliveryman_star">Give the number of stars that deserves the deliveryman in this service</string>
+    <string name="text_logout">Log Out</string>
+    <string name="text_item_settings">Setting</string>
+    <string name="text_history_drawer">History</string>
+    <string name="text_promotions_drawer">Promotions</string>
+    <string name="text_ad_drawer">Earn eCoins</string>
+    <string name="text_notifications_drawer">Notifications</string>
+    <string name="text_setup_drawer">Settings</string>
+    <string name="text_registro">Register</string>
+    <string name="text_contact_user">Diligence the fields</string>
+    <string name="text_choose_from_gallery">Choose a photo from my gallery</string>
+    <string name="text_make_your_order">Make your order!</string>
+    <string name="text_looking_order_near">Looking for delivery nearby...</string>
+    <string name="text_make_payment">Make payment</string>
+    <string name="text_no_internet_connection">No Internet Connection</string>
+    <string name="text_your_rating">Your rating: </string>
+    <string name="text_user_with">User </string>
+    <string name="text_domiciliary_with">Domiciliary </string>
+    <string name="text_new">New</string>
+    <string name="text_ecoin">eCoin</string>
+    <string name="text_credit_card">Credit card</string>
+    <string name="text_cash">Cash</string>
+    <string name="text_dimensions">Dimensions: </string>
+    <string name="text_message_earn_ecoin">Earn 100 eCoins for every video you see</string>
+    <string name="text_payment_method">Payment method</string>
+    <string name="text_terms_condictions">I accept <u>Terms and Conditions</u></string>
+    <string name="text_pay_through">Pay through:</string>
+    <string name="text_method_payment_efecty">Efecty points</string>
+    <string name="text_method_payment_pse">PSE</string>
+    <string name="text_method_payment_creditcard">Credit card</string>
+    <string name="text_method_payment_ecoin">eCoin</string>
+    <string name="text_my_rate">My score</string>
+    <string name="text_as_deliveryman">As deliveryman:</string>
+    <string name="text_as_user">As user:</string>
+    <string name="text_forgot_password"><u>I forgot my password</u></string>
+
+    <string name="button_text_login">Signin</string>
+    <string name="button_text_createaccount">Join</string>
+    <string name="button_text_request">Request</string>
+    <string name="button_be_user">Request</string>
+    <string name="button_be_domiciliary">Deliver</string>
+    <string name="button_see_route_to_follow">See route</string>
+    <string name="button_take_service">Take service</string>
+    <string name="button_cancel_delivery">Cancel delivery</string>
+    <string name="button_cancel_service">Cancel service</string>
+    <string name="button_close_service">Finish service</string>
+    <string name="button_send_contact_data">Done</string>
+    <string name="button_accept_delivery">Accept</string>
+    <string name="button_dismiss_delivery">Dismiss</string>
+    <string name="button_refresh">Refresh</string>
+    <string name="button_watch_video">Watch video</string>
+    <string name="button_pick_location">Situate</string>
+    <string name="button_next">Next</string>
+    <string name="button_pay">Pay Out</string>
+    <string name="button_reset_password">Restore</string>
+    <string name="button_sent_rate">Submit</string>
+    <string name="button_upload">Upload</string>
+    <string name="button_back">Back</string>
+
+    <string name="toast_unmatch_password">Passwords do not match</string>
+    <string name="toast_please_complete_all_files">Please complete all fields</string>
+    <string name="toast_account_created">We have sent a verification link to registered mail</string>
+    <string name="toast_account_not_created">An error has occurred, please try again</string>
+    <string name="toast_error_signin">You must register!</string>
+    <string name="toast_indicate_starting_point">Indicate a starting point</string>
+    <string name="toast_specify_destination_point">Specify a destination point</string>
+    <string name="toast_enter_description1">Field of starting point is missing</string>
+    <string name="toast_enter_description2">Missing endpoint field</string>
+    <string name="toast_enter_payment_amount">Enter a payment amount</string>
+    <string name="toast_order_registered">Registered order!</string>
+    <string name="toast_error_request">Could not register the order, try again please</string>
+    <string name="toast_domiciliary_has_cancelled_order">¡The dealer is gone!</string>
+    <string name="toast_can_not_backpressed">You can not leave the view until you finish your request</string>
+    <string name="toast_action_not_allowed">¡Action not allowed!</string>
+    <string name="toast_you_has_cancelled_order">¡You has cancelled the order!</string>
+    <string name="toast_user_has_cancelled_order">¡The user has cancelled the order!</string>
+    <string name="toast_can_not_backpressed_domiciliary">You can not leave the view until you finish your service</string>
+    <string name="toast_order_has_been_taken">the order has been taken</string>
+    <string name="toast_not_verify_email">Check the link in your email</string>
+    <string name="toast_sent_contact_data">¡Done!</string>
+    <string name="toast_success_upload">Successful upload!</string>
+    <string name="toast_restored_password">We have sent you a password reset email</string>
+    <string name="toast_please_enter_email">Enter your email</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_requested">Your request</string>
+    <string name="title_activity_tester">TesterActivity</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_create_account">CreateAccountActivity</string>
+    <string name="title_activity_user_home">Hello</string>
+    <string name="title_activity_user_profile">Profile</string>
+    <string name="title_activity_user_history">Your history</string>
+    <string name="title_activity_user_setting">Setting</string>
+    <string name="title_activity_user_about">About</string>
+    <string name="title_activity_user_promotion">Promotions</string>
+    <string name="title_activity_user_notification">Notifications</string>
+    <string name="title_activity_earn_ecoin">Earn eCoins</string>
+    <string name="title_search_deliveries">Deliveries search</string>
+    <string name="title_type_email">Enter your email associated with Domix</string>
+    <string name="title_delivery_detail">Delivery details</string>
+
+    <string name="font_montserrat_regular">fonts/Montserrat-Regular.ttf</string>
+    <string name="font_shrikhand_regular">fonts/Shrikhand-Regular.ttf</string>
+    <string name="font_cabin_regular">fonts/Cabin-Regular.ttf</string>
+
+    <string name="message_location_deactivate">Activate high precision location</string>
+    <string name="message_yes">Yes</string>
+    <string name="message_no">No</string>
+    <string name="message_cancel_request">Do you want to cancel the order?</string>
+    <string name="message_finish_request">Have you completed the service?</string>
+
+    <!--DRAWER NAVIGATION-->
+    <string name="title_activity_home">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="spinner_dimensions">Dimensions</string>
+    <string-array name="options_dimensions">
+        <item>Letter (Letter or Legal)</item>
+        <item>Bag (40x38x38 cms)</item>
+        <item>Trunk (30x30x30 cms)</item>
+        <item>Grid</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/confirm_address_map_wrapper"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@drawable/corner_radius_maps">
+
+    <include layout="@layout/map_reference"></include>
+
+    <ImageView
+        android:id="@+id/confirm_address_map_custom_marker"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_pin_pick" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabFail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="@dimen/user_buttons_pick_map"
+        android:layout_marginLeft="@dimen/user_buttons_pick_map"
+        android:src="@drawable/ic_fail" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/user_buttons_pick_map"
+        android:layout_marginRight="@dimen/user_buttons_pick_map"
+        android:src="@drawable/ic_okay" />
+
+</RelativeLayout>

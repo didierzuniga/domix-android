@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".DomixApplication"
@@ -32,13 +32,14 @@
             android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".login.view.Login"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".home.view.Home"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -53,11 +54,11 @@
         </activity>
         <activity
             android:name=".user.view.PickMap"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".user.view.Requested"
-            android:parentActivityName=".user.view.User"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".user.view.User"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -69,8 +70,8 @@
             android:noHistory="true" />
         <activity
             android:name=".domiciliary.view.Domiciliary"
-            android:label="@string/title_search_deliveries"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_search_deliveries"
             android:parentActivityName=".home.view.Home">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -78,13 +79,13 @@
         </activity>
         <activity
             android:name=".domiciliary.view.PreviewRouteOrder"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".domiciliary.view.OrderCatched"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".domiciliary.view.DomiciliaryScore"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".customizer.view.Profile"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -117,6 +118,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="co.domix.android.home.view.Home" />
         </activity>
+        <activity android:name=".login.view.Signup"></activity>
     </application>
 
 </manifest>

@@ -18,7 +18,7 @@ public interface LoginView {
     void goDomiciliaryScore(String uid, String email, int idOrder);
 
     void goHome(String uid, String email);
-    void signup(String email, String password, String confirmPassword);
+
     void signin(String email, String password);
 
     void responseErrorSignup();

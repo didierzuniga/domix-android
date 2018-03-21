@@ -6,6 +6,8 @@ import co.domix.android.login.interactor.LoginInteractor;
 import co.domix.android.login.interactor.LoginInteractorImpl;
 import co.domix.android.login.view.Login;
 import co.domix.android.login.view.LoginView;
+import co.domix.android.login.view.Signup;
+import co.domix.android.login.view.SignupView;
 
 /**
  * Created by unicorn on 11/10/2017.
@@ -19,11 +21,6 @@ public class LoginPresenterImpl implements LoginPresenter {
     public LoginPresenterImpl(LoginView view) {
         this.view = view;
         interactor = new LoginInteractorImpl(this);
-    }
-
-    @Override
-    public void signup(String email, String password, String confirmPassword, Login login, FirebaseAuth firebaseAuth) {
-        interactor.signup(email, password, confirmPassword, login, firebaseAuth);
     }
 
     @Override

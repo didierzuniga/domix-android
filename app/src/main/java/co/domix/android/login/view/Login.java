@@ -33,10 +33,8 @@ import co.domix.android.user.view.UserScore;
 public class Login extends AppCompatActivity implements LoginView {
 
     private TextInputEditText emailField, passwordField, emailFieldForRestore;
-    private EditText emailFieldForSignup, passwordFieldForSignup, confirmPasswordFieldForSignup;
     private Button buttonSignin, buttonSignup, buttonRestore;
     private TextView createHere, restorePassword;
-    private CheckBox checkBox;
     private ProgressBar progressBarLogin;
     private AlertDialog alertDialog;
     private DomixApplication app;
@@ -86,7 +84,7 @@ public class Login extends AppCompatActivity implements LoginView {
         createHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertSignup();
+                goSignup();
             }
         });
     }
@@ -178,11 +176,6 @@ public class Login extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void signup(String email, String password, String confirmPassword) {
-        presenter.signup(email, password, confirmPassword, this, firebaseAuth);
-    }
-
-    @Override
     public void signin(String email, String password) {
         disableInputs();
         presenter.signin(email, password, this, firebaseAuth);
@@ -191,7 +184,7 @@ public class Login extends AppCompatActivity implements LoginView {
     @Override
     public void responseErrorSignup() {
         hideProgressBar();
-        alertSignup();
+        goSignup();
         Toast.makeText(this, R.string.toast_account_not_created, Toast.LENGTH_SHORT).show();
     }
 
@@ -235,37 +228,16 @@ public class Login extends AppCompatActivity implements LoginView {
         Toast.makeText(this, R.string.toast_restored_password, Toast.LENGTH_LONG).show();
     }
 
-    public void alertSignup() {
+    public void goSignup() {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View view = layoutInflater.inflate(R.layout.dialog_signup, null);
         alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        checkBox = (CheckBox) view.findViewById(R.id.checkTerms);
-        buttonSignup = (Button) view.findViewById(R.id.buttonSignup);
-        buttonSignup.setEnabled(false);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    buttonSignup.setEnabled(true);
-                } else {
-                    buttonSignup.setEnabled(false);
-                }
-            }
-        });
 
-        emailFieldForSignup = (EditText) view.findViewById(R.id.emailSignup);
-        passwordFieldForSignup = (EditText) view.findViewById(R.id.passwordSignup);
-        confirmPasswordFieldForSignup = (EditText) view.findViewById(R.id.confirmPasswordSignup);
-        buttonSignup.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showProgressBar();
-                signup(emailFieldForSignup.getText().toString(),
-                        passwordFieldForSignup.getText().toString(),
-                        confirmPasswordFieldForSignup.getText().toString());
-            }
-        });
+
+
+
         alertDialog.setView(view);
         alertDialog.show();
     }

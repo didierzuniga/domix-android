@@ -23,18 +23,6 @@ public class LoginInteractorImpl implements LoginInteractor {
     }
 
     @Override
-    public void signup(String email, String password, String confirmPassword, Activity activity, FirebaseAuth firebaseAuth) {
-        if (email.equals("") || password.equals("") || confirmPassword.equals("")) {
-            presenter.responseCompleteAllFiles();
-        } else if (!password.equals(confirmPassword)) {
-            presenter.responseUnmatchPassword();
-        } else {
-            presenter.dismissDialogSignup();
-            repository.signup(email, password, activity, firebaseAuth);
-        }
-    }
-
-    @Override
     public void signin(String email, String password, Activity activity, FirebaseAuth firebaseAuth) {
         repository.signin(email, password, activity, firebaseAuth);
     }

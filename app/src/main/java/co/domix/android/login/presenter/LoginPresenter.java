@@ -3,13 +3,13 @@ package co.domix.android.login.presenter;
 import com.google.firebase.auth.FirebaseAuth;
 
 import co.domix.android.login.view.Login;
+import co.domix.android.login.view.Signup;
 
 /**
  * Created by unicorn on 11/10/2017.
  */
 
 public interface LoginPresenter {
-    void signup(String email, String password, String confirmPassword, Login login, FirebaseAuth firebaseAuth);
     void signin(String email, String password, Login login, FirebaseAuth firebaseAuth);
     void restorePassword(String email);
     void responseErrorSignup();

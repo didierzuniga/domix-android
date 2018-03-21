@@ -182,43 +182,14 @@ public class Login extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void responseErrorSignup() {
-        hideProgressBar();
-        goSignup();
-        Toast.makeText(this, R.string.toast_account_not_created, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void responseSuccessSignup(String email) {
-        hideProgressBar();
-//        firebaseAuth.getInstance().signOut();
-        Toast.makeText(this, R.string.toast_account_created, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void responseEnterEmail() {
         Toast.makeText(Login.this, R.string.toast_please_enter_email, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void responseCompleteAllFiles() {
-        Toast.makeText(Login.this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void responseUnmatchPassword() {
-        Toast.makeText(Login.this, R.string.toast_unmatch_password, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void dismissDialogRestore() {
         alertDialog.dismiss();
         showProgressBar();
-    }
-
-    @Override
-    public void dismissDialogSignup() {
-        alertDialog.dismiss();
     }
 
     @Override
@@ -229,17 +200,8 @@ public class Login extends AppCompatActivity implements LoginView {
     }
 
     public void goSignup() {
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View view = layoutInflater.inflate(R.layout.dialog_signup, null);
-        alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-
-
-
-        alertDialog.setView(view);
-        alertDialog.show();
+        Intent intent = new Intent(this, Signup.class);
+        startActivity(intent);
     }
 
     public void alertRestorePassword() {

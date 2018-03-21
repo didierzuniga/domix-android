@@ -10,4 +10,8 @@ import co.domix.android.login.view.Signup;
 
 public interface SignupPresenter {
     void signup(String email, String password, String confirmPassword, Signup signup, FirebaseAuth firebaseAuth);
+    void responseErrorSignup();
+    void responseSuccessSignup(String email);
+    void responseCompleteAllFiles();
+    void responseUnmatchPassword();
 }

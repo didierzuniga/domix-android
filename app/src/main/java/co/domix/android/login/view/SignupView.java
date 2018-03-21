@@ -8,4 +8,8 @@ public interface SignupView {
     void showProgressBar();
     void hideProgressBar();
     void signup(String email, String password, String confirmPassword);
+    void responseCompleteAllFiles();
+    void responseUnmatchPassword();
+    void responseErrorSignup();
+    void responseSuccessSignup(String email);
 }

@@ -34,33 +34,8 @@ public class LoginPresenterImpl implements LoginPresenter {
     }
 
     @Override
-    public void responseErrorSignup() {
-        view.responseErrorSignup();
-    }
-
-    @Override
-    public void responseSuccessSignup(String email) {
-        view.responseSuccessSignup(email);
-    }
-
-    @Override
     public void responseEnterEmail() {
         view.responseEnterEmail();
-    }
-
-    @Override
-    public void responseCompleteAllFiles() {
-        view.responseCompleteAllFiles();
-    }
-
-    @Override
-    public void responseUnmatchPassword() {
-        view.responseUnmatchPassword();
-    }
-
-    @Override
-    public void dismissDialogSignup() {
-        view.dismissDialogSignup();
     }
 
     @Override

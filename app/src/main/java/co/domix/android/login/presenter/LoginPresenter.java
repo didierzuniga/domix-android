@@ -12,13 +12,8 @@ import co.domix.android.login.view.Signup;
 public interface LoginPresenter {
     void signin(String email, String password, Login login, FirebaseAuth firebaseAuth);
     void restorePassword(String email);
-    void responseErrorSignup();
-    void responseSuccessSignup(String email);
     void responseEnterEmail();
-    void responseCompleteAllFiles();
-    void responseUnmatchPassword();
 
-    void dismissDialogSignup();
     void dismissDialogRestore();
     void resetPasswordSent();
 

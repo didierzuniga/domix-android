@@ -21,14 +21,9 @@ public interface LoginView {
 
     void signin(String email, String password);
 
-    void responseErrorSignup();
-    void responseSuccessSignup(String email);
     void responseEnterEmail();
-    void responseCompleteAllFiles();
-    void responseUnmatchPassword();
 
     void dismissDialogRestore();
-    void dismissDialogSignup();
     void resetPasswordSent();
     void responseVerifyEmailFalse();
 }

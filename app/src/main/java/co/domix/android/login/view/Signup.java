@@ -1,5 +1,6 @@
 package co.domix.android.login.view;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,20 +9,21 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import co.domix.android.R;
-import co.domix.android.login.presenter.LoginPresenter;
+import co.domix.android.login.presenter.SignupPresenter;
 
 public class Signup extends AppCompatActivity implements SignupView {
 
     private EditText emailFieldForSignup, passwordFieldForSignup, confirmPasswordFieldForSignup;
-    private Button buttonSignup;
+    private Button buttonSignup, buttonBack;
     private ProgressBar progressBarLogin;
     private CheckBox checkBox;
     private FirebaseAuth firebaseAuth;
-    private LoginPresenter presenter;
+    private SignupPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class Signup extends AppCompatActivity implements SignupView {
         passwordFieldForSignup = (EditText) findViewById(R.id.passwordSignup);
         confirmPasswordFieldForSignup = (EditText) findViewById(R.id.confirmPasswordSignup);
         buttonSignup = (Button) findViewById(R.id.buttonSignup);
+        buttonBack = (Button) findViewById(R.id.buttonBack);
         buttonSignup.setEnabled(false);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -52,6 +55,12 @@ public class Signup extends AppCompatActivity implements SignupView {
                         confirmPasswordFieldForSignup.getText().toString());
             }
         });
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -67,5 +76,27 @@ public class Signup extends AppCompatActivity implements SignupView {
     @Override
     public void signup(String email, String password, String confirmPassword) {
         presenter.signup(email, password, confirmPassword, this, firebaseAuth);
+    }
+
+    @Override
+    public void responseCompleteAllFiles() {
+        Toast.makeText(this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void responseUnmatchPassword() {
+        Toast.makeText(this, R.string.toast_unmatch_password, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void responseErrorSignup() {
+        hideProgressBar();
+        Toast.makeText(this, R.string.toast_account_not_created, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void responseSuccessSignup(String email) {
+        hideProgressBar();
+        Toast.makeText(this, R.string.toast_account_created, Toast.LENGTH_LONG).show();
     }
 }

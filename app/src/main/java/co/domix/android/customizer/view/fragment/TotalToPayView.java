@@ -8,6 +8,4 @@ public interface TotalToPayView {
     void showProgressBar();
     void hideProgressBar();
     void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix);
-    void responseTotalToPayEcoin(String totalToPayEcoin);
-
 }

@@ -53,8 +53,7 @@ tools:context="co.domix.android.user.view.UserScore">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/user_margin_top_form"
-            android:background="@drawable/corner_radius_buttons"
+            android:layout_marginTop="10dp"
             android:text="@string/button_sent_rate"
             android:theme="@style/RaiseButtonDark" />
     </LinearLayout>

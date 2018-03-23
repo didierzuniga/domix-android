@@ -18,17 +18,12 @@ public interface LoginView {
     void goDomiciliaryScore(String uid, String email, int idOrder);
 
     void goHome(String uid, String email);
-    void signup(String email, String password, String confirmPassword);
+
     void signin(String email, String password);
 
-    void responseErrorSignup();
-    void responseSuccessSignup(String email);
     void responseEnterEmail();
-    void responseCompleteAllFiles();
-    void responseUnmatchPassword();
 
     void dismissDialogRestore();
-    void dismissDialogSignup();
     void resetPasswordSent();
     void responseVerifyEmailFalse();
 }

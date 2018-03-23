@@ -63,7 +63,7 @@
     <string name="text_dimensions">Dimensiones: </string>
     <string name="text_message_earn_ecoin">Gana 100 eCoins por cada video que veas</string>
     <string name="text_payment_method">Método de pago</string>
-    <string name="text_terms_condictions">Acepto <u>Términos y Condiciones</u></string>
+    <string name="text_terms_condictions"><u>Acepto Términos y Condiciones</u></string>
     <string name="text_pay_through">Pagar a través de:</string>
     <string name="text_method_payment_efecty">Puntos Efecty</string>
     <string name="text_method_payment_pse">PSE</string>

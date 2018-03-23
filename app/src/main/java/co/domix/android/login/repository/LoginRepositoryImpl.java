@@ -31,7 +31,6 @@ import co.domix.android.model.User;
 public class LoginRepositoryImpl implements LoginRepository {
 
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference referenceCounter = database.getReference("counter");
     private DatabaseReference referenceUser = database.getReference("user");
     private DatabaseReference referenceOrder = database.getReference("order");
     private FirebaseAuth firebaseAuth;
@@ -46,27 +45,6 @@ public class LoginRepositoryImpl implements LoginRepository {
 
     public LoginRepositoryImpl(LoginPresenter presenter) {
         this.presenter = presenter;
-    }
-
-    @Override
-    public void signup(final String email, String password, final Activity activity, final FirebaseAuth firebaseAuth) {
-
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            user = FirebaseAuth.getInstance().getCurrentUser();
-                            if (user != null) {
-                                final String mail = user.getEmail();
-                                final String uid = user.getUid();
-                                sendEmailVerification(mail, uid, activity);
-                            }
-                        } else {
-                            presenter.responseErrorSignup();
-                        }
-                    }
-                });
     }
 
     @Override
@@ -147,43 +125,6 @@ public class LoginRepositoryImpl implements LoginRepository {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    @Override
-    public void sendEmailVerification(final String email, final String uid, final Activity activity) {
-        user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    setDataUser(email, uid, activity);
-                    presenter.responseSuccessSignup(email);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void setDataUser(final String email, final String uid, Activity activity) {
-        referenceCounter.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                final Counter c = mutableData.getValue(Counter.class);
-                if (c == null) {
-                    return Transaction.success(mutableData);
-                }
-                c.counterUser++;
-                User usr = new User(email, 10, 0.0, 0.0, 0,
-                        0, false, false);
-                referenceUser.child(uid).setValue(usr);
-                mutableData.setValue(c);
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-
             }
         });
     }

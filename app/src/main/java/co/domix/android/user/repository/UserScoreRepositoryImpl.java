@@ -59,18 +59,15 @@ public class UserScoreRepositoryImpl implements UserScoreRepository {
                 if (u == null){
                     return Transaction.success(mutableData);
                 }
-
                 u.scoreAsDomiciliary = ((u.scoreAsDomiciliary * u.counterScoreAsDomi) + score) / (u.counterScoreAsDomi + 1);
                 u.counterScoreAsDomi = u.counterScoreAsDomi + 1;
-
                 mutableData.setValue(u);
-                presenter.responseBackHomeActivity();
                 return Transaction.success(mutableData);
             }
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-
+                presenter.responseBackHomeActivity();
             }
         });
     }

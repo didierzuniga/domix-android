@@ -45,14 +45,14 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     private RadioGroup radioGroup;
     private LinearLayout linearNotInternet;
     private Button buttonRequestOrder, buttonSendFullnameAndPhone, buttonRefresh;
-    private TextView from, to, buttonSelectFrom, buttonSelectTo, paymentCash, paymentEcoin;
+    private TextView from, to, buttonSelectFrom, buttonSelectTo, paymentCash;
     private EditText description1, description2;
     private Spinner spinnerDimensions;
     private byte dimenSelected;
     private TextInputEditText firstName, lastName, phone;
     private String countryOrigen, cityOrigen;
     private byte payMethod;
-    private int priceInCash, priceInEcoin;
+    private int priceInCash;
     private ProgressBar progressBarRequest;
     private AlertDialog alert = null;
     private android.app.AlertDialog alertDialog;
@@ -120,9 +120,6 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                     case R.id.payWithCredit:
                         payMethod = 1;
                         break;
-                    case R.id.payWithEcoin:
-                        payMethod = 2;
-                        break;
                 }
             }
         });
@@ -130,7 +127,6 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         description1 = (EditText) findViewById(R.id.idOrderDescription1);
         description2 = (EditText) findViewById(R.id.idOrderDescription2);
         paymentCash = (TextView) findViewById(R.id.idMoneyToPay);
-        paymentEcoin = (TextView) findViewById(R.id.idEcoinToPay);
 
         buttonSelectFrom = (TextView) findViewById(R.id.buttonSelectFrom);
         buttonSelectFrom.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +157,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                 presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
                                 from.getText().toString(), to.getText().toString(),
                                 description1.getText().toString(), description2.getText().toString(),
-                                dimenSelected, payMethod, priceInCash, priceInEcoin, User.this);
+                                dimenSelected, payMethod, priceInCash, User.this);
             }
         });
 
@@ -320,9 +316,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         countryOrigen = countryOrigenn;
         cityOrigen = cityOrigenn;
         priceInCash = priceInCashh;
-        priceInEcoin = priceInEcoinn;
         paymentCash.setText(" " + priceInCash + " " + countryO);
-        paymentEcoin.setText(" " + String.valueOf(priceInEcoin) + " " + "eCoin");
     }
 
     @Override

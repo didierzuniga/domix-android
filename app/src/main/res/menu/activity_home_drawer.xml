@@ -7,10 +7,6 @@
             android:icon="@drawable/ic_menu_user"
             android:title="@string/title_activity_user_profile"/>
         <item
-            android:id="@+id/nav_earnecoin"
-            android:icon="@drawable/ic_menu_ad"
-            android:title="@string/text_ad_drawer"/>
-        <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_menu_history"
             android:title="@string/text_history_drawer"/>

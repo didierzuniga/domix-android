@@ -11,7 +11,6 @@ public interface RequestedRepository {
     void dialogCancel(int idOrder, Activity activity);
     void removeOrder(int idOrder, Activity activity);
     void deductCounters();
-    void goRateUser();
     void updateDomiPosition(int idOrder, Activity activity);
     void requestCoordinates(String idDomiciliary, Activity activity);
     void getDataDomiciliary(String uidDomiciliary);

@@ -64,7 +64,7 @@
     <string name="text_dimensions">Dimensions: </string>
     <string name="text_message_earn_ecoin">Earn 100 eCoins for every video you see</string>
     <string name="text_payment_method">Payment method</string>
-    <string name="text_terms_condictions">I accept <u>Terms and Conditions</u></string>
+    <string name="text_terms_condictions"><u>I accept Terms and Conditions</u></string>
     <string name="text_pay_through">Pay through:</string>
     <string name="text_method_payment_efecty">Efecty points</string>
     <string name="text_method_payment_pse">PSE</string>

@@ -10,7 +10,6 @@ public interface HomeView {
     void goProfile();
     void goHistory();
     void goSetting();
-    void goEarnEcoin();
     void goPayment();
     void showProgressBar();
     void hideProgressBar();

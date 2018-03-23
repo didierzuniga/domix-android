@@ -82,7 +82,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public void request(String uid, String email, final String country, final String city,
                         final String from, final String to, final String description1, final String description2,
-                        final byte dimenSelected, final byte payMethod, int paymentCash, int paymentEcoin, Activity activity) {
+                        final byte dimenSelected, final byte payMethod, int paymentCash, Activity activity) {
         SharedPreferences location = activity
                 .getSharedPreferences("Locate_prefs", Context.MODE_PRIVATE);
         final String uidCurrentUser = uid;
@@ -91,7 +91,6 @@ public class UserRepositoryImpl implements UserRepository {
         final String latTo = location.getString("latTo", "");
         final String lonTo = location.getString("lonTo", "");
         final int vvPaymentCash = paymentCash;
-        final int vvPaymentEcoin = paymentEcoin;
         final Double scoreAuthor = null;
         final Double scoreDomiciliary = null;
 
@@ -114,6 +113,7 @@ public class UserRepositoryImpl implements UserRepository {
         });
 
         referenceCounter.runTransaction(new Transaction.Handler() {
+            int couForResponse;
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 final Counter c = mutableData.getValue(Counter.class);
@@ -124,13 +124,14 @@ public class UserRepositoryImpl implements UserRepository {
                     c.countFull++;
                     c.counterDone++;
                     c.countRealTime++;
+                    couForResponse = c.countFull;
                     String couString = String.valueOf(c.countFull);
                     Order order = new Order(uidCurrentUser, country, city, c.countFull, from, to,
                             latFrom, lonFrom, latTo, lonTo, description1, description2, dimenSelected, payMethod,
-                            vvPaymentCash, vvPaymentEcoin, fare, today, time, (double) new Date().getTime(),
+                            vvPaymentCash, fare, today, time, (double) new Date().getTime(),
                             scoreAuthor, scoreDomiciliary);
                     referenceOrder.child(couString).setValue(order);
-                    presenter.responseSuccessRequest(c.countFull);
+//                    presenter.responseSuccessRequest(c.countFull);
                 }
                 mutableData.setValue(c);
                 return Transaction.success(mutableData);
@@ -138,7 +139,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-
+                presenter.responseSuccessRequest(couForResponse);
             }
         });
     }

@@ -11,5 +11,5 @@ public interface SignupView {
     void responseCompleteAllFiles();
     void responseUnmatchPassword();
     void responseErrorSignup();
-    void responseSuccessSignup(String email);
+    void responseSuccessSignup();
 }

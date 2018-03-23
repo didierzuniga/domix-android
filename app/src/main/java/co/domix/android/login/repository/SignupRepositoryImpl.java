@@ -2,6 +2,7 @@ package co.domix.android.login.repository;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,7 +38,6 @@ public class SignupRepositoryImpl implements SignupRepository {
 
     @Override
     public void signup(final String email, String password, final Activity activity, final FirebaseAuth firebaseAuth) {
-
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -47,7 +47,7 @@ public class SignupRepositoryImpl implements SignupRepository {
                             if (user != null) {
                                 final String mail = user.getEmail();
                                 final String uid = user.getUid();
-                                sendEmailVerification(mail, uid, activity);
+                                sendEmailVerification(mail, uid);
                             }
                         } else {
                             presenter.responseErrorSignup();
@@ -57,20 +57,19 @@ public class SignupRepositoryImpl implements SignupRepository {
     }
 
     @Override
-    public void sendEmailVerification(final String email, final String uid, final Activity activity) {
+    public void sendEmailVerification(final String email, final String uid) {
         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    setDataUser(email, uid, activity);
-                    presenter.responseSuccessSignup(email);
+                    setDataUser(email, uid);
                 }
             }
         });
     }
 
     @Override
-    public void setDataUser(final String email, final String uid, Activity activity) {
+    public void setDataUser(final String email, final String uid) {
         referenceCounter.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -79,7 +78,7 @@ public class SignupRepositoryImpl implements SignupRepository {
                     return Transaction.success(mutableData);
                 }
                 c.counterUser++;
-                User usr = new User(email, 10, 0.0, 0.0, 0,
+                User usr = new User(email, 0.0, 0.0, 0,
                         0, false, false);
                 referenceUser.child(uid).setValue(usr);
                 mutableData.setValue(c);
@@ -88,7 +87,7 @@ public class SignupRepositoryImpl implements SignupRepository {
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-
+                presenter.responseSuccessSignup();
             }
         });
     }

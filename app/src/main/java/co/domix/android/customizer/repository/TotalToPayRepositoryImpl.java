@@ -51,7 +51,6 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                             country = order.getX_country();
                             listOrders.add(snapshot.getKey());
                             totalToTayCash = totalToTayCash + order.getX_moneyToPay();
-                            totalToPayEcoin = totalToPayEcoin + order.getX_ecoinToPay();
                         }
                     }
                 }
@@ -62,7 +61,7 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                         taxe = fare.getTaxe();
                         payUCommission = fare.getPayU_commission();
                         payUFullRate = fare.getPayU_fullRate();
-                        interactor.responseTotalToPay(totalToTayCash, totalToPayEcoin, taxe,
+                        interactor.responseTotalToPay(totalToTayCash, taxe,
                                 payUCommission, payUFullRate, country);
                     }
 

@@ -72,7 +72,6 @@ public class SplashRepositoryImpl extends AppCompatActivity implements SplashRep
                 if (withoutOrder == 0){
                     presenter.goHome();
                 }
-
                 referenceOrder.removeEventListener(this);
             }
 

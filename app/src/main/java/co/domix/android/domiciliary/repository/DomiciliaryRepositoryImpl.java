@@ -43,7 +43,6 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Order order = snapshot.getValue(Order.class);
                     boolean catched = order.isX_catched();
-                    Log.w("jjj", "XD");
                     if (catched == false){
                         countChild++;
                         int idOrder = order.getX_id();
@@ -84,7 +83,6 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                     Toast.makeText(activity, R.string.toast_order_has_been_taken, Toast.LENGTH_LONG).show();
                     presenter.responseOrderHasBeenTaken();
                 }
-
             }
 
             @Override
@@ -157,7 +155,6 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
         referenceUser.child(uid).child("firstName").setValue(firstName);
         referenceUser.child(uid).child("lastName").setValue(lastName);
         referenceUser.child(uid).child("phone").setValue(phone);
-
         presenter.contactDataSent();
     }
 }

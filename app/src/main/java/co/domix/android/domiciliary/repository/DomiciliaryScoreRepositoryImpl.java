@@ -58,18 +58,15 @@ public class DomiciliaryScoreRepositoryImpl implements DomiciliaryScoreRepositor
                 if (u == null){
                     return Transaction.success(mutableData);
                 }
-
                 u.scoreAsUser = ((u.scoreAsUser * u.counterScoreAsUser) + score) / (u.counterScoreAsUser + 1);
                 u.counterScoreAsUser = u.counterScoreAsUser + 1;
-
                 mutableData.setValue(u);
-                presenter.responseBackDomiciliaryActivity();
                 return Transaction.success(mutableData);
             }
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-
+                presenter.responseBackDomiciliaryActivity();
             }
         });
     }

@@ -204,13 +204,6 @@ tools:context="co.domix.android.user.view.User">
                         android:textStyle="bold"
                         android:drawableLeft="@drawable/ic_cash"
                         android:textSize="20sp" />
-                    <TextView
-                        android:id="@+id/idEcoinToPay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:drawableLeft="@drawable/ic_coin"
-                        android:textSize="20sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -218,6 +211,7 @@ tools:context="co.domix.android.user.view.User">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:paddingLeft="15dp"
                 android:orientation="vertical">
                 <TextView
@@ -242,11 +236,6 @@ tools:context="co.domix.android.user.view.User">
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:text="@string/text_credit_card"/>
-                    <RadioButton android:id="@+id/payWithEcoin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:text="@string/text_ecoin"/>
                 </RadioGroup>
             </LinearLayout>
 

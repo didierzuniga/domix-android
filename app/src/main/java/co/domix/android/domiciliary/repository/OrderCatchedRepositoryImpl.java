@@ -45,7 +45,6 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Order order = dataSnapshot.getValue(Order.class);
-
                 String uidAuthor = order.getA_id();
                 String countryAuthor = order.getX_country();
                 String cityAuthor = order.getX_city();
@@ -62,7 +61,6 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                         titleAuthor, descriptionAuthor, oriLa, oriLo,
                         desLa, desLo, moneyAuthor);
                 verifyOrderActive(uid, activity);
-
                 referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
             }
 
@@ -111,10 +109,10 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
     @Override
     public void dialogFinish(String idOrder, final String uidDomicili, Activity activity) {
-        deductCounterRealtime();
         referenceOrder.child(idOrder).child("x_completed").setValue(true);
+        deductCounterRealtime();
         //removeCoordDomiciliary(uidDomicili);
-        presenter.goRateDomiciliary();
+//        presenter.goRateDomiciliary();
     }
 
     @Override
@@ -177,7 +175,6 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                 if (c == null){
                     return Transaction.success(mutableData);
                 }
-
                 c.countRealTime = c.countRealTime - 1;
                 mutableData.setValue(c);
                 return Transaction.success(mutableData);
@@ -185,7 +182,8 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-
+                //This call was in dialogFinish()
+                presenter.goRateDomiciliary();
             }
         });
     }

@@ -32,8 +32,8 @@ public class SignupPresenterImpl implements SignupPresenter {
     }
 
     @Override
-    public void responseSuccessSignup(String email) {
-        view.responseSuccessSignup(email);
+    public void responseSuccessSignup() {
+        view.responseSuccessSignup();
     }
 
     @Override

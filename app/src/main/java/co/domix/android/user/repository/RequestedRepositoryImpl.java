@@ -72,7 +72,7 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                             presenter.resultNotCatched();
                         }
                     } else if (completed == true && scoredDomi == null) {
-                        goRateUser();
+                        presenter.goRateUser();
                         referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
                     }
                 }
@@ -120,24 +120,18 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                 if (c == null){
                     return Transaction.success(mutableData);
                 }
-
                 c.countRealTime = c.countRealTime - 1;
                 c.counterDone = c.counterDone - 1;
                 mutableData.setValue(c);
-                presenter.resultGoUserActivity();
                 return Transaction.success(mutableData);
             }
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-
+                //This call was in deductCounters()
+                presenter.resultGoUserActivity();
             }
         });
-    }
-
-    @Override
-    public void goRateUser() {
-        presenter.goRateUser();
     }
 
     @Override

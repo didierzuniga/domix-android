@@ -1,7 +1,9 @@
 package co.domix.android.login.view;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import co.domix.android.R;
 import co.domix.android.login.presenter.SignupPresenter;
+import co.domix.android.login.presenter.SignupPresenterImpl;
 
 public class Signup extends AppCompatActivity implements SignupView {
 
@@ -28,8 +31,11 @@ public class Signup extends AppCompatActivity implements SignupView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        presenter = new SignupPresenterImpl(this);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         checkBox = (CheckBox) findViewById(R.id.checkTerms);
+        progressBarLogin = (ProgressBar) findViewById(R.id.progressBarlogin);
         emailFieldForSignup = (EditText) findViewById(R.id.emailSignup);
         passwordFieldForSignup = (EditText) findViewById(R.id.passwordSignup);
         confirmPasswordFieldForSignup = (EditText) findViewById(R.id.confirmPasswordSignup);
@@ -94,8 +100,12 @@ public class Signup extends AppCompatActivity implements SignupView {
     }
 
     @Override
-    public void responseSuccessSignup(String email) {
+    public void responseSuccessSignup() {
+        firebaseAuth.getInstance().signOut();
         hideProgressBar();
         Toast.makeText(this, R.string.toast_account_created, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+        finish();
     }
 }

@@ -134,7 +134,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     @Override
     public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                         String from, String to, String description1, String description2, byte dimenSelected,
-                        byte payMethod, int paymentCash, int paymentEcoin, Activity activity) {
+                        byte payMethod, int paymentCash, Activity activity) {
         if (from.equals("")) {
             presenter.responseEmptyFields(activity.getString(R.string.toast_indicate_starting_point));
         } else if (to.equals("")) {
@@ -148,7 +148,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
         } else {
             if (fieldsWasFill) {
                 repository.request(uid, email, country, city, from, to, description1, description2,
-                                    dimenSelected, payMethod, paymentCash, paymentEcoin, activity);
+                                    dimenSelected, payMethod, paymentCash, activity);
             } else {
                 presenter.openDialogSendContactData();
             }

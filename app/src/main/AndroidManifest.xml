@@ -103,14 +103,6 @@
                 android:value="co.domix.android.home.view.Home" />
         </activity>
         <activity
-            android:name=".customizer.view.EarnEcoin"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:parentActivityName=".home.view.Home">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="co.domix.android.home.view.Home" />
-        </activity>
-        <activity
             android:name=".customizer.view.History"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:parentActivityName=".home.view.Home">

@@ -17,7 +17,7 @@ public interface UserPresenter {
     void openDialogSendContactData();
     void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                  String from, String to, String description1, String description2, byte dimenSelected,
-                 byte payMethod, int paymentCash, int paymentEcoin, User user);
+                 byte payMethod, int paymentCash, User user);
     void responseSuccessRequest(int getCountFull);
     void responseFromName(String from);
     void responseToName(String to);

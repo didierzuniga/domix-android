@@ -81,11 +81,4 @@ public class TotalToPay extends Fragment implements TotalToPayView {
         toPayTaxe.setText(payTaxe);
         toPayDomixTotal.setText(payTotalToDomix);
     }
-
-    @Override
-    public void responseTotalToPayEcoin(String totalToPayEcoin) {
-        hideProgressBar();
-        linearPayTotal.setVisibility(View.VISIBLE);
-        toPayDomixTotal.setText(totalToPayEcoin + " eCoin");
-    }
 }

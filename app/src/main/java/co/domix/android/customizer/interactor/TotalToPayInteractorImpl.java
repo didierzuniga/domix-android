@@ -28,7 +28,7 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
     }
 
     @Override
-    public void responseTotalToPay(int totalToPayCash, int totalToPayEcoin, double taxe,
+    public void responseTotalToPay(int totalToPayCash, double taxe,
                                    double payUCommission, int payURate, String country) {
         String showCountry = "";
         if (country.equals("CO")){
@@ -38,26 +38,24 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
         } else if (country.equals("MX")){
             showCountry = "MXN";
         }
-        if (payXXX == 4){
-            presenter.responseTotalToPayEcoin(String.valueOf(totalToPayEcoin));
+
+        int commissionDomix = (int) (totalToPayCash * 0.37);
+        String payTaxe;
+        String payTotalToDomix;
+        if (totalToPayCash != 0) {
+            int payUCommissionCost = (int) (commissionDomix * payUCommission);
+            int payUTotalCommission = payUCommissionCost + payURate;
+            int payUIvaOverCommission = (int) (payUTotalCommission * taxe);
+            int payUTotalCommissionWithIva = payUTotalCommission + payUIvaOverCommission;
+            payTaxe = String.valueOf(payUTotalCommissionWithIva) + " " + showCountry;
+            payTotalToDomix = String.valueOf(commissionDomix + payUTotalCommissionWithIva) + " " + showCountry;
         } else {
-            int commissionDomix = (int)(totalToPayCash * 0.37);
-            String payTaxe;
-            String payTotalToDomix;
-            if (totalToPayCash != 0){
-                int payUCommissionCost = (int)(commissionDomix * payUCommission);
-                int payUTotalCommission = payUCommissionCost + payURate;
-                int payUIvaOverCommission = (int)(payUTotalCommission * taxe);
-                int payUTotalCommissionWithIva = payUTotalCommission + payUIvaOverCommission;
-                payTaxe = String.valueOf(payUTotalCommissionWithIva) + " " + showCountry;
-                payTotalToDomix = String.valueOf(commissionDomix + payUTotalCommissionWithIva) + " " + showCountry;
-            } else {
-                payTaxe = "0 " + showCountry;
-                payTotalToDomix = "0 " + showCountry;
-            }
-            presenter.responseTotalToPayCash(String.valueOf(commissionDomix) + " " + showCountry,
-                                            payTaxe,
-                                            payTotalToDomix);
+            payTaxe = "0 " + showCountry;
+            payTotalToDomix = "0 " + showCountry;
         }
+        presenter.responseTotalToPayCash(String.valueOf(commissionDomix) + " " + showCountry,
+                payTaxe,
+                payTotalToDomix);
+
     }
 }

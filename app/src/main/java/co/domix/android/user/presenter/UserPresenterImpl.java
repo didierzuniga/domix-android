@@ -62,9 +62,9 @@ public class UserPresenterImpl implements UserPresenter {
     @Override
     public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                         String from, String to, String description1, String description2, byte dimenSelected,
-                        byte payMethod, int paymentCash, int paymentEcoin, User user) {
+                        byte payMethod, int paymentCash, User user) {
         interactor.request(fieldsWasFill, uid, email, country, city, from, to, description1, description2,
-                dimenSelected, payMethod, paymentCash, paymentEcoin, user);
+                dimenSelected, payMethod, paymentCash, user);
     }
 
     @Override

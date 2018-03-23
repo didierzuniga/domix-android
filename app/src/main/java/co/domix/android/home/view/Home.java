@@ -3,9 +3,7 @@ package co.domix.android.home.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -24,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
-import co.domix.android.customizer.view.EarnEcoin;
 import co.domix.android.customizer.view.History;
 import co.domix.android.customizer.view.Pay;
 import co.domix.android.customizer.view.Profile;
@@ -120,8 +117,6 @@ public class Home extends AppCompatActivity
             goHistory();
         } else if (id == R.id.nav_setting) {
             goSetting();
-        } else if (id == R.id.nav_earnecoin) {
-            goEarnEcoin();
         } else if (id == R.id.nav_payment) {
             goPayment();
         } else if (id == R.id.nav_logout) {
@@ -160,12 +155,6 @@ public class Home extends AppCompatActivity
     @Override
     public void goSetting() {
 
-    }
-
-    @Override
-    public void goEarnEcoin() {
-        Intent intent = new Intent(this, EarnEcoin.class);
-        startActivity(intent);
     }
 
     @Override

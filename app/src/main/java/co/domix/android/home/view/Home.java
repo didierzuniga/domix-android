@@ -25,6 +25,7 @@ import co.domix.android.R;
 import co.domix.android.customizer.view.History;
 import co.domix.android.customizer.view.Pay;
 import co.domix.android.customizer.view.Profile;
+import co.domix.android.customizer.view.Setting;
 import co.domix.android.domiciliary.view.Domiciliary;
 import co.domix.android.home.presenter.HomePresenter;
 import co.domix.android.home.presenter.HomePresenterImpl;
@@ -154,7 +155,8 @@ public class Home extends AppCompatActivity
 
     @Override
     public void goSetting() {
-
+        Intent intent = new Intent(this, Setting.class);
+        startActivity(intent);
     }
 
     @Override

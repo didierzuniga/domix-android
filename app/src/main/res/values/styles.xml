@@ -29,6 +29,11 @@
         <item name="colorControlActivated">@color/editTextColorGrey</item>
     </style>
 
+    <style name="TextViewGreyOption" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorTextViewGray</item>
+    </style>
+
     <style name="RaiseButtonGreen" parent="Theme.AppCompat.Light">
         <item name="colorButtonNormal">@color/button_green_dark</item>
         <item name="colorControlHighlight">@color/button_green_light</item>

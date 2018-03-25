@@ -73,6 +73,8 @@
     <string name="text_as_deliveryman">Como domiciliario:</string>
     <string name="text_as_user">Como usuario:</string>
     <string name="text_forgot_password"><u>Olvidé mi contraseña</u></string>
+    <string name="text_active_me_as_deliveryman">Activarme como domiciliario</string>
+    <string name="text_for_deliverymen">Para domiciliarios</string>
 
     <string name="button_text_login">Ingresar</string>
     <string name="button_text_createaccount">Únete</string>

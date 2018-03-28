@@ -8,6 +8,7 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm password</string>
+    <string name="hint_new_password">New password</string>
     <string name="hint_order_title">Title:</string>
     <string name="hint_order_description">Description:</string>
     <string name="hint_payment">Service cost: </string>
@@ -75,7 +76,9 @@
     <string name="text_as_user">As user:</string>
     <string name="text_forgot_password"><u>I forgot my password</u></string>
     <string name="text_active_notifications">Enable notifications</string>
-    <string name="text_for_deliverymen">For deliverymen</string>
+    <string name="text_delete_account">Delete my Domix account</string>
+    <string name="text_change_password">Change my password</string>
+    <string name="text_notice_before_delete_account">Keep in mind that when you delete your Domix account, you will lose your activity history, access to the platform, and your contact information will be deleted.</string>
 
     <string name="button_text_login">Signin</string>
     <string name="button_text_createaccount">Join</string>
@@ -99,6 +102,8 @@
     <string name="button_sent_rate">Submit</string>
     <string name="button_upload">Upload</string>
     <string name="button_back">Back</string>
+    <string name="button_change_password">Change</string>
+    <string name="button_delete_account">Delete account</string>
 
     <string name="toast_unmatch_password">Passwords do not match</string>
     <string name="toast_please_complete_all_files">Please complete all fields</string>

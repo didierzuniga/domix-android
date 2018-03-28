@@ -4,6 +4,7 @@
     <string name="hint_email">Correo</string>
     <string name="hint_password">Contraseña</string>
     <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="hint_new_password">Nueva contraseña</string>
     <string name="hint_order_title">Título:</string>
     <string name="hint_order_description">Descripción:</string>
     <string name="hint_payment">Costo de servicio: </string>
@@ -74,7 +75,9 @@
     <string name="text_as_user">Como usuario:</string>
     <string name="text_forgot_password"><u>Olvidé mi contraseña</u></string>
     <string name="text_active_notifications">Permitir notificaciones</string>
-    <string name="text_for_deliverymen">Para domiciliarios</string>
+    <string name="text_delete_account">Borrar mi cuenta en Domix</string>
+    <string name="text_change_password">Cambiar mi contraseña</string>
+    <string name="text_notice_before_delete_account">Ten en cuenta que al eliminar tu cuenta en Domix, perderás tu historial de actividad, acceso a la plataforma, y tus datos de contacto serán eliminados</string>
 
     <string name="button_text_login">Ingresar</string>
     <string name="button_text_createaccount">Únete</string>
@@ -98,6 +101,8 @@
     <string name="button_sent_rate">Enviar</string>
     <string name="button_upload">Subir</string>
     <string name="button_back">Volver</string>
+    <string name="button_change_password">Cambiar</string>
+    <string name="button_delete_account">Borrar cuenta</string>
 
     <string name="toast_unmatch_password">Las contraseñas no coinciden</string>
     <string name="toast_please_complete_all_files">Diligencie todos los campos</string>

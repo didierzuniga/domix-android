@@ -5,4 +5,6 @@ package co.domix.android.customizer.interactor;
  */
 
 public interface SettingInteractor {
+    void dialogReauthenticate(String email, String password, int opt);
+    void changePassword(String newPassword);
 }

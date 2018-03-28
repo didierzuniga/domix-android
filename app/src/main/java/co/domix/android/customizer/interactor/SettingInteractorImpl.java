@@ -16,4 +16,14 @@ public class SettingInteractorImpl implements SettingInteractor {
         this.presenter = presenter;
         repository = new SettingRepositoryImpl(presenter);
     }
+
+    @Override
+    public void dialogReauthenticate(String email, String password, int opt) {
+        repository.dialogReauthenticate(email, password, opt);
+    }
+
+    @Override
+    public void changePassword(String newPassword) {
+        repository.changePassword(newPassword);
+    }
 }

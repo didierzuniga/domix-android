@@ -5,5 +5,5 @@ package co.domix.android.customizer.view;
  */
 
 public interface SettingView {
-    void deleteAccount();
+    void goToChangePassword();
 }

@@ -5,4 +5,6 @@ package co.domix.android.customizer.repository;
  */
 
 public interface SettingRepository {
+    void dialogReauthenticate(String email, String password, int opt);
+    void changePassword(String password);
 }

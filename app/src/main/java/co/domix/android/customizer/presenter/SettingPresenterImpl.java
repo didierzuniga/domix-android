@@ -17,4 +17,19 @@ public class SettingPresenterImpl implements SettingPresenter {
         this.view = view;
         interactor = new SettingInteractorImpl(this);
     }
+
+    @Override
+    public void dialogReauthenticate(String email, String password, int opt) {
+        interactor.dialogReauthenticate(email, password, opt);
+    }
+
+    @Override
+    public void goToChangePassword() {
+        view.goToChangePassword();
+    }
+
+    @Override
+    public void changePassword(String newPassword) {
+        interactor.changePassword(newPassword);
+    }
 }

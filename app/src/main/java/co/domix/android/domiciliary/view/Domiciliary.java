@@ -114,7 +114,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         btnAcceptDelivery = (Button) findViewById(R.id.buttonAcceptRequest);
         btnDismissDelivery = (Button) findViewById(R.id.buttonDismissRequest);
 
-        location = getSharedPreferences("Locate_prefs", MODE_PRIVATE);
+        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();
         editor.putBoolean("SearchDelivery", false);
         editor.putBoolean("IsServiceActive", false);

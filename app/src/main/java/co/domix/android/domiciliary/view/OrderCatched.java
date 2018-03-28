@@ -48,7 +48,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         startService(new Intent(this, CoordinateService.class));
 
         presenter = new OrderCatchedPresenterImpl(this);
-        location = getSharedPreferences("Locate_prefs", MODE_PRIVATE);
+        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();
 
         textViewRequestedBy = (TextView) findViewById(R.id.d_requested_by);

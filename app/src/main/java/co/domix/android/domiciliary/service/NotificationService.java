@@ -95,7 +95,7 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        location = getSharedPreferences("Locate_prefs", MODE_PRIVATE);
+        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();
         editor.putBoolean("IsServiceActive", true);
         editor.commit();

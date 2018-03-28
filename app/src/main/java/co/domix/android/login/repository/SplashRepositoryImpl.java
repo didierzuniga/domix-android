@@ -1,10 +1,8 @@
 package co.domix.android.login.repository;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

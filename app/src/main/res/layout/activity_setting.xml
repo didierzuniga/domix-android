@@ -35,20 +35,16 @@
         tools:showIn="@layout/activity_setting"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/text_for_deliverymen"
-            style="@style/TextViewGreyOption"/>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="@color/colorTextViewGray"
             android:orientation="horizontal" />
-        <android.support.v7.widget.SwitchCompat
+        <Switch
+            android:id="@+id/switchNotifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/text_active_me_as_deliveryman"
+            android:text="@string/text_active_notifications"
             style="@style/TextViewGreyOption"/>
 
     </LinearLayout>

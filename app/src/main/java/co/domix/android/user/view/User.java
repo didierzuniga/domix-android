@@ -91,7 +91,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
         presenter = new UserPresenterImpl(this);
         progressBarRequest = (ProgressBar) findViewById(R.id.progressBarRequest);
-        location = getSharedPreferences("Locate_prefs", MODE_PRIVATE);
+        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();
 
         spinnerDimensions = (Spinner) findViewById(R.id.spinnerDimensions);

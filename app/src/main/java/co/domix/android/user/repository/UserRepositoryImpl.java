@@ -84,7 +84,7 @@ public class UserRepositoryImpl implements UserRepository {
                         final String from, final String to, final String description1, final String description2,
                         final byte dimenSelected, final byte payMethod, int paymentCash, Activity activity) {
         SharedPreferences location = activity
-                .getSharedPreferences("Locate_prefs", Context.MODE_PRIVATE);
+                .getSharedPreferences("domx_prefs", Context.MODE_PRIVATE);
         final String uidCurrentUser = uid;
         final String latFrom = location.getString("latFrom", "");
         final String lonFrom = location.getString("lonFrom", "");

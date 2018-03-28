@@ -74,7 +74,7 @@
     <string name="text_as_deliveryman">As deliveryman:</string>
     <string name="text_as_user">As user:</string>
     <string name="text_forgot_password"><u>I forgot my password</u></string>
-    <string name="text_active_me_as_deliveryman">Activate me as a deliveryman</string>
+    <string name="text_active_notifications">Enable notifications</string>
     <string name="text_for_deliverymen">For deliverymen</string>
 
     <string name="button_text_login">Signin</string>

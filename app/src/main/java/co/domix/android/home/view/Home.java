@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +21,10 @@ import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.customizer.view.History;
@@ -31,6 +36,10 @@ import co.domix.android.home.presenter.HomePresenter;
 import co.domix.android.home.presenter.HomePresenterImpl;
 import co.domix.android.login.view.Login;
 import co.domix.android.user.view.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeView {
@@ -73,6 +82,32 @@ public class Home extends AppCompatActivity
                 goDomiciliary();
             }
         });
+
+//        Test call timestamp with Retrofit
+
+        Retrofit retrofit = new RetrofitAdapter().getAdapter();
+        RetrofitService service = retrofit.create(RetrofitService.class);
+        Call<TimeFromWeb> call;
+        call = service.loadTime();
+        call.enqueue(new Callback<TimeFromWeb>() {
+            @Override
+            public void onResponse(Call<TimeFromWeb> call, Response<TimeFromWeb> response) {
+                Log.w("jjj", "-> "+response.body().getTimestamp());
+                Log.w("jjj", "-> "+response.body().getDate());
+                Log.w("jjj", "-> "+response.body().getTime());
+            }
+
+            @Override
+            public void onFailure(Call<TimeFromWeb> call, Throwable t) {
+                Log.w("jjj", "Err-> "+t.getCause());
+            }
+        });
+
+
+
+
+
+//        Test call timestamp with Retrofit
 
         buttonGoUser.setTypeface(font);
         buttonGoDomiciliary.setTypeface(font);

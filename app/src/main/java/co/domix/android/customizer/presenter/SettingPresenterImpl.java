@@ -32,4 +32,24 @@ public class SettingPresenterImpl implements SettingPresenter {
     public void changePassword(String newPassword) {
         interactor.changePassword(newPassword);
     }
+
+    @Override
+    public void successChangePassword() {
+        view.successChangePassword();
+    }
+
+    @Override
+    public void errorChangePassword() {
+        view.errorChangePassword();
+    }
+
+    @Override
+    public void failedCredential() {
+        view.failedCredential();
+    }
+
+    @Override
+    public void goLogin() {
+        view.goLogin();
+    }
 }

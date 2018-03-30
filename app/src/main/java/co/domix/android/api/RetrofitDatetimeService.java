@@ -13,6 +13,5 @@ import retrofit2.http.Path;
 public interface RetrofitDatetimeService {
 
     @GET("datetime/{code}")
-//    Call<Time> loadTime();
     Call<Time> loadTime(@Path("code") String code);
 }

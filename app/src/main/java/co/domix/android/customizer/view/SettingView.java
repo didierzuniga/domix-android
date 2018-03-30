@@ -5,5 +5,11 @@ package co.domix.android.customizer.view;
  */
 
 public interface SettingView {
+    void showProgressBar();
+    void hideProgressBar();
     void goToChangePassword();
+    void successChangePassword();
+    void errorChangePassword();
+    void failedCredential();
+    void goLogin();
 }

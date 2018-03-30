@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/corner_radius"
     android:orientation="vertical">
 
     <ScrollView
@@ -14,6 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="15dp"
             android:orientation="vertical">
 
             <co.domix.android.utils.fonts.FontTextViewTitle
@@ -23,29 +23,44 @@
                 android:textAlignment="center"
                 android:textSize="32sp" />
 
-            <EditText
-                android:id="@+id/emailSignup"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:hint="@string/hint_email"
-                android:inputType="textEmailAddress" />
+                android:theme="@style/EditTextGrey">
 
-            <EditText
-                android:id="@+id/passwordSignup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:hint="@string/hint_password"
-                android:inputType="textPassword" />
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/emailSignup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_email"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/confirmPasswordSignup"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:hint="@string/hint_confirm_password"
-                android:inputType="textPassword" />
+                android:theme="@style/EditTextGrey">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/passwordSignup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_password"
+                    android:inputType="textPassword" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/EditTextGrey">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/confirmPasswordSignup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_confirm_password"
+                    android:inputType="textPassword" />
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -60,6 +75,7 @@
                     android:textAlignment="center" />
 
                 <TextView
+                    android:id="@+id/textViewTerms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/text_terms_condictions" />

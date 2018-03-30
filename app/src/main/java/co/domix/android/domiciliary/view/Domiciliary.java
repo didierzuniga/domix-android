@@ -6,12 +6,10 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,7 +19,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -129,7 +126,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         enableLocationUpdates();
 
         if (location.getBoolean("backFromServiceNotification", false)){
-            Log.w("jjj", "Entro al switcheo XD");
             switchAB.setChecked(false);
             switchAB.setChecked(true);
             editor.putBoolean("backFromServiceNotification", false);

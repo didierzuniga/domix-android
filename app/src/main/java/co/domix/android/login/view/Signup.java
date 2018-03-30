@@ -1,6 +1,9 @@
 package co.domix.android.login.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +24,8 @@ import co.domix.android.login.presenter.SignupPresenterImpl;
 
 public class Signup extends AppCompatActivity implements SignupView {
 
-    private EditText emailFieldForSignup, passwordFieldForSignup, confirmPasswordFieldForSignup;
+    private TextInputEditText emailFieldForSignup, passwordFieldForSignup, confirmPasswordFieldForSignup;
+    private TextView terms;
     private Button buttonSignup, buttonBack;
     private ProgressBar progressBarLogin;
     private CheckBox checkBox;
@@ -35,10 +40,11 @@ public class Signup extends AppCompatActivity implements SignupView {
         firebaseAuth = FirebaseAuth.getInstance();
 
         checkBox = (CheckBox) findViewById(R.id.checkTerms);
+        terms = (TextView) findViewById(R.id.textViewTerms);
         progressBarLogin = (ProgressBar) findViewById(R.id.progressBarlogin);
-        emailFieldForSignup = (EditText) findViewById(R.id.emailSignup);
-        passwordFieldForSignup = (EditText) findViewById(R.id.passwordSignup);
-        confirmPasswordFieldForSignup = (EditText) findViewById(R.id.confirmPasswordSignup);
+        emailFieldForSignup = (TextInputEditText) findViewById(R.id.emailSignup);
+        passwordFieldForSignup = (TextInputEditText) findViewById(R.id.passwordSignup);
+        confirmPasswordFieldForSignup = (TextInputEditText) findViewById(R.id.confirmPasswordSignup);
         buttonSignup = (Button) findViewById(R.id.buttonSignup);
         buttonBack = (Button) findViewById(R.id.buttonBack);
         buttonSignup.setEnabled(false);
@@ -50,6 +56,12 @@ public class Signup extends AppCompatActivity implements SignupView {
                 } else {
                     buttonSignup.setEnabled(false);
                 }
+            }
+        });
+        terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogShowTerms();
             }
         });
         buttonSignup.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +90,20 @@ public class Signup extends AppCompatActivity implements SignupView {
         progressBarLogin.setVisibility(View.GONE);
     }
 
+    public void dialogShowTerms(){
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.text_terms_and_conditions))
+                .setPositiveButton(getString(R.string.text_agree), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        checkBox.setChecked(true);
+                    }
+                })
+                .setNegativeButton(getString(R.string.text_do_not_agree), null)
+                .setMessage(getString(R.string.text_terms))
+                .show();
+    }
+
     @Override
     public void signup(String email, String password, String confirmPassword) {
         presenter.signup(email, password, confirmPassword, this, firebaseAuth);
@@ -85,11 +111,13 @@ public class Signup extends AppCompatActivity implements SignupView {
 
     @Override
     public void responseCompleteAllFiles() {
+        hideProgressBar();
         Toast.makeText(this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void responseUnmatchPassword() {
+        hideProgressBar();
         Toast.makeText(this, R.string.toast_unmatch_password, Toast.LENGTH_SHORT).show();
     }
 

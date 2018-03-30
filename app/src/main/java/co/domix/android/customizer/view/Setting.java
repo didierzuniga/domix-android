@@ -1,9 +1,11 @@
 package co.domix.android.customizer.view;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -26,12 +29,14 @@ import com.google.firebase.auth.FirebaseUser;
 import co.domix.android.R;
 import co.domix.android.customizer.presenter.SettingPresenter;
 import co.domix.android.customizer.presenter.SettingPresenterImpl;
+import co.domix.android.login.view.Login;
 
 public class Setting extends AppCompatActivity implements SettingView {
 
+    private ProgressBar progressBar;
     private Switch aSwitch;
-    private EditText editTextEmailReauthenticate, editTextPasswordReauthenticate, editTextPassword1, editTextPassword2;
-    private Button buttonChangePassword, buttonDeleteAccount, buttonReauthenticate;
+    private TextInputEditText editTextEmailReauthenticate, editTextPasswordReauthenticate, editTextPassword1, editTextPassword2;
+    private Button buttonChangePassword, buttonDeleteAccount, buttonReauthenticate, buttonBack;
     private android.app.AlertDialog alertDialog;
     private SharedPreferences location;
     private SharedPreferences.Editor editor;
@@ -50,6 +55,7 @@ public class Setting extends AppCompatActivity implements SettingView {
         location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();
 
+        progressBar = (ProgressBar) findViewById(R.id.progressBarSetting);
         buttonChangePassword = (Button) findViewById(R.id.buttonChangePassword);
         buttonDeleteAccount = (Button) findViewById(R.id.buttonDeleteAccount);
         aSwitch = (Switch) findViewById(R.id.switchNotifications);
@@ -81,13 +87,24 @@ public class Setting extends AppCompatActivity implements SettingView {
         });
     }
 
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
     public void dialogReauthenticate(final int opt) {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View view = layoutInflater.inflate(R.layout.dialog_reauthenticate, null);
         alertDialog = new android.app.AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        editTextEmailReauthenticate = (EditText) view.findViewById(R.id.editTextEmalReauthenticate);
-        editTextPasswordReauthenticate = (EditText) view.findViewById(R.id.editTextPasswordReauthenticate);
+
+        editTextEmailReauthenticate = (TextInputEditText) view.findViewById(R.id.editTextEmalReauthenticate);
+        editTextPasswordReauthenticate = (TextInputEditText) view.findViewById(R.id.editTextPasswordReauthenticate);
         buttonReauthenticate = (Button) view.findViewById(R.id.buttonReauthenticate);
         buttonReauthenticate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,19 +116,30 @@ public class Setting extends AppCompatActivity implements SettingView {
                 } else {
                     presenter.dialogReauthenticate(getEmail, getPassword, opt);
                     alertDialog.dismiss();
+                    showProgressBar();
                 }
             }
         });
+        buttonBack = (Button) view.findViewById(R.id.buttonBack);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.setView(view);
+        alertDialog.show();
     }
 
     @Override
     public void goToChangePassword() {
+        hideProgressBar();
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View view = layoutInflater.inflate(R.layout.dialog_change_password, null);
         alertDialog = new android.app.AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        editTextPassword1 = (EditText) view.findViewById(R.id.editTextPassword1);
-        editTextPassword2 = (EditText) view.findViewById(R.id.editTextPassword2);
+        editTextPassword1 = (TextInputEditText) view.findViewById(R.id.editTextPassword1);
+        editTextPassword2 = (TextInputEditText) view.findViewById(R.id.editTextPassword2);
         buttonChangePassword = (Button) view.findViewById(R.id.buttonChangePassword);
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,8 +151,44 @@ public class Setting extends AppCompatActivity implements SettingView {
                 } else {
                     presenter.changePassword(getPassword1);
                     alertDialog.dismiss();
+                    showProgressBar();
                 }
             }
         });
+        buttonBack = (Button) view.findViewById(R.id.buttonBack);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.setView(view);
+        alertDialog.show();
+    }
+
+    @Override
+    public void successChangePassword() {
+        hideProgressBar();
+        Toast.makeText(this, getString(R.string.toast_updated_password), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void errorChangePassword() {
+        hideProgressBar();
+        Toast.makeText(this, getString(R.string.toast_account_not_created), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void failedCredential() {
+        hideProgressBar();
+        Toast.makeText(this, getString(R.string.toast_invalid_credential), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void goLogin() {
+        Toast.makeText(this, getString(R.string.toast_has_ben_delete_account), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+        finish();
     }
 }

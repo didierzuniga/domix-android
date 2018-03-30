@@ -55,10 +55,6 @@ public class PaymentMethod extends Fragment {
                         app.payMethod = 3;
                         buttonNext.setEnabled(true);
                         break;
-                    case R.id.methEcoin:
-                        app.payMethod = 4;
-                        buttonNext.setEnabled(true);
-                        break;
                 }
             }
         });

@@ -38,7 +38,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public Double fare;
     private Timer timer;
-    private int countFinal, vvPaymentCash;
+    private int couForResponse, countFinal, vvPaymentCash;
     private Double scoreAuthor, scoreDomiciliary;
     private byte dimenSelected, payMethod;
     private String couString, uidCurrentUser, country, city, from, to, latFrom, lonFrom, latTo, lonTo, description1,
@@ -111,7 +111,6 @@ public class UserRepositoryImpl implements UserRepository {
         scoreDomiciliary = null;
 
         //DATETIME
-
         Retrofit retrofit = new RetrofitDatetimeAdapter().getAdapter();
         RetrofitDatetimeService service = retrofit.create(RetrofitDatetimeService.class);
         Call<Time> call;
@@ -143,7 +142,6 @@ public class UserRepositoryImpl implements UserRepository {
         });
 
         referenceCounter.runTransaction(new Transaction.Handler() {
-            int couForResponse;
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 final Counter c = mutableData.getValue(Counter.class);
@@ -166,7 +164,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                presenter.responseSuccessRequest(couForResponse);
+                // Empty
             }
         });
     }
@@ -177,10 +175,11 @@ public class UserRepositoryImpl implements UserRepository {
             if (timeNow != null){
                 Order order = new Order(uidCurrentUser, country, city, countFinal, from, to,
                         latFrom, lonFrom, latTo, lonTo, description1, description2, dimenSelected, payMethod,
-                        vvPaymentCash, fare, dateNow, timeNow, (double) new Date().getTime(),
+                        vvPaymentCash, fare, dateNow, timeNow, new Date().getTime(),
                         scoreAuthor, scoreDomiciliary);
                 referenceOrder.child(couString).setValue(order);
                 timer.cancel();
+                presenter.responseSuccessRequest(couForResponse);
             }
         }
 

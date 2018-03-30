@@ -63,6 +63,12 @@
                 android:layout_marginBottom="40dp"
                 android:text="@string/button_change_password" />
 
+            <ProgressBar
+                android:id="@+id/progressBarSetting"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
             <TextView
                 style="@style/TextViewGreyOption"
                 android:layout_width="match_parent"

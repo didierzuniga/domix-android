@@ -26,6 +26,7 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.customizer.presenter.SettingPresenter;
 import co.domix.android.customizer.presenter.SettingPresenterImpl;
@@ -41,6 +42,7 @@ public class Setting extends AppCompatActivity implements SettingView {
     private SharedPreferences location;
     private SharedPreferences.Editor editor;
     private SettingPresenter presenter;
+    private DomixApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class Setting extends AppCompatActivity implements SettingView {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.title_activity_user_setting);
 
+        app = (DomixApplication) getApplicationContext();
         presenter = new SettingPresenterImpl(this);
         location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();
@@ -149,9 +152,16 @@ public class Setting extends AppCompatActivity implements SettingView {
                 if (getPassword1.equals("") || getPassword2.equals("")) {
                     Toast.makeText(Setting.this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
                 } else {
-                    presenter.changePassword(getPassword1);
-                    alertDialog.dismiss();
-                    showProgressBar();
+                    int result = app.matchPassword(getPassword1, getPassword2);
+                    if (result == 0){
+                        presenter.changePassword(getPassword1);
+                        alertDialog.dismiss();
+                        showProgressBar();
+                    } else if (result == 1){
+                        Toast.makeText(Setting.this, getString(R.string.toast_unmatch_password), Toast.LENGTH_SHORT).show();
+                    } else if (result == 2){
+                        Toast.makeText(Setting.this, getString(R.string.toast_length_password), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });

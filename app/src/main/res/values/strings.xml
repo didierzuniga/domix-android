@@ -61,7 +61,7 @@
     <string name="text_cash">Efectivo</string>
     <string name="text_dimensions">Dimensiones: </string>
     <string name="text_payment_method">Método de pago</string>
-    <string name="text_terms_condictions"><u>Acepto Términos y Condiciones</u></string>
+    <string name="text_terms_condictions">Acepto Términos y Condiciones</string>
     <string name="text_pay_through">Pagar a través de:</string>
     <string name="text_method_payment_efecty">Puntos Efecty</string>
     <string name="text_method_payment_pse">PSE</string>
@@ -224,6 +224,7 @@
     <string name="toast_updated_password">¡Contraseña actualizada!</string>
     <string name="toast_invalid_credential">Credenciales inválidas</string>
     <string name="toast_has_ben_delete_account">¡Haz eliminado tu cuenta!</string>
+    <string name="toast_length_password">Mínimo 6 caracteres para la contraseña</string>
 
     <string name="title_home">Inicio</string>
     <string name="title_requested">Tu solicitud</string>

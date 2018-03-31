@@ -24,12 +24,6 @@ public class SignupInteractorImpl implements SignupInteractor {
 
     @Override
     public void signup(String email, String password, String confirmPassword, Activity activity, FirebaseAuth firebaseAuth) {
-        if (email.equals("") || password.equals("") || confirmPassword.equals("")) {
-            presenter.responseCompleteAllFiles();
-        } else if (!password.equals(confirmPassword)) {
-            presenter.responseUnmatchPassword();
-        } else {
-            repository.signup(email, password, activity, firebaseAuth);
-        }
+        repository.signup(email, password, activity, firebaseAuth);
     }
 }

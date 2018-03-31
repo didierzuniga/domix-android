@@ -62,27 +62,6 @@
                     android:inputType="textPassword" />
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/checkTerms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center" />
-
-                <TextView
-                    android:id="@+id/textViewTerms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="@string/text_terms_condictions" />
-
-            </LinearLayout>
-
             <ProgressBar
                 android:id="@+id/progressBarlogin"
                 android:layout_width="match_parent"

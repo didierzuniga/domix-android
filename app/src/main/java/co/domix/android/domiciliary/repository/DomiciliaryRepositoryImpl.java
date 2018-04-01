@@ -13,6 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import co.domix.android.R;
+import co.domix.android.domiciliary.interactor.DomiciliaryInteractor;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.model.Order;
 import co.domix.android.model.User;
@@ -30,20 +31,22 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
     DatabaseReference referenceUser = database.getReference("user");
     DatabaseReference referenceOrder = database.getReference("order");
     private DomiciliaryPresenter presenter;
+    private DomiciliaryInteractor interactor;
 
-    public DomiciliaryRepositoryImpl(DomiciliaryPresenter presenter) {
+    public DomiciliaryRepositoryImpl(DomiciliaryPresenter presenter, DomiciliaryInteractor interactor) {
         this.presenter = presenter;
+        this.interactor = interactor;
     }
 
     @Override
-    public void searchDeliveries() {
+    public void searchDeliveries(final String latDomi, final String lonDomi) {
         referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Order order = snapshot.getValue(Order.class);
                     boolean catched = order.isX_catched();
-                    if (catched == false){
+                    if (!catched){
                         countChild++;
                         int idOrder = order.getX_id();
                         String ago = order.getRelativeTimeStamp();
@@ -55,10 +58,14 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                         String oriLo = order.getX_longitudeFrom();
                         String desLa = order.getX_latitudeTo();
                         String desLo = order.getX_longitudeTo();
-                        presenter.goCompareDistance(idOrder, ago, from, to, description1, description2, oriLa, oriLo, desLa, desLo);
+//                        presenter.goCompareDistance(idOrder, ago, from, to, description1, description2,
+//                                                    oriLa, oriLo, desLa, desLo, latDomi, lonDomi);
+                        interactor.goCompareDistance(idOrder, ago, from, to, description1, description2,
+                                oriLa, oriLo, desLa, desLo, latDomi, lonDomi);
                     }
                 }
-                presenter.countChild(countChild);
+//                presenter.countChild(countChild);
+                interactor.countChild(countChild);
                 countChild = 0;
             }
 

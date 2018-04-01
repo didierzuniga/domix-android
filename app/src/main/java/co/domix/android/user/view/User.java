@@ -70,8 +70,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.text_make_your_order);
-
-
+        presenter = new UserPresenterImpl(this);
         app = (DomixApplication) getApplicationContext();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -89,7 +88,6 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
         scrollView = (ScrollView) findViewById(R.id.rootScroll);
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
-        presenter = new UserPresenterImpl(this);
         progressBarRequest = (ProgressBar) findViewById(R.id.progressBarRequest);
         location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();

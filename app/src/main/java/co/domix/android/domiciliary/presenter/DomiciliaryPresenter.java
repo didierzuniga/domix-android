@@ -1,5 +1,8 @@
 package co.domix.android.domiciliary.presenter;
 
+import java.util.Hashtable;
+import java.util.List;
+
 import co.domix.android.domiciliary.view.Domiciliary;
 
 /**
@@ -7,12 +10,18 @@ import co.domix.android.domiciliary.view.Domiciliary;
  */
 
 public interface DomiciliaryPresenter {
-    void searchDeliveries();
+    void alertNoGps();
+    void showYesInternet();
+    void showNotInternet();
+    void hideProgressBar();
+    void verifyLocationAndInternet(Domiciliary domiciliary);
+    void searchDeliveries(String lat, String lon);
     void sendDataDomiciliary(Domiciliary domiciliary, int idOrderToSend, String uid);
-    void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
-                           String description2, String oriLat, String oriLon, String desLat,
-                           String desLon);
-    void countChild(int countChild);
+//    void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
+//                           String description2, String oriLat, String oriLon, String desLat,
+//                           String desLon);
+//    void countChild(int countChild);
+    void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex);
     void responseOrderHasBeenTaken();
     void responseGoOrderCatched(String idOrder);
     void queryForFullnameAndPhone(String uid);

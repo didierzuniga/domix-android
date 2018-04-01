@@ -37,7 +37,7 @@ public class ProfileInteractorImpl implements ProfileInteractor {
         if (firstname != null && lastname != null){
             presenter.responseDataUser(verifyGlide, firstname, lastname, email, scoreAsDomi, scoreAsUser);
         } else {
-            presenter.responseDataUser(verifyGlide, null, null, null, "0.00", "0.00");
+            presenter.responseDataUser(verifyGlide, null, null, email, "0.00", "0.00");
         }
     }
 }

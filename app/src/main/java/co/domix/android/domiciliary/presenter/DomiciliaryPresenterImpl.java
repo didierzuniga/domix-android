@@ -1,5 +1,8 @@
 package co.domix.android.domiciliary.presenter;
 
+import java.util.Hashtable;
+import java.util.List;
+
 import co.domix.android.domiciliary.interactor.DomiciliaryInteractor;
 import co.domix.android.domiciliary.interactor.DomiciliaryInteractorImpl;
 import co.domix.android.domiciliary.view.Domiciliary;
@@ -20,8 +23,33 @@ public class DomiciliaryPresenterImpl implements DomiciliaryPresenter {
     }
 
     @Override
-    public void searchDeliveries() {
-        interactor.searchDeliveries();
+    public void alertNoGps() {
+        view.alertNoGps();
+    }
+
+    @Override
+    public void showYesInternet() {
+        view.showYesInternet();
+    }
+
+    @Override
+    public void showNotInternet() {
+        view.showNotInternet();
+    }
+
+    @Override
+    public void hideProgressBar() {
+        view.hideProgressBar();
+    }
+
+    @Override
+    public void verifyLocationAndInternet(Domiciliary domiciliary) {
+        interactor.verifyLocationAndInternet(domiciliary);
+    }
+
+    @Override
+    public void searchDeliveries(String lat, String lon) {
+        interactor.searchDeliveries(lat, lon);
     }
 
     @Override
@@ -29,16 +57,21 @@ public class DomiciliaryPresenterImpl implements DomiciliaryPresenter {
         interactor.sendDataDomiciliary(domiciliary, idOrderToSend, uid);
     }
 
-    @Override
-    public void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
-                                  String description2, String oriLat, String oriLon, String desLat,
-                                  String desLon) {
-        view.goCompareDistance(idOrder, ago, from, to, description1, description2, oriLat, oriLon, desLat, desLon);
-    }
+//    @Override
+//    public void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
+//                                  String description2, String oriLat, String oriLon, String desLat,
+//                                  String desLon) {
+//        view.goCompareDistance(idOrder, ago, from, to, description1, description2, oriLat, oriLon, desLat, desLon);
+//    }
+
+//    @Override
+//    public void countChild(int countChild) {
+//        view.countChild(countChild);
+//    }
 
     @Override
-    public void countChild(int countChild) {
-        view.countChild(countChild);
+    public void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex) {
+        view.showResultOrder(dictionary, countIndex);
     }
 
     @Override

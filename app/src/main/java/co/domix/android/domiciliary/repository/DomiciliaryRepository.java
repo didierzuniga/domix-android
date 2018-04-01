@@ -7,7 +7,7 @@ import android.app.Activity;
  */
 
 public interface DomiciliaryRepository {
-    void searchDeliveries();
+    void searchDeliveries(String lat, String lon);
     void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid);
     void updateDataDomiciliary(String uidCurrentUser, String i);
     void queryForFullnameAndPhone(String uid);

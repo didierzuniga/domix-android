@@ -11,7 +11,34 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
 
     <include layout="@layout/actionbar_toolbar" />
 
+    <LinearLayout
+        android:id="@+id/notInternetDomiciliary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:text="@string/text_no_internet_connection"/>
+        <Button
+            android:id="@+id/buttonRefreshDomiciliary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/button_refresh"/>
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBarDomiciliary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <ScrollView
+        android:id="@+id/scrollViewDomiciliary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">

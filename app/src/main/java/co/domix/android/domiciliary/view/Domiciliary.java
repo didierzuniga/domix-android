@@ -1,18 +1,18 @@
 package co.domix.android.domiciliary.view;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -24,21 +24,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 
@@ -54,44 +45,35 @@ import co.domix.android.directionModule.DirectionFinderListener;
 import co.domix.android.directionModule.Route;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenterImpl;
-import co.domix.android.domiciliary.service.CoordinateService;
 import co.domix.android.domiciliary.service.NotificationService;
-
-import static java.lang.Thread.sleep;
 
 /**
  * Created by unicorn on 11/12/2017.
  */
 
-public class Domiciliary extends AppCompatActivity implements DomiciliaryView, LocationListener,
-        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, DirectionFinderListener {
+public class Domiciliary extends AppCompatActivity implements DomiciliaryView, LocationListener {
 
+    protected LocationManager locationManager;
     private String la, lo;
-    private int distMin;
-    private int countForDictionary;
-    private int countIndex;
-    private int countIndexTemp;
-    private int countChilds;
-    private int idOrderToSend;
+    private int distMin, countForDictionary, countIndex, countIndexTemp, countChilds, idOrderToSend;
     private boolean fieldsWasFill;
-    private DomixApplication app;
-    private LocationManager locationManager;
+    private ProgressBar progressBarDomiciliary;
     private Switch switchAB;
     private android.app.AlertDialog alertDialog;
     private TextInputEditText firstName, lastName, phone;
-    private Button btnViewMap, btnAcceptDelivery, btnDismissDelivery, buttonSendFullnameAndPhone;
-    private List<String> listica;
+    private Button btnViewMap, btnAcceptDelivery, btnDismissDelivery, buttonSendFullnameAndPhone, buttonRefresh;
+    //    private List<String> listica;
     private Hashtable<Integer, List> diccionario;
     private TextView tvAgo, tvFrom, tvTo, tvDescription1, tvDescription2, waitinDeliveries, textRateUser, rateUser;
-    private LinearLayout linearLayout;
-    private LocationRequest locRequest;
-    private GoogleApiClient apiClient;
+    private LinearLayout linearLayout, linearNotInternet;
+    private ScrollView scrollView;
     private AlertDialog alert = null;
     private SharedPreferences location;
     private SharedPreferences.Editor editor;
-    private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
-    private List<Polyline> polylinePaths = new ArrayList<>();
+    //    private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
+//    private List<Polyline> polylinePaths = new ArrayList<>();
     private DomiciliaryPresenter presenter;
+    private DomixApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +82,26 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         app = (DomixApplication) getApplicationContext();
         presenter = new DomiciliaryPresenterImpl(this);
 
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+
         switchAB = (Switch) findViewById(R.id.switchAB);
+        linearNotInternet = (LinearLayout) findViewById(R.id.notInternetDomiciliary);
+        scrollView = (ScrollView) findViewById(R.id.scrollViewDomiciliary);
+        progressBarDomiciliary = (ProgressBar) findViewById(R.id.progressBarDomiciliary);
         linearLayout = (LinearLayout) findViewById(R.id.show_data);
         waitinDeliveries = (TextView) findViewById(R.id.waiting_deliveries);
         btnViewMap = (Button) findViewById(R.id.buttonViewMap);
@@ -117,15 +114,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         editor.putBoolean("IsServiceActive", false);
         editor.commit();
 
-        apiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .build();
-
-        enableLocationUpdates();
-
-        if (location.getBoolean("backFromServiceNotification", false)){
+        if (location.getBoolean("backFromServiceNotification", false)) {
             switchAB.setChecked(false);
             switchAB.setChecked(true);
             editor.putBoolean("backFromServiceNotification", false);
@@ -172,6 +161,14 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
                 linearLayout.setVisibility(View.GONE);
             }
         });
+        buttonRefresh = (Button) findViewById(R.id.buttonRefreshDomiciliary);
+        buttonRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showProgressBar();
+                presenter.verifyLocationAndInternet(Domiciliary.this);
+            }
+        });
     }
 
     @Override
@@ -182,89 +179,103 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     }
 
     @Override
-    public void searchDeliveries() {
-        presenter.searchDeliveries();
-    }
-
-    private void enableLocationUpdates() {
-        locRequest = new LocationRequest();
-        locRequest.setInterval(500);
-        locRequest.setFastestInterval(400);
-        locRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        LocationSettingsRequest locSettingsRequest = new LocationSettingsRequest.Builder()
-                .addLocationRequest(locRequest)
-                .build();
-
-        PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(
-                        apiClient, locSettingsRequest);
-
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+    public void alertNoGps() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.message_location_deactivate)
+                .setCancelable(false)
+                .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
             @Override
-            public void onResult(LocationSettingsResult locationSettingsResult) {
-                final Status status = locationSettingsResult.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        startLocationUpdates();
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        try {
-                            status.startResolutionForResult(Domiciliary.this, 201);
-                        } catch (IntentSender.SendIntentException e) {
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        break;
-                }
+            public void onClick(DialogInterface dialog, int which) {
+                Domiciliary.super.finish();
             }
         });
-    }
-
-    private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //Ojo: estamos suponiendo que ya tenemos concedido el permiso.
-            //Sería recomendable implementar la posible petición en caso de no tenerlo.
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    apiClient, locRequest, this);
-        }
+        alert = builder.create();
+        alert.show();
     }
 
     @Override
-    public void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
-                                  String description2, String oriLat, String oriLon, String desLat,
-                                  String desLon) {
-        diccionario = new Hashtable<Integer, List>();
-        listica = new ArrayList<String>();
-        String idOrderStr = String.valueOf(idOrder);
-        listica.add(idOrderStr);
-        listica.add(ago);
-        listica.add(from);
-        listica.add(to);
-        listica.add(description1);
-        listica.add(description2);
-        listica.add(oriLat);
-        listica.add(oriLon);
-        listica.add(desLat);
-        listica.add(desLon);
-
-        diccionario.put(countForDictionary, listica);
-
-        try {
-            String uno = oriLat + ", " + oriLon;
-            String dos = la + ", " + lo;
-            new DirectionFinder(this, uno, dos).execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        countForDictionary++;
+    public void showYesInternet() {
+        switchAB.setVisibility(View.VISIBLE);
+        linearNotInternet.setVisibility(View.GONE);
+        scrollView.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void countChild(int countChild) {
-        countChilds = countChild;
+    public void showNotInternet() {
+        hideProgressBar();
+        switchAB.setVisibility(View.GONE);
+        scrollView.setVisibility(View.GONE);
+        linearNotInternet.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void showProgressBar() {
+        progressBarDomiciliary.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBarDomiciliary.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void searchDeliveries() {
+        presenter.searchDeliveries(la, lo);
+    }
+
+    @Override
+    public void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex) {
+        diccionario = dictionary;
+        queryUserRate(dictionary.get(countIndex).get(0).toString());
+        idOrderToSend = Integer.valueOf(dictionary.get(countIndex).get(0).toString());
+        tvAgo.append(" " + dictionary.get(countIndex).get(1).toString());
+        tvFrom.append(" " + dictionary.get(countIndex).get(2).toString());
+        tvTo.append(" " + dictionary.get(countIndex).get(3).toString());
+        tvDescription1.append(" " + dictionary.get(countIndex).get(4).toString());
+        tvDescription2.append(" " + dictionary.get(countIndex).get(5).toString());
+        waitinDeliveries.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.VISIBLE);
+    }
+
+//    @Override
+//    public void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
+//                                  String description2, String oriLat, String oriLon, String desLat,
+//                                  String desLon) {
+//        diccionario = new Hashtable<Integer, List>();
+//        listica = new ArrayList<String>();
+//        String idOrderStr = String.valueOf(idOrder);
+//        listica.add(idOrderStr);
+//        listica.add(ago);
+//        listica.add(from);
+//        listica.add(to);
+//        listica.add(description1);
+//        listica.add(description2);
+//        listica.add(oriLat);
+//        listica.add(oriLon);
+//        listica.add(desLat);
+//        listica.add(desLon);
+//
+//        diccionario.put(countForDictionary, listica);
+//
+//        try {
+//            String uno = oriLat + ", " + oriLon;
+//            String dos = la + ", " + lo;
+//            new DirectionFinder(this, uno, dos).execute();
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        countForDictionary++;
+//    }
+
+//    @Override
+//    public void countChild(int countChild) {
+//        countChilds = countChild;
+//    }
 
     @Override
     public void goPreviewRouteOrder() {
@@ -316,12 +327,10 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     public void openDialogSendContactData() {
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View view = layoutInflater.inflate(R.layout.dialog_send_user_contact, null);
-
         alertDialog = new android.app.AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         buttonSendFullnameAndPhone = (Button) view.findViewById(R.id.buttonSendContactData);
-
         firstName = (TextInputEditText) view.findViewById(R.id.firstName);
         lastName = (TextInputEditText) view.findViewById(R.id.lastName);
         phone = (TextInputEditText) view.findViewById(R.id.phone);
@@ -379,25 +388,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         }
     }
 
-    private void alertNoGps() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.message_location_deactivate)
-                .setCancelable(false)
-                .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Domiciliary.super.finish();
-            }
-        });
-        alert = builder.create();
-        alert.show();
-    }
-
     @Override
     public void responseForFullnameAndPhone(boolean result) {
         if (location.getBoolean("SearchDelivery", false)) {
@@ -410,84 +400,54 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         }
     }
 
-    @Override
-    public void onDirectionFinderStart() {
-        if (originMarkers != null) {
-            for (Marker marker : originMarkers) {
-                marker.remove();
-            }
-        }
+//    @Override
+//    public void onDirectionFinderStart() {
+//        if (originMarkers != null) {
+//            for (Marker marker : originMarkers) {
+//                marker.remove();
+//            }
+//        }
+//
+//        if (destinationMarkers != null) {
+//            for (Marker marker : destinationMarkers) {
+//                marker.remove();
+//            }
+//        }
+//
+//        if (polylinePaths != null) {
+//            for (Polyline polyline : polylinePaths) {
+//                polyline.remove();
+//            }
+//        }
+//    }
 
-        if (destinationMarkers != null) {
-            for (Marker marker : destinationMarkers) {
-                marker.remove();
-            }
-        }
-
-        if (polylinePaths != null) {
-            for (Polyline polyline : polylinePaths) {
-                polyline.remove();
-            }
-        }
-    }
-
-    @Override
-    public void onDirectionFinderSuccess(List<Route> routes) {
-        //if (location.getBoolean("SearchDelivery", false)) {
-            for (Route route : routes) {
-                int newDistance = route.distance.value;
-                if (distMin != 0) {
-                    if (distMin > newDistance) {
-                        distMin = newDistance;
-                        countIndex = countIndexTemp;
-                    }
-                } else {
-                    distMin = newDistance;
-                }
-                countIndexTemp++;
-            }
-
-            if (countIndexTemp == countChilds) {
-                queryUserRate(diccionario.get(countIndex).get(0).toString());
-                idOrderToSend = Integer.valueOf(diccionario.get(countIndex).get(0).toString());
-                tvAgo.append(" " + diccionario.get(countIndex).get(1).toString());
-                tvFrom.append(" " + diccionario.get(countIndex).get(2).toString());
-                tvTo.append(" " + diccionario.get(countIndex).get(3).toString());
-                tvDescription1.append(" " + diccionario.get(countIndex).get(4).toString());
-                tvDescription2.append(" " + diccionario.get(countIndex).get(5).toString());
-                waitinDeliveries.setVisibility(View.GONE);
-                linearLayout.setVisibility(View.VISIBLE);
-            }
-        //}
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        la = String.valueOf(location.getLatitude());
-        lo = String.valueOf(location.getLongitude());
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-        } else {
-            Location lastLocation =
-                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
+//    @Override
+//    public void onDirectionFinderSuccess(List<Route> routes) {
+//        for (Route route : routes) {
+//            int newDistance = route.distance.value;
+//            if (distMin != 0) {
+//                if (distMin > newDistance) {
+//                    distMin = newDistance;
+//                    countIndex = countIndexTemp;
+//                }
+//            } else {
+//                distMin = newDistance;
+//            }
+//            countIndexTemp++;
+//        }
+//
+//        if (countIndexTemp == countChilds) {
+//            queryUserRate(diccionario.get(countIndex).get(0).toString());
+//            idOrderToSend = Integer.valueOf(diccionario.get(countIndex).get(0).toString());
+//            tvAgo.append(" " + diccionario.get(countIndex).get(1).toString());
+//            tvFrom.append(" " + diccionario.get(countIndex).get(2).toString());
+//            tvTo.append(" " + diccionario.get(countIndex).get(3).toString());
+//            tvDescription1.append(" " + diccionario.get(countIndex).get(4).toString());
+//            tvDescription2.append(" " + diccionario.get(countIndex).get(5).toString());
+//            waitinDeliveries.setVisibility(View.GONE);
+//            linearLayout.setVisibility(View.VISIBLE);
+//        }
+//    }
 
     @Override
     protected void onStart() {
@@ -501,24 +461,12 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         tvDescription1 = (TextView) findViewById(R.id.d_description1);
         tvDescription2 = (TextView) findViewById(R.id.d_description2);
         waitinDeliveries = (TextView) findViewById(R.id.waiting_deliveries);
-
-        //enableLocationUpdates();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        boolean network_enabled = false;
-
-        try {
-            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
-        }
-
-        if (!network_enabled) {
-            alertNoGps();
-        }
+        presenter.verifyLocationAndInternet(this);
     }
 
     @Override
@@ -538,5 +486,26 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        la = String.valueOf(location.getLatitude());
+        lo = String.valueOf(location.getLongitude());
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }

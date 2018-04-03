@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     private ProgressBar progressBarPay;
     private LinearLayout linearPayPerDomicilies, linearPaytaxes, linearPayTotal;
     private TextView toPayDomix, toPayDomixTotal, toPayTaxe;
+    private Button buttonToPay;
     private DomixApplication app;
     private TotalToPayPresenter presenter;
 
@@ -55,6 +57,8 @@ public class TotalToPay extends Fragment implements TotalToPayView {
         toPayDomix = (TextView) view.findViewById(R.id.toPayDomix);
         toPayDomixTotal = (TextView) view.findViewById(R.id.toPayDomixTotal);
         toPayTaxe = (TextView) view.findViewById(R.id.toPayTaxe);
+        buttonToPay = (Button) view.findViewById(R.id.btnGoToPay);
+        buttonToPay.setEnabled(false);
 
         presenter.queryOrderToPay(app.uId, app.payMethod);
 
@@ -72,7 +76,11 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     }
 
     @Override
-    public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix) {
+    public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix, boolean enableButtonPay) {
+        buttonToPay.setEnabled(enableButtonPay);
+        if (!enableButtonPay){
+            Toast.makeText(getActivity(), getString(R.string.text_minimum_amount), Toast.LENGTH_LONG).show();
+        }
         hideProgressBar();
         linearPayPerDomicilies.setVisibility(View.VISIBLE);
         linearPaytaxes.setVisibility(View.VISIBLE);

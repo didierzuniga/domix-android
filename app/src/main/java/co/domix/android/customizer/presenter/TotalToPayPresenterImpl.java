@@ -25,7 +25,7 @@ public class TotalToPayPresenterImpl implements TotalToPayPresenter {
     }
 
     @Override
-    public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix) {
-        view.responseTotalToPayCash(commissionDomix, payTaxe, payTotalToDomix);
+    public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix, boolean enableButtonPay) {
+        view.responseTotalToPayCash(commissionDomix, payTaxe, payTotalToDomix, enableButtonPay);
     }
 }

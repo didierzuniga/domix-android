@@ -42,20 +42,29 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
         int commissionDomix = (int) (totalToPayCash * 0.37);
         String payTaxe;
         String payTotalToDomix;
+        boolean enableButtonPay;
         if (totalToPayCash != 0) {
+
             int payUCommissionCost = (int) (commissionDomix * payUCommission);
             int payUTotalCommission = payUCommissionCost + payURate;
             int payUIvaOverCommission = (int) (payUTotalCommission * taxe);
             int payUTotalCommissionWithIva = payUTotalCommission + payUIvaOverCommission;
+
             payTaxe = String.valueOf(payUTotalCommissionWithIva) + " " + showCountry;
             payTotalToDomix = String.valueOf(commissionDomix + payUTotalCommissionWithIva) + " " + showCountry;
+            if ((commissionDomix + payUTotalCommissionWithIva) >= 10000){
+                enableButtonPay = true;
+            } else {
+                enableButtonPay = false;
+            }
         } else {
             payTaxe = "0 " + showCountry;
             payTotalToDomix = "0 " + showCountry;
+            enableButtonPay = false;
         }
         presenter.responseTotalToPayCash(String.valueOf(commissionDomix) + " " + showCountry,
-                payTaxe,
-                payTotalToDomix);
-
+                                        payTaxe,
+                                        payTotalToDomix,
+                                        enableButtonPay);
     }
 }

@@ -7,5 +7,5 @@ package co.domix.android.customizer.view.fragment;
 public interface TotalToPayView {
     void showProgressBar();
     void hideProgressBar();
-    void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix);
+    void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix, boolean enableButtonPay);
 }

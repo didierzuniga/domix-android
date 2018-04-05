@@ -14,6 +14,8 @@ public interface OrderCatchedPresenter {
                              String desLo, int moneyAuthor);
     void dialogCancel(String idOrder, String uid, OrderCatched orderCatched);
     void dialogFinish(String idOrder, String uidDomicili, OrderCatched orderCatched);
+    void showToastDeliverymanCancelledOrder();
+    void showToastUserCancelledOrder();
     void responseBackDomiciliaryActivity();
     void goRateDomiciliary();
     void submitCoord(String uid, String la, String lo, OrderCatched orderCatched);

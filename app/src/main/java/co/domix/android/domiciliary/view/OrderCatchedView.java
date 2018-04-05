@@ -14,6 +14,8 @@ public interface OrderCatchedView {
     void dialContactPhone(String phoneNumber);
     void dialogCancel();
     void dialogFinish(String uidDomicili);
+    void showToastDeliverymanCancelledOrder();
+    void showToastUserCancelledOrder();
     void responseBackDomiciliaryActivity();
     void goRateDomiciliary();
 }

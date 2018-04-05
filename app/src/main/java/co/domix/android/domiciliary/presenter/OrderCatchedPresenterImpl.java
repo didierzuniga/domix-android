@@ -45,6 +45,16 @@ public class OrderCatchedPresenterImpl implements OrderCatchedPresenter {
     }
 
     @Override
+    public void showToastDeliverymanCancelledOrder() {
+        view.showToastDeliverymanCancelledOrder();
+    }
+
+    @Override
+    public void showToastUserCancelledOrder() {
+        view.showToastUserCancelledOrder();
+    }
+
+    @Override
     public void responseBackDomiciliaryActivity() {
         view.responseBackDomiciliaryActivity();
     }

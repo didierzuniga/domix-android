@@ -1,6 +1,7 @@
 package co.domix.android.domiciliary.repository;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,6 +14,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenter;
 import co.domix.android.model.Counter;
@@ -25,9 +27,9 @@ import co.domix.android.model.User;
 
 public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
-    private int whatToast = 0;
-    private boolean queryForOrderActive;
+    private boolean finishedByDeliveryman = false;
     private OrderCatchedPresenter presenter;
+    private DomixApplication app;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");
@@ -60,8 +62,8 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                 getNameAndPhoneAuthor(uidAuthor, countryAuthor, cityAuthor, fromAuthor, toAuthor,
                         titleAuthor, descriptionAuthor, oriLa, oriLo,
                         desLa, desLo, moneyAuthor);
-                verifyOrderActive(uid, activity);
-                referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
+                verifyStatusOrder(uid, String.valueOf(idOrder), activity);
+//                referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
             }
 
             @Override
@@ -99,20 +101,19 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
     @Override
     public void dialogCancel(final String idOrder, String uid, final Activity activity) {
-        whatToast = 1;
         referenceOrder.child(idOrder).child("d_id").removeValue();
         referenceOrder.child(idOrder).child("x_catched").setValue(false);
         removeCoordDomiciliary(uid);
-        Toast.makeText(activity, R.string.toast_you_has_cancelled_order, Toast.LENGTH_LONG).show();
+        presenter.showToastDeliverymanCancelledOrder();
         presenter.responseBackDomiciliaryActivity();
     }
 
     @Override
     public void dialogFinish(String idOrder, final String uidDomicili, Activity activity) {
+        finishedByDeliveryman = true;
         referenceOrder.child(idOrder).child("x_completed").setValue(true);
+        //Remove coordinates???
         deductCounterRealtime();
-        //removeCoordDomiciliary(uidDomicili);
-//        presenter.goRateDomiciliary();
     }
 
     @Override
@@ -122,24 +123,22 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
     }
 
     @Override
-    public void verifyOrderActive(final String uid, final Activity activity) {
+    public void verifyStatusOrder(final String uid, String idorder, final Activity activity) {
         referenceOrder.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                queryForOrderActive = false;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Order order = snapshot.getValue(Order.class);
-                    if (uid.equals(order.getD_id()) && (order.isX_completed()) == false){
-                        queryForOrderActive = true;
+                    if (uid.equals(order.getD_id()) && !(order.isX_completed())) {
+                        // Do nothing
+                    } else {
+                        if (!finishedByDeliveryman){
+                            presenter.showToastUserCancelledOrder();
+                            presenter.responseBackDomiciliaryActivity();
+                            removeCoordDomiciliary(uid);
+                        }
+                        referenceOrder.removeEventListener(this);
                     }
-                }
-                if (!queryForOrderActive){
-                    if (whatToast == 0){
-                        Toast.makeText(activity, R.string.toast_user_has_cancelled_order, Toast.LENGTH_SHORT).show();
-                    }
-                    presenter.responseBackDomiciliaryActivity();
-                    referenceOrder.removeEventListener(this);
-                    removeCoordDomiciliary(uid);
                 }
             }
 
@@ -148,6 +147,37 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
             }
         });
+
+
+//        isActiveOrder = false;
+//        Log.w("jjj", "-> "+referenceOrder.child(idorder).onDisconnect());
+//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getKey());
+//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getParent());
+//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getRoot());
+//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getRef());
+//
+//        referenceOrder.child(idorder).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Order order = dataSnapshot.getValue(Order.class);
+//                isActiveOrder = true;
+//                if (!(order.isX_completed())) {
+//
+//                } else {
+//                    referenceOrder.removeEventListener(this);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//        if (!isActiveOrder) {
+//            Toast.makeText(activity, R.string.toast_user_has_cancelled_order, Toast.LENGTH_SHORT).show();
+//            presenter.responseBackDomiciliaryActivity();
+//            removeCoordDomiciliary(uid);
+//        }
     }
 
     @Override

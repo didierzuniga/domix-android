@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -326,8 +327,12 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void showYesInternet() {
-        linearNotInternet.setVisibility(View.GONE);
-        scrollView.setVisibility(View.VISIBLE);
+        try {
+            linearNotInternet.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
+        } catch (Exception e){
+
+        }
     }
 
     @Override
@@ -337,8 +342,12 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void hideProgressBar() {
-        presenter.requestForFullnameAndPhone(app.uId);
-        progressBarRequest.setVisibility(View.GONE);
+        try {
+            presenter.requestForFullnameAndPhone(app.uId);
+            progressBarRequest.setVisibility(View.GONE);
+        } catch (Exception e){
+
+        }
     }
 
     @Override
@@ -346,12 +355,18 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         super.onStart();
         from = (TextView) findViewById(R.id.idFrom);
         to = (TextView) findViewById(R.id.idTo);
-        presenter.requestGeolocationAndDistance(location.getString("latFrom", ""),
-                                                location.getString("lonFrom", ""),
-                                                location.getString("latTo", ""),
-                                                location.getString("lonTo", ""),
-                                                location.getInt("whatAddress", 2),
-                                                this);
+
+        try {
+            presenter.requestGeolocationAndDistance(location.getString("latFrom", ""),
+                    location.getString("lonFrom", ""),
+                    location.getString("latTo", ""),
+                    location.getString("lonTo", ""),
+                    location.getInt("whatAddress", 2),
+                    this);
+        } catch (Exception e){
+
+        }
+
     }
 
     @Override

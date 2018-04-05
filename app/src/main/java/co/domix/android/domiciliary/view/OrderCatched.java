@@ -148,6 +148,16 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     }
 
     @Override
+    public void showToastDeliverymanCancelledOrder() {
+        Toast.makeText(this, R.string.toast_you_has_cancelled_order, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showToastUserCancelledOrder() {
+        Toast.makeText(this, R.string.toast_user_has_cancelled_order, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void responseBackDomiciliaryActivity() {
         stopService(new Intent(this, CoordinateService.class));
         Intent intent = new Intent(this, Domiciliary.class);

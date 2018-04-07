@@ -27,7 +27,7 @@ import co.domix.android.model.User;
 
 public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
-    private boolean finishedByDeliveryman = false;
+    private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false, wasTaked = false;
     private OrderCatchedPresenter presenter;
     private DomixApplication app;
 
@@ -106,10 +106,11 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
         removeCoordDomiciliary(uid);
         presenter.showToastDeliverymanCancelledOrder();
         presenter.responseBackDomiciliaryActivity();
+        cancelledByDeliveryman = true;
     }
 
     @Override
-    public void dialogFinish(String idOrder, final String uidDomicili, Activity activity) {
+    public void dialogFinish(String idOrder) {
         finishedByDeliveryman = true;
         referenceOrder.child(idOrder).child("x_completed").setValue(true);
         //Remove coordinates???
@@ -130,14 +131,18 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Order order = snapshot.getValue(Order.class);
                     if (uid.equals(order.getD_id()) && !(order.isX_completed())) {
-                        // Do nothing
+                        wasTaked = true;
                     } else {
-                        if (!finishedByDeliveryman){
-                            presenter.showToastUserCancelledOrder();
-                            presenter.responseBackDomiciliaryActivity();
-                            removeCoordDomiciliary(uid);
+                        if (wasTaked){
+                            if (finishedByDeliveryman || cancelledByDeliveryman){
+                                referenceOrder.removeEventListener(this);
+                            } else {
+                                presenter.showToastUserCancelledOrder();
+                                presenter.responseBackDomiciliaryActivity();
+                                removeCoordDomiciliary(uid);
+                                referenceOrder.removeEventListener(this);
+                            }
                         }
-                        referenceOrder.removeEventListener(this);
                     }
                 }
             }
@@ -160,11 +165,15 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
 //                Order order = dataSnapshot.getValue(Order.class);
-//                isActiveOrder = true;
 //                if (!(order.isX_completed())) {
-//
+//                    isActiveOrder = true;
 //                } else {
 //                    referenceOrder.removeEventListener(this);
+//                }
+//                if (!isActiveOrder) {
+//                    Toast.makeText(activity, R.string.toast_user_has_cancelled_order, Toast.LENGTH_SHORT).show();
+//                    presenter.responseBackDomiciliaryActivity();
+//                    removeCoordDomiciliary(uid);
 //                }
 //            }
 //
@@ -173,11 +182,6 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 //
 //            }
 //        });
-//        if (!isActiveOrder) {
-//            Toast.makeText(activity, R.string.toast_user_has_cancelled_order, Toast.LENGTH_SHORT).show();
-//            presenter.responseBackDomiciliaryActivity();
-//            removeCoordDomiciliary(uid);
-//        }
     }
 
     @Override

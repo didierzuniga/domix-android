@@ -1,14 +1,18 @@
 package co.domix.android.domiciliary.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +35,8 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     private double oriLat, oriLon, desLat, desLon;
     private Button cancelService, finishService, btnViewMap;
     private ImageButton call;
+    private ProgressBar progressBar;
+    private ScrollView scrollview;
     private SharedPreferences location;
     private SharedPreferences.Editor editor;
     private OrderCatchedPresenter presenter;
@@ -51,6 +57,8 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();
 
+        progressBar = (ProgressBar) findViewById(R.id.progressCatched);
+        scrollview = (ScrollView) findViewById(R.id.scrollCatched);
         textViewRequestedBy = (TextView) findViewById(R.id.d_requested_by);
         textViewPhoneRequestedBy = (TextView) findViewById(R.id.d_phone_requested_by);
         call = (ImageButton) findViewById(R.id.idCall);
@@ -86,7 +94,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         finishService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogFinish(app.uId);
+                dialogFinish();
             }
         });
     }
@@ -94,6 +102,16 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     @Override
     public void onBackPressed() {
         Toast.makeText(this, getResources().getString(R.string.toast_can_not_backpressed_domiciliary), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -142,9 +160,21 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         presenter.dialogCancel(String.valueOf(app.idOrder), app.uId, this);
     }
 
-    @Override
-    public void dialogFinish(String uidDomicili) {
-        presenter.dialogFinish(String.valueOf(app.idOrder), uidDomicili, this);
+    public void dialogFinish() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.message_finish_request);
+        builder.setPositiveButton(R.string.message_yes,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        scrollview.setVisibility(View.GONE);
+                        showProgressBar();
+                        presenter.dialogFinish(String.valueOf(app.idOrder));
+                    }
+                }
+        )
+                .setNegativeButton(R.string.message_no, null);
+        builder.create().show();
     }
 
     @Override
@@ -167,6 +197,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     @Override
     public void goRateDomiciliary() {
+        hideProgressBar();
         stopService(new Intent(this, CoordinateService.class));
         Intent intent = new Intent(this, DomiciliaryScore.class);
         startActivity(intent);

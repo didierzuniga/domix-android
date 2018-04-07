@@ -45,19 +45,8 @@ public class OrderCatchedInteractorImpl implements OrderCatchedInteractor {
     }
 
     @Override
-    public void dialogFinish(final String idOrder, final String uidDomicili, final Activity activity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setMessage(R.string.message_finish_request);
-        builder.setPositiveButton(R.string.message_yes,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        repository.dialogFinish(idOrder, uidDomicili, activity);
-                    }
-                }
-        )
-                .setNegativeButton(R.string.message_no, null);
-        builder.create().show();
+    public void dialogFinish(String idOrder) {
+        repository.dialogFinish(idOrder);
     }
 
     @Override

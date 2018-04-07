@@ -83,13 +83,13 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     @Override
     public void requestGeolocationAndDistance(String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, Activity activity) {
         if (whatAddress == 0){
-            if (!latFrom.equals("") || !lonFrom.equals("")){
+            if (!latFrom.equals(null) || !lonFrom.equals(null)){
                 String arr [] = getGeolocation(latFrom, lonFrom, activity);
                 coordsFromPrice = arr[3];
                 presenter.responseFromName(arr[2]);
             }
         } else if (whatAddress == 1){
-            if (!latTo.equals("") || !lonTo.equals("")){
+            if (!latTo.equals(null) || !lonTo.equals(null)){
                 String arr [] = getGeolocation(latTo, lonTo, activity);
                 coordsToPrice = arr[3];
                 countryOrigen = arr[0];

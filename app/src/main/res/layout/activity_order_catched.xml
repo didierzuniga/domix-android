@@ -23,7 +23,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <ProgressBar
+        android:id="@+id/progressCatched"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <ScrollView
+        android:id="@+id/scrollCatched"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">

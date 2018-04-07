@@ -85,7 +85,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, this);
 
         scrollView = (ScrollView) findViewById(R.id.rootScroll);
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
@@ -327,12 +327,8 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void showYesInternet() {
-        try {
-            linearNotInternet.setVisibility(View.GONE);
-            scrollView.setVisibility(View.VISIBLE);
-        } catch (Exception e){
-
-        }
+        linearNotInternet.setVisibility(View.GONE);
+        scrollView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -342,12 +338,8 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void hideProgressBar() {
-        try {
-            presenter.requestForFullnameAndPhone(app.uId);
-            progressBarRequest.setVisibility(View.GONE);
-        } catch (Exception e){
-
-        }
+        presenter.requestForFullnameAndPhone(app.uId);
+        progressBarRequest.setVisibility(View.GONE);
     }
 
     @Override
@@ -355,18 +347,12 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         super.onStart();
         from = (TextView) findViewById(R.id.idFrom);
         to = (TextView) findViewById(R.id.idTo);
-
-        try {
-            presenter.requestGeolocationAndDistance(location.getString("latFrom", ""),
-                    location.getString("lonFrom", ""),
-                    location.getString("latTo", ""),
-                    location.getString("lonTo", ""),
-                    location.getInt("whatAddress", 2),
-                    this);
-        } catch (Exception e){
-
-        }
-
+        presenter.requestGeolocationAndDistance(location.getString("latFrom", ""),
+                location.getString("lonFrom", ""),
+                location.getString("latTo", ""),
+                location.getString("lonTo", ""),
+                location.getInt("whatAddress", 2),
+                this);
     }
 
     @Override

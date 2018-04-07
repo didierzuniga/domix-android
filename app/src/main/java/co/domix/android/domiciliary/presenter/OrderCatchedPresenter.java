@@ -13,7 +13,7 @@ public interface OrderCatchedPresenter {
                              String descriptionAuthor, String oriLa, String oriLo, String desLa,
                              String desLo, int moneyAuthor);
     void dialogCancel(String idOrder, String uid, OrderCatched orderCatched);
-    void dialogFinish(String idOrder, String uidDomicili, OrderCatched orderCatched);
+    void dialogFinish(String idOrder);
     void showToastDeliverymanCancelledOrder();
     void showToastUserCancelledOrder();
     void responseBackDomiciliaryActivity();

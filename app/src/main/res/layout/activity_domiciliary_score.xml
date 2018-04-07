@@ -48,6 +48,12 @@ tools:context="co.domix.android.domiciliary.view.DomiciliaryScore">
             android:rating="0"
             android:stepSize="1.0" />
 
+        <ProgressBar
+            android:id="@+id/progressRateDomi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/buttonSendScoreDomiToUser"
             android:layout_width="wrap_content"

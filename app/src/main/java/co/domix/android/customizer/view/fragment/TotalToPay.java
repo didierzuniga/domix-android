@@ -3,6 +3,7 @@ package co.domix.android.customizer.view.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     private LinearLayout linearPayPerDomicilies, linearPaytaxes, linearPayTotal;
     private TextView toPayDomix, toPayDomixTotal, toPayTaxe;
     private Button buttonToPay;
+    private boolean enablePayment;
     private DomixApplication app;
     private TotalToPayPresenter presenter;
 
@@ -58,10 +60,18 @@ public class TotalToPay extends Fragment implements TotalToPayView {
         toPayDomixTotal = (TextView) view.findViewById(R.id.toPayDomixTotal);
         toPayTaxe = (TextView) view.findViewById(R.id.toPayTaxe);
         buttonToPay = (Button) view.findViewById(R.id.btnGoToPay);
+        buttonToPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (enablePayment){
+                    Toast.makeText(getActivity(), "Pagando...", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.text_minimum_amount), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         buttonToPay.setEnabled(false);
-
         presenter.queryOrderToPay(app.uId, app.payMethod);
-
         return view;
     }
 
@@ -77,8 +87,10 @@ public class TotalToPay extends Fragment implements TotalToPayView {
 
     @Override
     public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix, boolean enableButtonPay) {
-        buttonToPay.setEnabled(enableButtonPay);
+        buttonToPay.setEnabled(true);
+        enablePayment = true;
         if (!enableButtonPay){
+            enablePayment = false;
             Toast.makeText(getActivity(), getString(R.string.text_minimum_amount), Toast.LENGTH_LONG).show();
         }
         hideProgressBar();

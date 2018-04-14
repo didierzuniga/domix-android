@@ -28,7 +28,7 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
     }
 
     @Override
-    public void responseTotalToPay(int totalToPayCash, double taxe,
+    public void responseTotalToPay(int totalToPayCash, double taxe, int minPayment,
                                    double payUCommission, int payURate, String country) {
         String showCountry = "";
         if (country.equals("CO")){
@@ -42,6 +42,7 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
         int commissionDomix = (int) (totalToPayCash * 0.37);
         String payTaxe;
         String payTotalToDomix;
+        String miniPayment = "";
         boolean enableButtonPay;
         if (totalToPayCash != 0) {
 
@@ -52,19 +53,21 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
 
             payTaxe = String.valueOf(payUTotalCommissionWithIva) + " " + showCountry;
             payTotalToDomix = String.valueOf(commissionDomix + payUTotalCommissionWithIva) + " " + showCountry;
-            if ((commissionDomix + payUTotalCommissionWithIva) >= 10000){
+            if ((commissionDomix + payUTotalCommissionWithIva) >= minPayment){
                 enableButtonPay = true;
             } else {
+                miniPayment = String.valueOf(minPayment) + " " +showCountry;
                 enableButtonPay = false;
             }
         } else {
-            payTaxe = "0 " + showCountry;
-            payTotalToDomix = "0 " + showCountry;
+            payTaxe = "0.00 " + showCountry;
+            payTotalToDomix = "0.00 " + showCountry;
             enableButtonPay = false;
         }
         presenter.responseTotalToPayCash(String.valueOf(commissionDomix) + " " + showCountry,
                                         payTaxe,
                                         payTotalToDomix,
+                                        miniPayment,
                                         enableButtonPay);
     }
 }

@@ -30,6 +30,7 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     private LinearLayout linearPayPerDomicilies, linearPaytaxes, linearPayTotal;
     private TextView toPayDomix, toPayDomixTotal, toPayTaxe;
     private Button buttonToPay;
+    private String miniPayment;
     private boolean enablePayment;
     private DomixApplication app;
     private TotalToPayPresenter presenter;
@@ -66,7 +67,7 @@ public class TotalToPay extends Fragment implements TotalToPayView {
                 if (enablePayment){
                     Toast.makeText(getActivity(), "Pagando...", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getActivity(), getString(R.string.text_minimum_amount), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -86,12 +87,14 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     }
 
     @Override
-    public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix, boolean enableButtonPay) {
+    public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix,
+                                       String minPayment, boolean enableButtonPay) {
         buttonToPay.setEnabled(true);
         enablePayment = true;
+        miniPayment = minPayment;
         if (!enableButtonPay){
             enablePayment = false;
-            Toast.makeText(getActivity(), getString(R.string.text_minimum_amount), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment, Toast.LENGTH_LONG).show();
         }
         hideProgressBar();
         linearPayPerDomicilies.setVisibility(View.VISIBLE);

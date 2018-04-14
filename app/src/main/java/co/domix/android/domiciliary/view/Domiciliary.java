@@ -21,11 +21,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +48,7 @@ import co.domix.android.directionModule.Route;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenterImpl;
 import co.domix.android.domiciliary.service.NotificationService;
+import co.domix.android.utils.ToastsKt;
 
 /**
  * Created by unicorn on 11/12/2017.
@@ -65,7 +68,9 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     //    private List<String> listica;
     private Hashtable<Integer, List> diccionario;
     private TextView tvAgo, tvFrom, tvTo, tvDescription1, tvDescription2, waitinDeliveries, textRateUser, rateUser;
-    private LinearLayout linearLayout, linearNotInternet;
+    private LinearLayout lnrSpiVehicle, lnrShowData, lnrNotInternet;
+    private Spinner spiVehicle;
+    private byte vehSelected;
     private ScrollView scrollView;
     private AlertDialog alert = null;
     private SharedPreferences location;
@@ -99,10 +104,11 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 
         switchAB = (Switch) findViewById(R.id.switchAB);
-        linearNotInternet = (LinearLayout) findViewById(R.id.notInternetDomiciliary);
+        lnrSpiVehicle = (LinearLayout) findViewById(R.id.lnrSpiVehicle);
+        lnrNotInternet = (LinearLayout) findViewById(R.id.lnrNotInternet);
         scrollView = (ScrollView) findViewById(R.id.scrollViewDomiciliary);
         progressBarDomiciliary = (ProgressBar) findViewById(R.id.progressBarDomiciliary);
-        linearLayout = (LinearLayout) findViewById(R.id.show_data);
+        lnrShowData = (LinearLayout) findViewById(R.id.lnrShowData);
         waitinDeliveries = (TextView) findViewById(R.id.waiting_deliveries);
         btnViewMap = (Button) findViewById(R.id.buttonViewMap);
         btnAcceptDelivery = (Button) findViewById(R.id.buttonAcceptRequest);
@@ -120,6 +126,20 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
             editor.putBoolean("backFromServiceNotification", false);
             editor.commit();
         }
+
+        spiVehicle = (Spinner) findViewById(R.id.spinnerVehicle);
+        spiVehicle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                vehSelected = (byte) spiVehicle.getSelectedItemId();
+                ToastsKt.toastLong(Domiciliary.this, "Seleccionado: "+vehSelected);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         switchAB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -158,7 +178,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
                 switchAB.setChecked(false);
                 switchAB.setChecked(true);
                 waitinDeliveries.setVisibility(View.VISIBLE);
-                linearLayout.setVisibility(View.GONE);
+                lnrShowData.setVisibility(View.GONE);
             }
         });
         buttonRefresh = (Button) findViewById(R.id.buttonRefreshDomiciliary);
@@ -201,7 +221,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     @Override
     public void showYesInternet() {
         switchAB.setVisibility(View.VISIBLE);
-        linearNotInternet.setVisibility(View.GONE);
+        lnrNotInternet.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
     }
 
@@ -210,7 +230,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         hideProgressBar();
         switchAB.setVisibility(View.GONE);
         scrollView.setVisibility(View.GONE);
-        linearNotInternet.setVisibility(View.VISIBLE);
+        lnrNotInternet.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -239,43 +259,8 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         tvDescription1.append(" " + dictionary.get(countIndex).get(4).toString());
         tvDescription2.append(" " + dictionary.get(countIndex).get(5).toString());
         waitinDeliveries.setVisibility(View.GONE);
-        linearLayout.setVisibility(View.VISIBLE);
+        lnrShowData.setVisibility(View.VISIBLE);
     }
-
-//    @Override
-//    public void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
-//                                  String description2, String oriLat, String oriLon, String desLat,
-//                                  String desLon) {
-//        diccionario = new Hashtable<Integer, List>();
-//        listica = new ArrayList<String>();
-//        String idOrderStr = String.valueOf(idOrder);
-//        listica.add(idOrderStr);
-//        listica.add(ago);
-//        listica.add(from);
-//        listica.add(to);
-//        listica.add(description1);
-//        listica.add(description2);
-//        listica.add(oriLat);
-//        listica.add(oriLon);
-//        listica.add(desLat);
-//        listica.add(desLon);
-//
-//        diccionario.put(countForDictionary, listica);
-//
-//        try {
-//            String uno = oriLat + ", " + oriLon;
-//            String dos = la + ", " + lo;
-//            new DirectionFinder(this, uno, dos).execute();
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        countForDictionary++;
-//    }
-
-//    @Override
-//    public void countChild(int countChild) {
-//        countChilds = countChild;
-//    }
 
     @Override
     public void goPreviewRouteOrder() {
@@ -298,7 +283,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     public void responseOrderHasBeenTaken() {
         onStart();
         waitinDeliveries.setVisibility(View.VISIBLE);
-        linearLayout.setVisibility(View.GONE);
+        lnrShowData.setVisibility(View.GONE);
     }
 
     @Override
@@ -400,61 +385,12 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         }
     }
 
-//    @Override
-//    public void onDirectionFinderStart() {
-//        if (originMarkers != null) {
-//            for (Marker marker : originMarkers) {
-//                marker.remove();
-//            }
-//        }
-//
-//        if (destinationMarkers != null) {
-//            for (Marker marker : destinationMarkers) {
-//                marker.remove();
-//            }
-//        }
-//
-//        if (polylinePaths != null) {
-//            for (Polyline polyline : polylinePaths) {
-//                polyline.remove();
-//            }
-//        }
-//    }
-
-//    @Override
-//    public void onDirectionFinderSuccess(List<Route> routes) {
-//        for (Route route : routes) {
-//            int newDistance = route.distance.value;
-//            if (distMin != 0) {
-//                if (distMin > newDistance) {
-//                    distMin = newDistance;
-//                    countIndex = countIndexTemp;
-//                }
-//            } else {
-//                distMin = newDistance;
-//            }
-//            countIndexTemp++;
-//        }
-//
-//        if (countIndexTemp == countChilds) {
-//            queryUserRate(diccionario.get(countIndex).get(0).toString());
-//            idOrderToSend = Integer.valueOf(diccionario.get(countIndex).get(0).toString());
-//            tvAgo.append(" " + diccionario.get(countIndex).get(1).toString());
-//            tvFrom.append(" " + diccionario.get(countIndex).get(2).toString());
-//            tvTo.append(" " + diccionario.get(countIndex).get(3).toString());
-//            tvDescription1.append(" " + diccionario.get(countIndex).get(4).toString());
-//            tvDescription2.append(" " + diccionario.get(countIndex).get(5).toString());
-//            waitinDeliveries.setVisibility(View.GONE);
-//            linearLayout.setVisibility(View.VISIBLE);
-//        }
-//    }
-
     @Override
     protected void onStart() {
         super.onStart();
         stopService(new Intent(this, NotificationService.class));
 
-        linearLayout = (LinearLayout) findViewById(R.id.show_data);
+        lnrShowData = (LinearLayout) findViewById(R.id.lnrShowData);
         tvAgo = (TextView) findViewById(R.id.d_ago);
         tvFrom = (TextView) findViewById(R.id.d_from);
         tvTo = (TextView) findViewById(R.id.d_to);

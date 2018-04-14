@@ -268,4 +268,12 @@
         <item>Grid</item>
     </string-array>
 
+    <string name="spinner_vehicle_type">Vehicle</string>
+    <string-array name="options_conveyance">
+        <item>Neither</item>
+        <item>Bicycle</item>
+        <item>Motorcycle</item>
+        <item>Car</item>
+    </string-array>
+
 </resources>

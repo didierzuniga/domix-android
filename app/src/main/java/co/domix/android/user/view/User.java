@@ -48,7 +48,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     private Button buttonRequestOrder, buttonSendFullnameAndPhone, buttonRefresh;
     private TextView from, to, buttonSelectFrom, buttonSelectTo, paymentCash;
     private EditText description1, description2;
-    private Spinner spinnerDimensions;
+    private Spinner spiDimensions;
     private byte dimenSelected;
     private TextInputEditText firstName, lastName, phone;
     private String countryOrigen, cityOrigen;
@@ -93,11 +93,11 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();
 
-        spinnerDimensions = (Spinner) findViewById(R.id.spinnerDimensions);
-        spinnerDimensions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spiDimensions = (Spinner) findViewById(R.id.spinnerDimensions);
+        spiDimensions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                dimenSelected = (byte) spinnerDimensions.getSelectedItemId();
+                dimenSelected = (byte) spiDimensions.getSelectedItemId();
             }
 
             @Override

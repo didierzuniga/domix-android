@@ -268,6 +268,14 @@
         <item>Parrilla</item>
     </string-array>
 
+    <string name="spinner_vehicle_type">Vehiculo</string>
+    <string-array name="options_conveyance">
+        <item>Ninguno</item>
+        <item>Bicicleta</item>
+        <item>Motocicleta</item>
+        <item>Carro</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

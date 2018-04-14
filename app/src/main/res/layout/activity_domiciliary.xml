@@ -12,7 +12,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
     <include layout="@layout/actionbar_toolbar" />
 
     <LinearLayout
-        android:id="@+id/notInternetDomiciliary"
+        android:id="@+id/lnrNotInternet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -63,7 +63,35 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                 android:textStyle="italic" />
 
             <LinearLayout
-                android:id="@+id/show_data"
+                android:id="@+id/lnrSpiVehicle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextViewGreyOption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Seleccionar medio de transporte"/>
+
+                <Spinner
+                    android:id="@+id/spinnerVehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/corner_radius_select_destine"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:prompt="@string/spinner_vehicle_type"
+                    android:entries="@array/options_conveyance"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lnrShowData"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"

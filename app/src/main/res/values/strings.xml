@@ -22,6 +22,7 @@
     <string name="text_from"><b>Desde:</b></string>
     <string name="text_to"><b>Hasta:</b></string>
     <string name="text_header">Título:</string>
+    <string name="text_size_order"><b>Tamaño:</b></string>
     <string name="text_make_initial_point"><b>En el punto inicial:</b></string>
     <string name="text_make_final_point"><b>En el punto final:</b></string>
     <string name="text_description">Descripción:</string>
@@ -79,6 +80,10 @@
     <string name="text_agree">Acepto</string>
     <string name="text_do_not_agree">No acepto</string>
     <string name="text_minimum_amount">El pago mínimo es de</string>
+    <string name="text_letter">Sobre (Carta u Oficio)</string>
+    <string name="text_bag">Baúl o maletero (30x30x30 cms)</string>
+    <string name="text_trunk">Maleta (40x38x38 cms)</string>
+    <string name="text_grid">Parrilla</string>
     <string name="text_terms"><b>Colombia
             TÉRMINOS Y CONDICIONES DE USO DE “DOMIX”
             ASPECTOS GENERALES</b>
@@ -226,6 +231,7 @@
     <string name="toast_invalid_credential">Credenciales inválidas</string>
     <string name="toast_has_ben_delete_account">¡Haz eliminado tu cuenta!</string>
     <string name="toast_length_password">Mínimo 6 caracteres para la contraseña</string>
+    <string name="toast_must_choise_vehicle">Debes seleccionar el medio de transporte</string>
 
     <string name="title_home">Inicio</string>
     <string name="title_requested">Tu solicitud</string>

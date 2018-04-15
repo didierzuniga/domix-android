@@ -110,19 +110,21 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     public String [] getGeolocation(String latFrom, String lonFrom, Activity activity){
         String arr [] = new String[4];
-        double latitFrom = Double.valueOf(latFrom);
-        double longiFrom = Double.valueOf(lonFrom);
-        try {
-            geocodeMatches = new Geocoder(activity).getFromLocation(latitFrom, longiFrom, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!latFrom.equals("0") || !lonFrom.equals("0")){
+            double latitFrom = Double.valueOf(latFrom);
+            double longiFrom = Double.valueOf(lonFrom);
+            try {
+                geocodeMatches = new Geocoder(activity).getFromLocation(latitFrom, longiFrom, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (!geocodeMatches.isEmpty()) {
+                arr[0] = geocodeMatches.get(0).getCountryCode();
+                arr[1] = geocodeMatches.get(0).getLocality();
+                arr[2] = geocodeMatches.get(0).getFeatureName();
+            }
+            arr[3] = latFrom + ", " + lonFrom;
         }
-        if (!geocodeMatches.isEmpty()) {
-            arr[0] = geocodeMatches.get(0).getCountryCode();
-            arr[1] = geocodeMatches.get(0).getLocality();
-            arr[2] = geocodeMatches.get(0).getFeatureName();
-        }
-        arr[3] = latFrom + ", " + lonFrom;
         return arr;
     }
 

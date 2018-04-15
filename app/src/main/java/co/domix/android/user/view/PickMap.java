@@ -18,7 +18,7 @@ import co.domix.android.R;
 public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
 
     private String latit, longi;
-    private SharedPreferences location;
+    private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private FloatingActionButton fabOk;
     private FloatingActionButton fabFail;
@@ -33,14 +33,14 @@ public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
-        editor = location.edit();
+        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        editor = shaPref.edit();
 
         fabOk = (FloatingActionButton) findViewById(R.id.fabOk);
         fabOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int whatAdd = location.getInt("whatAddress", 2);
+                int whatAdd = shaPref.getInt("whatAddress", 2);
                 if (whatAdd == 0) {
                     editor.putString("latFrom", latit);
                     editor.putString("lonFrom", longi);
@@ -66,8 +66,8 @@ public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        double lat = Double.valueOf(location.getString("latitude", ""));
-        double lon = Double.valueOf(location.getString("longitude", ""));
+        double lat = Double.valueOf(shaPref.getString("latitude", ""));
+        double lon = Double.valueOf(shaPref.getString("longitude", ""));
         LatLng myPos = new LatLng(lat, lon);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 15));
 

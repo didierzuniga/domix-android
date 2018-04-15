@@ -67,10 +67,10 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     private Button btnViewMap, btnAcceptDelivery, btnDismissDelivery, buttonSendFullnameAndPhone, buttonRefresh;
     //    private List<String> listica;
     private Hashtable<Integer, List> diccionario;
-    private TextView tvAgo, tvFrom, tvTo, tvDescription1, tvDescription2, waitinDeliveries, textRateUser, rateUser;
+    private TextView tvAgo, tvFrom, tvTo, tvDimensions, tvDescription1, tvDescription2, waitinDeliveries, textRateUser, rateUser;
     private LinearLayout lnrSpiVehicle, lnrShowData, lnrNotInternet;
     private Spinner spiVehicle;
-    private byte vehSelected;
+    private int vehSelected;
     private ScrollView scrollView;
     private AlertDialog alert = null;
     private SharedPreferences location;
@@ -132,7 +132,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 vehSelected = (byte) spiVehicle.getSelectedItemId();
-                ToastsKt.toastLong(Domiciliary.this, "Seleccionado: "+vehSelected);
             }
 
             @Override
@@ -145,10 +144,16 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    editor.putBoolean("SearchDelivery", true);
-                    editor.commit();
-                    waitinDeliveries.setVisibility(View.VISIBLE);
-                    queryForFullnameAndPhone();
+                    if (vehSelected == 0){
+                        ToastsKt.toastShort(Domiciliary.this, getString(R.string.toast_must_choise_vehicle));
+                        switchAB.setChecked(false);
+                    } else {
+                        editor.putBoolean("SearchDelivery", true);
+                        editor.commit();
+                        lnrSpiVehicle.setVisibility(View.GONE);
+                        waitinDeliveries.setVisibility(View.VISIBLE);
+                        queryForFullnameAndPhone();
+                    }
                 } else {
                     editor.putBoolean("SearchDelivery", false);
                     editor.commit();
@@ -167,7 +172,9 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         btnAcceptDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDataDomiciliary();
+                lnrShowData.setVisibility(View.GONE);
+                showProgressBar();
+                presenter.sendDataDomiciliary(Domiciliary.this, idOrderToSend, app.uId, vehSelected);
             }
         });
 
@@ -253,8 +260,20 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         diccionario = dictionary;
         queryUserRate(dictionary.get(countIndex).get(0).toString());
         idOrderToSend = Integer.valueOf(dictionary.get(countIndex).get(0).toString());
+        String sizeOrder = "";
+        if ((dictionary.get(countIndex).get(10).toString()).equals("0")){
+            sizeOrder = getString(R.string.text_letter);
+        } else if ((dictionary.get(countIndex).get(10).toString()).equals("1")){
+            sizeOrder = getString(R.string.text_bag);
+        } else if ((dictionary.get(countIndex).get(10).toString()).equals("2")){
+            sizeOrder = getString(R.string.text_trunk);
+        } else if ((dictionary.get(countIndex).get(10).toString()).equals("3")){
+            sizeOrder = getString(R.string.text_grid);
+        }
+
         tvAgo.append(" " + dictionary.get(countIndex).get(1).toString());
         tvFrom.append(" " + dictionary.get(countIndex).get(2).toString());
+        tvDimensions.append(" " + sizeOrder);
         tvTo.append(" " + dictionary.get(countIndex).get(3).toString());
         tvDescription1.append(" " + dictionary.get(countIndex).get(4).toString());
         tvDescription2.append(" " + dictionary.get(countIndex).get(5).toString());
@@ -275,19 +294,18 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     }
 
     @Override
-    public void sendDataDomiciliary() {
-        presenter.sendDataDomiciliary(this, idOrderToSend, app.uId);
-    }
-
-    @Override
     public void responseOrderHasBeenTaken() {
         onStart();
+        hideProgressBar();
+        lnrShowData.setVisibility(View.VISIBLE);
+        ToastsKt.toastLong(this, getString(R.string.toast_order_has_been_taken));
         waitinDeliveries.setVisibility(View.VISIBLE);
         lnrShowData.setVisibility(View.GONE);
     }
 
     @Override
     public void responseGoOrderCatched(String idOrder) {
+        hideProgressBar();
         editor.putBoolean("SearchDelivery", false);
         app.idOrder = Integer.valueOf(idOrder);
         editor.putString("latFrom", diccionario.get(countIndex).get(6).toString());
@@ -394,6 +412,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         tvAgo = (TextView) findViewById(R.id.d_ago);
         tvFrom = (TextView) findViewById(R.id.d_from);
         tvTo = (TextView) findViewById(R.id.d_to);
+        tvDimensions = (TextView) findViewById(R.id.tvDimensions);
         tvDescription1 = (TextView) findViewById(R.id.d_description1);
         tvDescription2 = (TextView) findViewById(R.id.d_description2);
         waitinDeliveries = (TextView) findViewById(R.id.waiting_deliveries);

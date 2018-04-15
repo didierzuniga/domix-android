@@ -57,7 +57,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     private ProgressBar progressBarRequest;
     private AlertDialog alert = null;
     private android.app.AlertDialog alertDialog;
-    private SharedPreferences location;
+    private SharedPreferences shaPref;
     private boolean fieldsWasFill;
     private SharedPreferences.Editor editor;
     private DomixApplication app;
@@ -90,8 +90,8 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         scrollView = (ScrollView) findViewById(R.id.rootScroll);
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
         progressBarRequest = (ProgressBar) findViewById(R.id.progressBarRequest);
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
-        editor = location.edit();
+        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        editor = shaPref.edit();
 
         spiDimensions = (Spinner) findViewById(R.id.spinnerDimensions);
         spiDimensions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -112,7 +112,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId) {
+                switch (checkedId) {
                     case R.id.payWithCash:
                         payMethod = 0;
                         break;
@@ -154,9 +154,9 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                 scrollView.setVisibility(View.GONE);
                 showProgressBar();
                 presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
-                                from.getText().toString(), to.getText().toString(),
-                                description1.getText().toString(), description2.getText().toString(),
-                                dimenSelected, payMethod, priceInCash, User.this);
+                        from.getText().toString(), to.getText().toString(),
+                        description1.getText().toString(), description2.getText().toString(),
+                        dimenSelected, payMethod, priceInCash, User.this);
             }
         });
 
@@ -327,8 +327,12 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void showYesInternet() {
-        linearNotInternet.setVisibility(View.GONE);
-        scrollView.setVisibility(View.VISIBLE);
+        try {
+            linearNotInternet.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
+        } catch (Exception e){
+
+        }
     }
 
     @Override
@@ -339,7 +343,11 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     @Override
     public void hideProgressBar() {
         presenter.requestForFullnameAndPhone(app.uId);
-        progressBarRequest.setVisibility(View.GONE);
+        try {
+            progressBarRequest.setVisibility(View.GONE);
+        } catch (Exception e){
+
+        }
     }
 
     @Override
@@ -347,12 +355,18 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         super.onStart();
         from = (TextView) findViewById(R.id.idFrom);
         to = (TextView) findViewById(R.id.idTo);
-        presenter.requestGeolocationAndDistance(location.getString("latFrom", ""),
-                location.getString("lonFrom", ""),
-                location.getString("latTo", ""),
-                location.getString("lonTo", ""),
-                location.getInt("whatAddress", 2),
-                this);
+
+        try {
+            presenter.requestGeolocationAndDistance(shaPref.getString("latFrom", ""),
+                    shaPref.getString("lonFrom", ""),
+                    shaPref.getString("latTo", ""),
+                    shaPref.getString("lonTo", ""),
+                    shaPref.getInt("whatAddress", 2),
+                    this);
+        } catch (Exception e){
+
+        }
+
     }
 
     @Override

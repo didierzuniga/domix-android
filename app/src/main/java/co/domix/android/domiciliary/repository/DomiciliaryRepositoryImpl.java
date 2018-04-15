@@ -52,6 +52,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                         String ago = order.getRelativeTimeStamp();
                         String from = order.getX_nameFrom();
                         String to = order.getX_nameTo();
+                        int sizeOrder = order.getX_transportUsed();
                         String description1 = order.getX_description1();
                         String description2 = order.getX_description2();
                         String oriLa = order.getX_latitudeFrom();
@@ -60,7 +61,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                         String desLo = order.getX_longitudeTo();
 //                        presenter.goCompareDistance(idOrder, ago, from, to, description1, description2,
 //                                                    oriLa, oriLo, desLa, desLo, latDomi, lonDomi);
-                        interactor.goCompareDistance(idOrder, ago, from, to, description1, description2,
+                        interactor.goCompareDistance(idOrder, ago, from, to, sizeOrder, description1, description2,
                                 oriLa, oriLo, desLa, desLo, latDomi, lonDomi);
                     }
                 }
@@ -77,7 +78,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
     }
 
     @Override
-    public void sendDataDomiciliary(final Activity activity, int idOrderToSend, final String uid) {
+    public void sendDataDomiciliary(final Activity activity, int idOrderToSend, final String uid, final int transportUsed) {
         i = String.valueOf(idOrderToSend);
         referenceOrder.child(i).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -85,9 +86,12 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                 Order order = dataSnapshot.getValue(Order.class);
                 catchedOrderAvailable = order.isX_catched();
                 if (catchedOrderAvailable == false) {
-                    updateDataDomiciliary(uid, i);
+//                    updateDataDomiciliary(uid, i);
+                    referenceOrder.child(i).child("d_id").setValue(uid);
+                    presenter.responseGoOrderCatched(i);
+                    referenceOrder.child(i).child("x_catched").setValue(true);
+                    referenceOrder.child(i).child("x_transportUsed").setValue(transportUsed);
                 } else {
-                    Toast.makeText(activity, R.string.toast_order_has_been_taken, Toast.LENGTH_LONG).show();
                     presenter.responseOrderHasBeenTaken();
                 }
             }
@@ -101,9 +105,9 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
     @Override
     public void updateDataDomiciliary(final String uidCurrentUser, final String i) {
-        referenceOrder.child(i).child("d_id").setValue(uidCurrentUser);
-        presenter.responseGoOrderCatched(i);
-        referenceOrder.child(i).child("x_catched").setValue(true);
+//        referenceOrder.child(i).child("d_id").setValue(uidCurrentUser);
+//        presenter.responseGoOrderCatched(i);
+//        referenceOrder.child(i).child("x_catched").setValue(true);
     }
 
     @Override

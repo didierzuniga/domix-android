@@ -15,13 +15,8 @@ public interface DomiciliaryView {
     void hideProgressBar();
 
     void searchDeliveries();
-//    void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
-//                           String description2, String oriLat, String oriLon, String desLat,
-//                           String desLon);
-//    void countChild(int countChild);
     void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex);
     void goPreviewRouteOrder();
-    void sendDataDomiciliary();
     void responseOrderHasBeenTaken();
     void responseGoOrderCatched(String idOrder);
     void queryForFullnameAndPhone();

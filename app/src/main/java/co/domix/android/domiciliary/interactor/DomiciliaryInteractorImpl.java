@@ -88,7 +88,7 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     }
 
     @Override
-    public void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
+    public void goCompareDistance(int idOrder, String ago, String from, String to, int sizeOrder, String description1,
                                   String description2, String oriLat, String oriLon, String desLat,
                                   String desLon, String latDomi, String lonDomi) {
         diccionario = new Hashtable<Integer, List>();
@@ -104,6 +104,7 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
         listica.add(oriLon);
         listica.add(desLat);
         listica.add(desLon);
+        listica.add(String.valueOf(sizeOrder));
 
         diccionario.put(countForDictionary, listica);
 
@@ -123,8 +124,8 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     }
 
     @Override
-    public void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid) {
-        repository.sendDataDomiciliary(activity, idOrderToSend, uid);
+    public void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed) {
+        repository.sendDataDomiciliary(activity, idOrderToSend, uid, transportUsed);
     }
 
     @Override

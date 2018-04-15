@@ -25,8 +25,8 @@ public class RequestedPresenterImpl implements RequestedPresenter {
     }
 
     @Override
-    public void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone) {
-        view.responseDomiciliaryCatched(id, rate, name, cellPhone);
+    public void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle) {
+        view.responseDomiciliaryCatched(id, rate, name, cellPhone, usedVehicle);
     }
 
     @Override

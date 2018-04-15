@@ -215,8 +215,9 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                     String fullName = user.getFirstName()+" "+user.getLastName();
                     String cellPhone = user.getPhone();
                     String rate = String.format("%.2f", user.getScoreAsDomiciliary());
+                    int usedVehicle = user.getUsedVehicle();
                     presenter.responseDomiciliaryCatched(uidDomiciliary, rate, fullName,
-                            cellPhone);
+                            cellPhone, usedVehicle);
                 }
 
                 @Override

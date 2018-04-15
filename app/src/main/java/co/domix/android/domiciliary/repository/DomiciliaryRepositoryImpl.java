@@ -91,6 +91,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                     presenter.responseGoOrderCatched(i);
                     referenceOrder.child(i).child("x_catched").setValue(true);
                     referenceOrder.child(i).child("x_transportUsed").setValue(transportUsed);
+                    referenceUser.child(uid).child("usedVehicle").setValue(transportUsed);
                 } else {
                     presenter.responseOrderHasBeenTaken();
                 }

@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +67,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     private LinearLayout linearRateDomiciliary, linearNameDomiciliary, linearCellphoneDomiciliary, linearParent;
     private TextView textViewTitle, textViewWaitingDomiciliary, textViewRateDomiciliary,
                      textViewSelectedDomiciliary, textViewDataDomiciliary;
+    private ImageView ivVehicle;
     private String idDomiciliary;
     private Button buttonCanceled;
     private boolean locDomi, validateDomiciliaryRealtime = false, initialize = false;
@@ -102,6 +104,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         linearParent = (LinearLayout) findViewById(R.id.linearParent);
         textViewWaitingDomiciliary = (TextView) findViewById(R.id.waiting_domiciliary);
         textViewRateDomiciliary = (TextView) findViewById(R.id.rateDomiciliary);
+        ivVehicle = (ImageView) findViewById(R.id.ivVehicleUsed);
         textViewSelectedDomiciliary = (TextView) findViewById(R.id.selectedDomiciliary);
         textViewDataDomiciliary = (TextView) findViewById(R.id.dataDomiciliary);
         buttonCanceled = (Button) findViewById(R.id.buttonCanceledRequest);
@@ -221,7 +224,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
 
     @Override
-    public void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone) {
+    public void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle) {
         idDomiciliary = id;
         if (!rate.equals("0.00")){
             textViewRateDomiciliary.setText(rate);
@@ -231,6 +234,14 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         linearParent.setVisibility(View.VISIBLE);
         textViewSelectedDomiciliary.setText(name);
         textViewDataDomiciliary.setText(cellPhone);
+        if (usedVehicle == 1){
+            ivVehicle.setImageResource(R.drawable.ic_bicycle);
+        } else if (usedVehicle == 2){
+            ivVehicle.setImageResource(R.drawable.ic_bike);
+        }
+        else if (usedVehicle == 3){
+            ivVehicle.setImageResource(R.drawable.ic_car);
+        }
         textViewWaitingDomiciliary.setVisibility(View.GONE);
         locDomi = true;
         runOnUiThread(new Runnable() {

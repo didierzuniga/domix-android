@@ -22,7 +22,7 @@ public class Signup extends AppCompatActivity implements SignupView {
 
     private TextInputEditText emailFieldForSignup, passwordFieldForSignup, confirmPasswordFieldForSignup;
     private Button buttonSignup, buttonBack;
-    private ProgressBar progressBarLogin;
+    private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
     private SignupPresenter presenter;
     private DomixApplication app;
@@ -35,12 +35,12 @@ public class Signup extends AppCompatActivity implements SignupView {
         firebaseAuth = FirebaseAuth.getInstance();
         app = (DomixApplication) getApplicationContext();
 
-        progressBarLogin = (ProgressBar) findViewById(R.id.progressBarlogin);
-        emailFieldForSignup = (TextInputEditText) findViewById(R.id.emailSignup);
-        passwordFieldForSignup = (TextInputEditText) findViewById(R.id.passwordSignup);
-        confirmPasswordFieldForSignup = (TextInputEditText) findViewById(R.id.confirmPasswordSignup);
-        buttonSignup = (Button) findViewById(R.id.buttonSignup);
-        buttonBack = (Button) findViewById(R.id.buttonBack);
+        progressBar = (ProgressBar) findViewById(R.id.prgBarSignup);
+        emailFieldForSignup = (TextInputEditText) findViewById(R.id.txtInpEmailSignup);
+        passwordFieldForSignup = (TextInputEditText) findViewById(R.id.txtInpPasswordSignup);
+        confirmPasswordFieldForSignup = (TextInputEditText) findViewById(R.id.txtInpConfirmPasswordSignup);
+        buttonSignup = (Button) findViewById(R.id.btnSignup);
+        buttonBack = (Button) findViewById(R.id.btnBack);
         buttonSignup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dialogShowTerms(emailFieldForSignup.getText().toString(),
@@ -58,12 +58,12 @@ public class Signup extends AppCompatActivity implements SignupView {
 
     @Override
     public void showProgressBar() {
-        progressBarLogin.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-        progressBarLogin.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     public void dialogShowTerms(String email, String password, String confirmPassword){

@@ -19,7 +19,7 @@
             android:layout_gravity="center"
             android:orientation="vertical"/>
         <ProgressBar
-            android:id="@+id/progressBarSplash"
+            android:id="@+id/prgBarSplash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone" />

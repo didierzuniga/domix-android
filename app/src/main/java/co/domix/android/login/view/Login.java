@@ -35,10 +35,9 @@ public class Login extends AppCompatActivity implements LoginView {
     private TextInputEditText emailField, passwordField, emailFieldForRestore;
     private Button buttonSignin, buttonSignup, buttonRestore;
     private TextView createHere, restorePassword;
-    private ProgressBar progressBarLogin;
+    private ProgressBar progressBar;
     private AlertDialog alertDialog;
     private DomixApplication app;
-
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -54,10 +53,10 @@ public class Login extends AppCompatActivity implements LoginView {
         presenter = new LoginPresenterImpl(this);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        progressBarLogin = (ProgressBar) findViewById(R.id.progressBarlogin);
-        emailField = (TextInputEditText) findViewById(R.id.email);
-        passwordField = (TextInputEditText) findViewById(R.id.password);
-        buttonSignin = (Button) findViewById(R.id.buttonSignin);
+        progressBar = (ProgressBar) findViewById(R.id.prgBlogin);
+        emailField = (TextInputEditText) findViewById(R.id.txtInpEmail);
+        passwordField = (TextInputEditText) findViewById(R.id.txtInpPassword);
+        buttonSignin = (Button) findViewById(R.id.btnSignin);
         buttonSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,7 +79,7 @@ public class Login extends AppCompatActivity implements LoginView {
             }
         });
 
-        createHere = (TextView) findViewById(R.id.createHere);
+        createHere = (TextView) findViewById(R.id.txtVieCreateHere);
         createHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,12 +104,12 @@ public class Login extends AppCompatActivity implements LoginView {
 
     @Override
     public void showProgressBar() {
-        progressBarLogin.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-        progressBarLogin.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -210,9 +209,9 @@ public class Login extends AppCompatActivity implements LoginView {
         alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        emailFieldForRestore = (TextInputEditText) view.findViewById(R.id.emailForRestore);
+        emailFieldForRestore = (TextInputEditText) view.findViewById(R.id.txtInpEmailForReset);
 
-        buttonRestore = (Button) view.findViewById(R.id.buttonRestorePassword);
+        buttonRestore = (Button) view.findViewById(R.id.btnResetPassword);
         buttonRestore.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 presenter.restorePassword(emailFieldForRestore.getText().toString());

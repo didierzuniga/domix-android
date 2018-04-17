@@ -71,7 +71,7 @@ public class Login extends AppCompatActivity implements LoginView {
             }
         });
 
-        restorePassword = (TextView) findViewById(R.id.forgotMyPassword);
+        restorePassword = (TextView) findViewById(R.id.txtVieForgotMyPassword);
         restorePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

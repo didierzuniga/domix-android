@@ -65,7 +65,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     private android.app.AlertDialog alertDialog;
     private TextInputEditText firstName, lastName, phone;
     private Button btnViewMap, btnAcceptDelivery, btnDismissDelivery, buttonSendFullnameAndPhone, buttonRefresh;
-    //    private List<String> listica;
     private Hashtable<Integer, List> diccionario;
     private TextView tvAgo, tvFrom, tvTo, tvDimensions, tvDescription1, tvDescription2, waitinDeliveries, textRateUser, rateUser;
     private LinearLayout lnrSpiVehicle, lnrShowData, lnrNotInternet;
@@ -75,8 +74,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     private AlertDialog alert = null;
     private SharedPreferences location;
     private SharedPreferences.Editor editor;
-    //    private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
-//    private List<Polyline> polylinePaths = new ArrayList<>();
     private DomiciliaryPresenter presenter;
     private DomixApplication app;
 
@@ -106,13 +103,13 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         switchAB = (Switch) findViewById(R.id.switchAB);
         lnrSpiVehicle = (LinearLayout) findViewById(R.id.lnrSpiVehicle);
         lnrNotInternet = (LinearLayout) findViewById(R.id.lnrNotInternet);
-        scrollView = (ScrollView) findViewById(R.id.scrollViewDomiciliary);
-        progressBarDomiciliary = (ProgressBar) findViewById(R.id.progressBarDomiciliary);
+        scrollView = (ScrollView) findViewById(R.id.scrVieDomiciliary);
+        progressBarDomiciliary = (ProgressBar) findViewById(R.id.prgBarDomiciliary);
         lnrShowData = (LinearLayout) findViewById(R.id.lnrShowData);
-        waitinDeliveries = (TextView) findViewById(R.id.waiting_deliveries);
-        btnViewMap = (Button) findViewById(R.id.buttonViewMap);
-        btnAcceptDelivery = (Button) findViewById(R.id.buttonAcceptRequest);
-        btnDismissDelivery = (Button) findViewById(R.id.buttonDismissRequest);
+        waitinDeliveries = (TextView) findViewById(R.id.txtVieWaitingDeliveries);
+        btnViewMap = (Button) findViewById(R.id.btnViewMap);
+        btnAcceptDelivery = (Button) findViewById(R.id.btnAcceptRequest);
+        btnDismissDelivery = (Button) findViewById(R.id.btnDismissRequest);
 
         location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = location.edit();
@@ -188,7 +185,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
                 lnrShowData.setVisibility(View.GONE);
             }
         });
-        buttonRefresh = (Button) findViewById(R.id.buttonRefreshDomiciliary);
+        buttonRefresh = (Button) findViewById(R.id.btnRefreshDomiciliary);
         buttonRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -382,8 +379,8 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
 
     @Override
     public void responseQueryRate(String rate) {
-        textRateUser = (TextView) findViewById(R.id.textYourRating);
-        rateUser = (TextView) findViewById(R.id.rateUser);
+        textRateUser = (TextView) findViewById(R.id.txtVieYourRating);
+        rateUser = (TextView) findViewById(R.id.txtVieRateUser);
         if (!rate.equals("0.00")) {
             rateUser.setText(rate);
         } else {
@@ -409,12 +406,12 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         stopService(new Intent(this, NotificationService.class));
 
         lnrShowData = (LinearLayout) findViewById(R.id.lnrShowData);
-        tvAgo = (TextView) findViewById(R.id.d_ago);
-        tvFrom = (TextView) findViewById(R.id.d_from);
-        tvTo = (TextView) findViewById(R.id.d_to);
-        tvDimensions = (TextView) findViewById(R.id.tvDimensions);
-        tvDescription1 = (TextView) findViewById(R.id.d_description1);
-        tvDescription2 = (TextView) findViewById(R.id.d_description2);
+        tvAgo = (TextView) findViewById(R.id.txtVieAgo);
+        tvFrom = (TextView) findViewById(R.id.txtVieFrom);
+        tvTo = (TextView) findViewById(R.id.txtVieTo);
+        tvDimensions = (TextView) findViewById(R.id.txtVieDimensions);
+        tvDescription1 = (TextView) findViewById(R.id.txtVieDescription1);
+        tvDescription2 = (TextView) findViewById(R.id.txtVieDescription2);
         waitinDeliveries = (TextView) findViewById(R.id.waiting_deliveries);
     }
 

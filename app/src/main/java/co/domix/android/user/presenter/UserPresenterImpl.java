@@ -88,8 +88,8 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
-    public void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen, int priceInEcoin) {
-        view.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, priceInEcoin);
+    public void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen) {
+        view.responseCash(priceInCash, countryO, countryOrigen, cityOrigen);
     }
 
     @Override

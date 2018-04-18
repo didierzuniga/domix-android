@@ -8,7 +8,7 @@ import android.app.Activity;
 
 public interface DomiciliaryInteractor {
     void verifyLocationAndInternet(Activity activity);
-    void searchDeliveries(String lat, String lon);
+    void searchDeliveries(String lat, String lon, int vehSelected);
     void goCompareDistance(int idOrder, String ago, String from, String to, int sizeOrder, String description1,
                            String description2, String oriLat, String oriLon, String desLat,
                            String desLon, String latDomi, String lonDomi);

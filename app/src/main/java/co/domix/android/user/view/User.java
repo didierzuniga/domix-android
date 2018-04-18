@@ -311,7 +311,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     }
 
     @Override
-    public void responseCash(int priceInCashh, String countryO, String countryOrigenn, String cityOrigenn, int priceInEcoinn) {
+    public void responseCash(int priceInCashh, String countryO, String countryOrigenn, String cityOrigenn) {
         countryOrigen = countryOrigenn;
         cityOrigen = cityOrigenn;
         priceInCash = priceInCashh;

@@ -128,7 +128,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/d_header"
+                        android:id="@+id/txtVieDescription1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp" />
@@ -156,7 +156,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/d_description"
+                        android:id="@+id/txtVieDescription2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="18sp" />

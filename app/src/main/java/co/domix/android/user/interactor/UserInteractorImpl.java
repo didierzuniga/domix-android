@@ -29,7 +29,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     private LocationManager locationManager;
     private DomixApplication app;
-    private int minFare, priceInCash, priceInEcoin;
+    private int minFare, priceInCash;
     private double fareToApply;
     private String coordsFromPrice, coordsToPrice, cityOrigen, countryOrigen, countryO;
     private List<Address> geocodeMatches = null;
@@ -110,21 +110,23 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     public String [] getGeolocation(String latFrom, String lonFrom, Activity activity){
         String arr [] = new String[4];
-        if (!latFrom.equals("0") || !lonFrom.equals("0")){
-            double latitFrom = Double.valueOf(latFrom);
-            double longiFrom = Double.valueOf(lonFrom);
-            try {
-                geocodeMatches = new Geocoder(activity).getFromLocation(latitFrom, longiFrom, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (!geocodeMatches.isEmpty()) {
-                arr[0] = geocodeMatches.get(0).getCountryCode();
-                arr[1] = geocodeMatches.get(0).getLocality();
-                arr[2] = geocodeMatches.get(0).getFeatureName();
-            }
-            arr[3] = latFrom + ", " + lonFrom;
+//        if (!latFrom.equals("") || !lonFrom.equals("")){
+//
+//        }
+        double latitFrom = Double.valueOf(latFrom);
+        double longiFrom = Double.valueOf(lonFrom);
+        try {
+            geocodeMatches = new Geocoder(activity).getFromLocation(latitFrom, longiFrom, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        if (!geocodeMatches.isEmpty()) {
+            arr[0] = geocodeMatches.get(0).getCountryCode();
+            arr[1] = geocodeMatches.get(0).getLocality();
+            arr[2] = geocodeMatches.get(0).getFeatureName();
+        }
+        arr[3] = latFrom + ", " + lonFrom;
+
         return arr;
     }
 
@@ -184,8 +186,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             if (priceInCash < minFare) {
                 priceInCash = minFare;
             }
-            priceInEcoin = ((priceInCash / 174) * 2) * 100;
-            presenter.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, priceInEcoin);
+            presenter.responseCash(priceInCash, countryO, countryOrigen, cityOrigen);
         }
     }
 }

@@ -22,7 +22,7 @@ public interface UserPresenter {
     void responseFromName(String from);
     void responseToName(String to);
     void responseEmptyFields(String toastMessage);
-    void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen, int priceInEcoin);
+    void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen);
     void resultErrorRequest();
     void showNotInternet();
     void showYesInternet();

@@ -30,7 +30,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     private DomixApplication app;
     private TextView textViewRequestedBy, textViewPhoneRequestedBy, textViewFrom, textViewTo,
-                        textViewHeader, textViewDescription, textViewMoneyToPay;
+            textViewDescription1, textViewDescription2, textViewMoneyToPay;
     private String countryO;
     private double oriLat, oriLon, desLat, desLon;
     private Button cancelService, finishService, btnViewMap;
@@ -62,10 +62,10 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         textViewRequestedBy = (TextView) findViewById(R.id.d_requested_by);
         textViewPhoneRequestedBy = (TextView) findViewById(R.id.d_phone_requested_by);
         call = (ImageButton) findViewById(R.id.idCall);
-        textViewFrom = (TextView) findViewById(R.id.d_from);
-        textViewTo = (TextView) findViewById(R.id.d_to);
-        textViewHeader = (TextView) findViewById(R.id.d_header);
-        textViewDescription = (TextView) findViewById(R.id.d_description);
+        textViewFrom = (TextView) findViewById(R.id.txtVieFrom);
+        textViewTo = (TextView) findViewById(R.id.txtVieTo);
+        textViewDescription1 = (TextView) findViewById(R.id.txtVieDescription1);
+        textViewDescription2 = (TextView) findViewById(R.id.txtVieDescription2);
         textViewMoneyToPay = (TextView) findViewById(R.id.d_moneyToPay);
 
         getUserRequest();
@@ -131,8 +131,8 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         }
         textViewRequestedBy.setText(nameAuthor);
         textViewPhoneRequestedBy.setText(cellphoneAuthor);
-        textViewHeader.setText(titleAuthor);
-        textViewDescription.setText(descriptionAuthor);
+        textViewDescription1.setText(titleAuthor);
+        textViewDescription2.setText(descriptionAuthor);
         textViewMoneyToPay.setText(String.valueOf(moneyAuthor)+" "+countryO);
         oriLat = Double.valueOf(oriLa);
         oriLon = Double.valueOf(oriLo);

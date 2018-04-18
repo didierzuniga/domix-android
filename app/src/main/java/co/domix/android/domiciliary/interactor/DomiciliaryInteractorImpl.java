@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.model.Marker;
@@ -29,7 +30,7 @@ import co.domix.android.domiciliary.repository.DomiciliaryRepositoryImpl;
 public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, DirectionFinderListener {
 
     private LocationManager locationManager;
-    private int countForDictionary, distMin, countIndex, countIndexTemp, countChilds;
+    private int countForDictionary, distMin, countIndex, countIndexTemp, countChilds, vehicleSelected;
     private List<String> listica;
     private Hashtable<Integer, List> diccionario;
     private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
@@ -79,7 +80,8 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     }
 
     @Override
-    public void searchDeliveries(String lat, String lon) {
+    public void searchDeliveries(String lat, String lon, int vehSelected) {
+        vehicleSelected = vehSelected; // Used in onDirectionFinderSuccess
         distMin = 0;
         countForDictionary = 0;
         countIndex = 0;
@@ -167,29 +169,39 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
         for (Route route : routes) {
-            int newDistance = route.distance.value;
-            if (distMin != 0) {
-                if (distMin > newDistance) {
-                    distMin = newDistance;
-                    countIndex = countIndexTemp;
+
+            // 4000 mts max
+            int betweenStartEnd = 300; // Distance between start and end points
+            if (vehicleSelected == 1){
+                if (betweenStartEnd <= 4000 && route.distance.value <= 1500){
+                    int newDistance = route.distance.value;
+                    //Get distance between Deliveryman and start point
+                    if (distMin != 0) {
+                        if (distMin > newDistance) {
+                            distMin = newDistance;
+                            countIndex = countIndexTemp;
+                        }
+                    } else {
+                        distMin = newDistance;
+                    }
                 }
             } else {
-                distMin = newDistance;
+                int newDistance = route.distance.value;
+                //Get distance between Deliveryman and start point
+                if (distMin != 0) {
+                    if (distMin > newDistance) {
+                        distMin = newDistance;
+                        countIndex = countIndexTemp;
+                    }
+                } else {
+                    distMin = newDistance;
+                }
             }
             countIndexTemp++;
         }
 
         if (countIndexTemp == countChilds) {
             presenter.showResultOrder(diccionario, countIndex);
-//            queryUserRate(diccionario.get(countIndex).get(0).toString());
-//            idOrderToSend = Integer.valueOf(diccionario.get(countIndex).get(0).toString());
-//            tvAgo.append(" " + diccionario.get(countIndex).get(1).toString());
-//            tvFrom.append(" " + diccionario.get(countIndex).get(2).toString());
-//            tvTo.append(" " + diccionario.get(countIndex).get(3).toString());
-//            tvDescription1.append(" " + diccionario.get(countIndex).get(4).toString());
-//            tvDescription2.append(" " + diccionario.get(countIndex).get(5).toString());
-//            waitinDeliveries.setVisibility(View.GONE);
-//            linearLayout.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -124,7 +124,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
             editor.commit();
         }
 
-        spiVehicle = (Spinner) findViewById(R.id.spinnerVehicle);
+        spiVehicle = (Spinner) findViewById(R.id.spiVehicle);
         spiVehicle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -249,7 +249,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
 
     @Override
     public void searchDeliveries() {
-        presenter.searchDeliveries(la, lo);
+        presenter.searchDeliveries(la, lo, vehSelected);
     }
 
     @Override
@@ -412,7 +412,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         tvDimensions = (TextView) findViewById(R.id.txtVieDimensions);
         tvDescription1 = (TextView) findViewById(R.id.txtVieDescription1);
         tvDescription2 = (TextView) findViewById(R.id.txtVieDescription2);
-        waitinDeliveries = (TextView) findViewById(R.id.waiting_deliveries);
+        waitinDeliveries = (TextView) findViewById(R.id.txtVieWaitingDeliveries);
     }
 
     @Override

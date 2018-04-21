@@ -7,7 +7,6 @@ import co.domix.android.user.view.UserScore;
  */
 
 public interface UserScorePresenter {
-    //*
     void sendScore(Double score, int idOrder, UserScore userScore);
     void responseBackHomeActivity();
 }

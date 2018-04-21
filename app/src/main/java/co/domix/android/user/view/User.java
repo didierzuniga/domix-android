@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.os.Process;
 import android.provider.Settings;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
@@ -46,7 +47,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     private RadioGroup radioGroup;
     private LinearLayout linearNotInternet;
     private Button buttonRequestOrder, btnSendFullnameAndPhone, btnBack, buttonRefresh;
-    private TextView from, to, buttonSelectFrom, buttonSelectTo, paymentCash;
+    private TextView txtFrom, txtTo, buttonSelectFrom, buttonSelectTo, paymentCash;
     private EditText description1, description2;
     private Spinner spiDimensions;
     private byte dimenSelected;
@@ -154,7 +155,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                 scrollView.setVisibility(View.GONE);
                 showProgressBar();
                 presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
-                        from.getText().toString(), to.getText().toString(), disBetweenPoints,
+                        txtFrom.getText().toString(), txtTo.getText().toString(), disBetweenPoints,
                         description1.getText().toString(), description2.getText().toString(),
                         dimenSelected, payMethod, priceInCash, User.this);
             }
@@ -303,12 +304,12 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void responseFromName(String fromm) {
-        from.setText(fromm);
+        txtFrom.setText(fromm);
     }
 
     @Override
     public void responseToName(String too) {
-        to.setText(too);
+        txtTo.setText(too);
     }
 
     @Override
@@ -361,8 +362,8 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     @Override
     protected void onStart() {
         super.onStart();
-        from = (TextView) findViewById(R.id.idFrom);
-        to = (TextView) findViewById(R.id.idTo);
+        txtFrom = (TextView) findViewById(R.id.idFrom);
+        txtTo = (TextView) findViewById(R.id.idTo);
 
         try {
             presenter.requestGeolocationAndDistance(shaPref.getString("latFrom", ""),
@@ -374,7 +375,6 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         } catch (Exception e){
 
         }
-
     }
 
     @Override
@@ -386,7 +386,13 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        editor.clear().commit();
+//        txtFrom.setText("");
+//        txtTo.setText("");
+//        editor.remove("latFrom");
+//        editor.remove("lonFrom");
+//        editor.remove("latTo");
+//        editor.remove("lonTo");
+//        editor.commit();
     }
 
     @Override

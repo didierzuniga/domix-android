@@ -174,12 +174,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void requestFare(final String code) {
-        referenceFare.child(code).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void requestFare(final String codeCountry) {
+        referenceFare.child(codeCountry).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Fare fare = dataSnapshot.getValue(Fare.class);
-                interactor.responseFare(fare.getFare_per_meter());
+                interactor.responseFare(fare.getFare_per_meter(), fare.getMin_fare_cost());
             }
 
             @Override

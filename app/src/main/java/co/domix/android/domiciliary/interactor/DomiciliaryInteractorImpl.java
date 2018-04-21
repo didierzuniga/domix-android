@@ -30,7 +30,7 @@ import co.domix.android.domiciliary.repository.DomiciliaryRepositoryImpl;
 public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, DirectionFinderListener {
 
     private LocationManager locationManager;
-    private int countForDictionary, distMin, countIndex, countIndexTemp, countChilds, vehicleSelected;
+    private int countForDictionary, distMin, countIndex, countIndexTemp, countChilds, vehicleSelected, minDistanceBetweenRequired;
     private List<String> listica;
     private Hashtable<Integer, List> diccionario;
     private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
@@ -81,6 +81,7 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
 
     @Override
     public void searchDeliveries(String lat, String lon, int vehSelected) {
+        diccionario = new Hashtable<Integer, List>(); // has been locate here for not restore values in goCompareDistance method
         vehicleSelected = vehSelected; // Used in onDirectionFinderSuccess
         distMin = 0;
         countForDictionary = 0;
@@ -92,8 +93,9 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     @Override
     public void goCompareDistance(int idOrder, String ago, String from, String to, int sizeOrder, String description1,
                                   String description2, String oriLat, String oriLon, String desLat,
-                                  String desLon, String latDomi, String lonDomi) {
-        diccionario = new Hashtable<Integer, List>();
+                                  String desLon, String latDomi, String lonDomi, int distanceBetween, int minDistanceRequired) {
+        minDistanceBetweenRequired = minDistanceRequired;
+
         listica = new ArrayList<String>();
         String idOrderStr = String.valueOf(idOrder);
         listica.add(idOrderStr);
@@ -107,9 +109,9 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
         listica.add(desLat);
         listica.add(desLon);
         listica.add(String.valueOf(sizeOrder));
+        listica.add(String.valueOf(distanceBetween));
 
         diccionario.put(countForDictionary, listica);
-
         try {
             String uno = oriLat + ", " + oriLon;
             String dos = latDomi + ", " + lonDomi;
@@ -169,27 +171,17 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
         for (Route route : routes) {
-
-            // 4000 mts max
-            int betweenStartEnd = 300; // Distance between start and end points
-            if (vehicleSelected == 1){
-                // Sum = betweenStartEnd + route.distance.value
-                // if (Sum <= 9000)
-                if (betweenStartEnd <= 4000 && route.distance.value <= 1500){
-                    int newDistance = route.distance.value;
-                    //Get distance between Deliveryman and start point
-                    if (distMin != 0) {
-                        if (distMin > newDistance) {
-                            distMin = newDistance;
-                            countIndex = countIndexTemp;
-                        }
-                    } else {
+            int newDistance = route.distance.value;
+            if (vehicleSelected == 1 && (Integer.valueOf(listica.get(11)) + route.distance.value) <= minDistanceBetweenRequired){
+                if (distMin != 0) {
+                    if (distMin > newDistance) {
                         distMin = newDistance;
+                        countIndex = countIndexTemp;
                     }
+                } else {
+                    distMin = newDistance;
                 }
             } else {
-                int newDistance = route.distance.value;
-                //Get distance between Deliveryman and start point
                 if (distMin != 0) {
                     if (distMin > newDistance) {
                         distMin = newDistance;
@@ -201,7 +193,6 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
             }
             countIndexTemp++;
         }
-
         if (countIndexTemp == countChilds) {
             presenter.showResultOrder(diccionario, countIndex);
         }

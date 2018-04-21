@@ -16,6 +16,7 @@ import co.domix.android.R;
 import co.domix.android.domiciliary.interactor.DomiciliaryInteractor;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.model.Order;
+import co.domix.android.model.Parameter;
 import co.domix.android.model.User;
 
 /**
@@ -24,12 +25,13 @@ import co.domix.android.model.User;
 
 public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
-    private int countChild = 0;
+    private int countChild = 0, minDistanceBetweenRequired;
     private String i;
     private boolean catchedOrderAvailable;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");
     DatabaseReference referenceOrder = database.getReference("order");
+    DatabaseReference referenceParameter = database.getReference("parameter");
     private DomiciliaryPresenter presenter;
     private DomiciliaryInteractor interactor;
 
@@ -59,8 +61,21 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                         String oriLo = order.getX_longitude_from();
                         String desLa = order.getX_latitude_to();
                         String desLo = order.getX_longitude_to();
+                        int distanceBetween = order.getX_distance_between_points();
+                        referenceParameter.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Parameter parameter = dataSnapshot.getValue(Parameter.class);
+                                minDistanceBetweenRequired = parameter.getMin_distance_between_points();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                         interactor.goCompareDistance(idOrder, ago, from, to, sizeOrder, description1, description2,
-                                oriLa, oriLo, desLa, desLo, latDomi, lonDomi);
+                                oriLa, oriLo, desLa, desLo, latDomi, lonDomi, distanceBetween, minDistanceBetweenRequired);
                     }
                 }
 //                presenter.countChild(countChild);
@@ -88,8 +103,8 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                     referenceOrder.child(i).child("d_id").setValue(uid);
                     presenter.responseGoOrderCatched(i);
                     referenceOrder.child(i).child("x_catched").setValue(true);
-                    referenceOrder.child(i).child("x_transportUsed").setValue(transportUsed);
-                    referenceUser.child(uid).child("usedVehicle").setValue(transportUsed);
+                    referenceOrder.child(i).child("x_transport_used").setValue(transportUsed);
+                    referenceUser.child(uid).child("used_vehicle").setValue(transportUsed); // For User model
                 } else {
                     presenter.responseOrderHasBeenTaken();
                 }
@@ -162,8 +177,8 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
     @Override
     public void sendContactData(String uid, String firstName, String lastName, String phone) {
-        referenceUser.child(uid).child("firstName").setValue(firstName);
-        referenceUser.child(uid).child("lastName").setValue(lastName);
+        referenceUser.child(uid).child("first_name").setValue(firstName);
+        referenceUser.child(uid).child("last_name").setValue(lastName);
         referenceUser.child(uid).child("phone").setValue(phone);
         presenter.contactDataSent();
     }

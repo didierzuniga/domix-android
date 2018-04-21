@@ -11,7 +11,7 @@ public interface DomiciliaryInteractor {
     void searchDeliveries(String lat, String lon, int vehSelected);
     void goCompareDistance(int idOrder, String ago, String from, String to, int sizeOrder, String description1,
                            String description2, String oriLat, String oriLon, String desLat,
-                           String desLon, String latDomi, String lonDomi);
+                           String desLon, String latDomi, String lonDomi, int distanceBetween, int minDistanceRequired);
     void countChild(int countChild);
     void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed);
     void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity);

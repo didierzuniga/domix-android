@@ -160,8 +160,9 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     }
 
     @Override
-    public void responseFare(double fare) {
+    public void responseFare(double fare, int minFareCost) {
         fareToApply = fare;
+        minFare = minFareCost;
     }
 
     @Override
@@ -178,11 +179,12 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             priceInCash = (int) (tres * 1000);
             if (countryOrigen.equals("CO")) {
                 countryO = "COP";
-                minFare = 3500;
-            } else if (countryOrigen == "CL") {
+            } else if (countryOrigen.equals("CL")) {
                 countryO = "CLP";
-                minFare = 740;
+            } else if (countryOrigen.equals("MX")){
+                countryO = "MXN";
             }
+
             if (priceInCash < minFare) {
                 priceInCash = minFare;
             }

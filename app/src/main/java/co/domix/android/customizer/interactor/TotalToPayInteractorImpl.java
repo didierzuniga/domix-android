@@ -28,7 +28,7 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
     }
 
     @Override
-    public void responseTotalToPay(int totalToPayCash, double taxe, int minPayment,
+    public void responseTotalToPay(int totalToPayCash, double taxe, double fareDomix, int minPayment,
                                    double payUCommission, int payURate, String country) {
         String showCountry = "";
         if (country.equals("CO")){
@@ -39,7 +39,7 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
             showCountry = "MXN";
         }
 
-        int commissionDomix = (int) (totalToPayCash * 0.37);
+        int commissionDomix = (int) (totalToPayCash * fareDomix);
         String payTaxe;
         String payTotalToDomix;
         String miniPayment = "";

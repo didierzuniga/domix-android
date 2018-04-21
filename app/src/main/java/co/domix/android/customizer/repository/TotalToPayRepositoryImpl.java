@@ -25,7 +25,7 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
     String country = "CO";
     private int totalToPayCash;
     private int payUFullRate, minPayment;
-    private float taxe, payUCommission;
+    private float nationalTaxe, payUCommission, fareDomix;
     private TotalToPayPresenter presenter;
     private TotalToPayInteractor interactor;
 
@@ -58,11 +58,12 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Fare fare = dataSnapshot.getValue(Fare.class);
-                        taxe = fare.getNational_tax();
+                        nationalTaxe = fare.getNational_tax();
+                        fareDomix = fare.getFare_domix();
                         payUCommission = fare.getPayu_commission();
                         payUFullRate = fare.getPayu_full_rate();
                         minPayment = fare.getMin_payment();
-                        interactor.responseTotalToPay(totalToPayCash, taxe, minPayment,
+                        interactor.responseTotalToPay(totalToPayCash, nationalTaxe, fareDomix, minPayment,
                                                       payUCommission, payUFullRate, country);
                     }
 

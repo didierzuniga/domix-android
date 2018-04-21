@@ -211,7 +211,7 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                     return Transaction.success(mutableData);
                 }
                 c.count_realtime -= 1;
-                c.counter_done += 1;
+                c.count_done += 1;
                 mutableData.setValue(c);
                 return Transaction.success(mutableData);
             }

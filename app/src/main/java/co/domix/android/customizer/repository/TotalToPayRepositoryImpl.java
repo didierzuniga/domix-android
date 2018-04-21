@@ -23,9 +23,9 @@ import co.domix.android.model.Order;
 public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
     String country = "CO";
-    private int totalToTayCash, totalToPayEcoin;
-    private int payUFullRate;
-    private float taxe, payUCommission;
+    private int totalToPayCash;
+    private int payUFullRate, minPayment;
+    private float nationalTaxe, payUCommission, fareDomix;
     private TotalToPayPresenter presenter;
     private TotalToPayInteractor interactor;
 
@@ -47,10 +47,10 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Order order = snapshot.getValue(Order.class);
                     if ((order.getD_id()).equals(uid)) {
-                        if (!order.isX_paidOut()){
+                        if (!order.isX_paid_out()){
                             country = order.getX_country();
-                            listOrders.add(snapshot.getKey());
-                            totalToTayCash = totalToTayCash + order.getX_moneyToPay();
+                            listOrders.add(snapshot.getKey()); //ID to save
+                            totalToPayCash += order.getX_money_to_pay();
                         }
                     }
                 }
@@ -58,11 +58,13 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Fare fare = dataSnapshot.getValue(Fare.class);
-                        taxe = fare.getTaxe();
-                        payUCommission = fare.getPayU_commission();
-                        payUFullRate = fare.getPayU_fullRate();
-                        interactor.responseTotalToPay(totalToTayCash, taxe,
-                                payUCommission, payUFullRate, country);
+                        nationalTaxe = fare.getNational_tax();
+                        fareDomix = fare.getFare_domix();
+                        payUCommission = fare.getPayu_commission();
+                        payUFullRate = fare.getPayu_full_rate();
+                        minPayment = fare.getMin_payment();
+                        interactor.responseTotalToPay(totalToPayCash, nationalTaxe, fareDomix, minPayment,
+                                                      payUCommission, payUFullRate, country);
                     }
 
                     @Override

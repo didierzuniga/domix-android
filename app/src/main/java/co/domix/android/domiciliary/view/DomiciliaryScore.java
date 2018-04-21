@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import co.domix.android.domiciliary.presenter.DomiciliaryScorePresenterImpl;
 public class DomiciliaryScore extends AppCompatActivity implements DomiciliaryScoreView {
 
     private RatingBar ratingBarDomiToUser;
+    private ProgressBar progressBar;
     private Button buttonSendScoreDomiToUser;
     private DomixApplication app;
     private DomiciliaryScorePresenter presenter;
@@ -36,11 +38,13 @@ public class DomiciliaryScore extends AppCompatActivity implements DomiciliarySc
 
         app = (DomixApplication) getApplicationContext();
         presenter = new DomiciliaryScorePresenterImpl(this);
+        progressBar = (ProgressBar) findViewById(R.id.prgBarRateDomi);
         ratingBarDomiToUser = (RatingBar) findViewById(R.id.rateDomiToUser);
         buttonSendScoreDomiToUser = (Button) findViewById(R.id.buttonSendScoreDomiToUser);
         buttonSendScoreDomiToUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showProgressBar();
                 Double score = Double.valueOf(ratingBarDomiToUser.getRating());
                 sendScore(score);
             }
@@ -53,12 +57,23 @@ public class DomiciliaryScore extends AppCompatActivity implements DomiciliarySc
     }
 
     @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
     public void sendScore(Double score) {
         presenter.sendScore(score, app.idOrder, this);
     }
 
     @Override
     public void responseBackDomiciliaryActivity() {
+        hideProgressBar();
         app.idOrder = 0;
         Intent intent = new Intent(this, Domiciliary.class);
         startActivity(intent);

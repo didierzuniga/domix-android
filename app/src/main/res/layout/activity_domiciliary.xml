@@ -11,7 +11,34 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
 
     <include layout="@layout/actionbar_toolbar" />
 
+    <LinearLayout
+        android:id="@+id/lnrNotInternet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:text="@string/text_no_internet_connection"/>
+        <Button
+            android:id="@+id/btnRefreshDomiciliary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/button_refresh"/>
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/prgBarDomiciliary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <ScrollView
+        android:id="@+id/scrVieDomiciliary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -24,7 +51,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <TextView
-                android:id="@+id/waiting_deliveries"
+                android:id="@+id/txtVieWaitingDeliveries"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -36,7 +63,35 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                 android:textStyle="italic" />
 
             <LinearLayout
-                android:id="@+id/show_data"
+                android:id="@+id/lnrSpiVehicle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextViewGreyOption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Seleccionar medio de transporte"/>
+
+                <Spinner
+                    android:id="@+id/spiVehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/corner_radius_select_destine"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginRight="40dp"
+                    android:prompt="@string/spinner_vehicle_type"
+                    android:entries="@array/options_conveyance"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lnrShowData"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
@@ -59,7 +114,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/d_ago"
+                            android:id="@+id/txtVieAgo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_requested"
@@ -75,13 +130,13 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textYourRating"
+                            android:id="@+id/txtVieYourRating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:visibility="visible"
                             android:text="@string/text_user_with"/>
                         <TextView
-                            android:id="@+id/rateUser"
+                            android:id="@+id/txtVieRateUser"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
@@ -99,7 +154,6 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/from_domiciliary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -108,7 +162,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                         android:paddingTop="10dp">
 
                         <TextView
-                            android:id="@+id/d_from"
+                            android:id="@+id/txtVieFrom"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="8dp"
@@ -119,7 +173,6 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/to_domiciliary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -128,7 +181,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                         android:paddingTop="10dp">
 
                         <TextView
-                            android:id="@+id/d_to"
+                            android:id="@+id/txtVieTo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingRight="8dp"
@@ -139,7 +192,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                     </LinearLayout>
 
                     <Button
-                        android:id="@+id/buttonViewMap"
+                        android:id="@+id/btnViewMap"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -164,7 +217,29 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:id="@+id/d_description1"
+                            android:id="@+id/txtVieDimensions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_size_order"
+                            android:textColor="@color/colorTextCardView"
+                            android:textSize="16sp"/>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/colorTextCardView"
+                        android:orientation="horizontal" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/txtVieDescription1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_make_initial_point"
@@ -187,7 +262,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/d_description2"
+                            android:id="@+id/txtVieDescription2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_make_final_point"
@@ -206,7 +281,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                     android:paddingRight="50dp"
                     android:orientation="vertical">
                     <Button
-                        android:id="@+id/buttonAcceptRequest"
+                        android:id="@+id/btnAcceptRequest"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -214,7 +289,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                         android:textAllCaps="true"
                         android:theme="@style/RaiseButtonGreen" />
                     <Button
-                        android:id="@+id/buttonDismissRequest"
+                        android:id="@+id/btnDismissRequest"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

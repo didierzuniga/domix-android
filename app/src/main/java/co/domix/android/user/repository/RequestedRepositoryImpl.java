@@ -56,12 +56,12 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                 } else {
                     Order order = dataSnapshot.getValue(Order.class);
                     boolean completed = order.isX_completed();
-                    Double scoredDomi = order.getX_scoreDomiciliary();
+                    Double scoredDomi = order.getX_score_deliveryman();
                     if (!completed) {
-                        String oriLa = order.x_latitudeFrom.toString();
-                        String oriLo = order.x_longitudeFrom.toString();
-                        String desLa = order.x_latitudeTo.toString();
-                        String desLo = order.x_longitudeTo.toString();
+                        String oriLa = order.x_latitude_from.toString();
+                        String oriLo = order.x_longitude_from.toString();
+                        String desLa = order.x_latitude_to.toString();
+                        String desLo = order.x_longitude_to.toString();
                         presenter.responseCoordinatesFromTo(oriLa, oriLo, desLa, desLo);
                         if (order.isX_catched()) {
                             orderHasBenCompleted = false;
@@ -120,8 +120,7 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                 if (c == null){
                     return Transaction.success(mutableData);
                 }
-                c.countRealTime = c.countRealTime - 1;
-                c.counterDone = c.counterDone - 1;
+                c.count_realtime = c.count_realtime - 1;
                 mutableData.setValue(c);
                 return Transaction.success(mutableData);
             }
@@ -212,11 +211,12 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
-                    String fullName = user.getFirstName()+" "+user.getLastName();
+                    String fullName = user.getFirst_name()+" "+user.getLast_name();
                     String cellPhone = user.getPhone();
-                    String rate = String.format("%.2f", user.getScoreAsDomiciliary());
+                    String rate = String.format("%.2f", user.getScore_as_deliveryman());
+                    int usedVehicle = user.getTransport_used();
                     presenter.responseDomiciliaryCatched(uidDomiciliary, rate, fullName,
-                            cellPhone);
+                            cellPhone, usedVehicle);
                 }
 
                 @Override

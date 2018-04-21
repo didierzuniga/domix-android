@@ -26,6 +26,7 @@
     <color name="button_red_dark">#C62828</color>
     <color name="button_red_light">#F44336</color>
     <color name="background_white_opacity">#CCFFFFFF</color>
+    <color name="colorSecundaryOpacity">#4FC3F7FF</color>
     <color name="button_green_dark">#388E3C</color>
     <color name="button_green_light">#4CAF50</color>
     <color name="colorTransparent">#80000000</color>

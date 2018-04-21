@@ -29,7 +29,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     private LocationManager locationManager;
     private DomixApplication app;
-    private int minFare, priceInCash, priceInEcoin;
+    private int minFare, priceInCash;
     private double fareToApply;
     private String coordsFromPrice, coordsToPrice, cityOrigen, countryOrigen, countryO;
     private List<Address> geocodeMatches = null;
@@ -83,13 +83,13 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     @Override
     public void requestGeolocationAndDistance(String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, Activity activity) {
         if (whatAddress == 0){
-            if (!latFrom.equals("") || !lonFrom.equals("")){
+            if (!latFrom.equals(null) || !lonFrom.equals(null)){
                 String arr [] = getGeolocation(latFrom, lonFrom, activity);
                 coordsFromPrice = arr[3];
                 presenter.responseFromName(arr[2]);
             }
         } else if (whatAddress == 1){
-            if (!latTo.equals("") || !lonTo.equals("")){
+            if (!latTo.equals(null) || !lonTo.equals(null)){
                 String arr [] = getGeolocation(latTo, lonTo, activity);
                 coordsToPrice = arr[3];
                 countryOrigen = arr[0];
@@ -110,6 +110,9 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     public String [] getGeolocation(String latFrom, String lonFrom, Activity activity){
         String arr [] = new String[4];
+//        if (!latFrom.equals("") || !lonFrom.equals("")){
+//
+//        }
         double latitFrom = Double.valueOf(latFrom);
         double longiFrom = Double.valueOf(lonFrom);
         try {
@@ -123,6 +126,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             arr[2] = geocodeMatches.get(0).getFeatureName();
         }
         arr[3] = latFrom + ", " + lonFrom;
+
         return arr;
     }
 
@@ -133,7 +137,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     @Override
     public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
-                        String from, String to, String description1, String description2, byte dimenSelected,
+                        String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
                         byte payMethod, int paymentCash, Activity activity) {
         if (from.equals("")) {
             presenter.responseEmptyFields(activity.getString(R.string.toast_indicate_starting_point));
@@ -147,7 +151,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             presenter.responseEmptyFields(activity.getString(R.string.toast_enter_payment_amount));
         } else {
             if (fieldsWasFill) {
-                repository.request(uid, email, country, city, from, to, description1, description2,
+                repository.request(uid, email, country, city, from, to, disBetweenPoints, description1, description2,
                                     dimenSelected, payMethod, paymentCash, activity);
             } else {
                 presenter.openDialogSendContactData();
@@ -156,8 +160,9 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     }
 
     @Override
-    public void responseFare(double fare) {
+    public void responseFare(double fare, int minFareCost) {
         fareToApply = fare;
+        minFare = minFareCost;
     }
 
     @Override
@@ -174,16 +179,16 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             priceInCash = (int) (tres * 1000);
             if (countryOrigen.equals("CO")) {
                 countryO = "COP";
-                minFare = 3500;
-            } else if (countryOrigen == "CL") {
+            } else if (countryOrigen.equals("CL")) {
                 countryO = "CLP";
-                minFare = 740;
+            } else if (countryOrigen.equals("MX")){
+                countryO = "MXN";
             }
+
             if (priceInCash < minFare) {
                 priceInCash = minFare;
             }
-            priceInEcoin = ((priceInCash / 174) * 2) * 100;
-            presenter.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, priceInEcoin);
+            presenter.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, route.distance.value);
         }
     }
 }

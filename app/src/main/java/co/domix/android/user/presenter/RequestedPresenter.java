@@ -8,7 +8,7 @@ import co.domix.android.user.view.Requested;
 
 public interface RequestedPresenter {
     void listenForUpdate(int idOrder, Requested requested);
-    void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone);
+    void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle);
     void dialogCancel(int idOrder, Requested requested);
     void resultGoUserActivity();
     void goRateUser();

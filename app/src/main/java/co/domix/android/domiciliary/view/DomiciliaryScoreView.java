@@ -5,6 +5,8 @@ package co.domix.android.domiciliary.view;
  */
 
 public interface DomiciliaryScoreView {
+    void showProgressBar();
+    void hideProgressBar();
     void sendScore(Double score);
     void responseBackDomiciliaryActivity();
 }

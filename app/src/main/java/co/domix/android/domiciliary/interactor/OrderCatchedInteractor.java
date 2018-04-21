@@ -9,6 +9,6 @@ import android.app.Activity;
 public interface OrderCatchedInteractor {
     void getUserRequest(int idOrder, String uid, Activity activity);
     void dialogCancel(String idOrder, String uid, Activity activity);
-    void dialogFinish(String idOrder, String uidDomicili, Activity activity);
+    void dialogFinish(String idOrder);
     void submitCoord(String uid, String la, String lo, Activity activity);
 }

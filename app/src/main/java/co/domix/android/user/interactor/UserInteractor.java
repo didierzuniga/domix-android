@@ -12,7 +12,7 @@ public interface UserInteractor {
     void requestGeolocationAndDistance(String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, Activity activity);
     void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity);
     void request(boolean fieldsWasFill, String uid, String email, String country, String city,
-                 String from, String to, String description1, String description2, byte dimenSelected,
+                 String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
                  byte payMethod, int paymentCash, Activity activity);
-    void responseFare(double fare);
+    void responseFare(double fare, int minFareCost);
 }

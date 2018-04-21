@@ -23,6 +23,7 @@
     <string name="text_from"><b>From:</b></string>
     <string name="text_to"><b>To:</b></string>
     <string name="text_header">Title:</string>
+    <string name="text_size_order"><b>Size:</b></string>
     <string name="text_make_initial_point"><b>In the initial point:</b></string>
     <string name="text_make_final_point"><b>At the end point:</b></string>
     <string name="text_description">Description:</string>
@@ -62,7 +63,7 @@
     <string name="text_cash">Cash</string>
     <string name="text_dimensions">Dimensions: </string>
     <string name="text_payment_method">Payment method</string>
-    <string name="text_terms_condictions"><u>I accept Terms and Conditions</u></string>
+    <string name="text_terms_condictions">I accept Terms and Conditions</string>
     <string name="text_pay_through">Pay through:</string>
     <string name="text_method_payment_efecty">Efecty points</string>
     <string name="text_method_payment_pse">PSE</string>
@@ -78,7 +79,12 @@
     <string name="text_notice_before_delete_account">Keep in mind that when you delete your Domix account, you will lose your activity history, access to the platform, and your contact information will be deleted.</string>
     <string name="text_terms_and_conditions">Terms and conditions of use</string>
     <string name="text_agree">Agree</string>
-    <string name="text_do_not_agree">Don't agree</string>
+    <string name="text_do_not_agree">Do not agree</string>
+    <string name="text_minimum_amount">The minimum payment is</string>
+    <string name="text_letter">Letter (Letter or Legal)</string>
+    <string name="text_bag">Bag (40x38x38 cms)</string>
+    <string name="text_trunk">Trunk (30x30x30 cms)</string>
+    <string name="text_grid">Grid</string>
     <string name="text_terms"><b>Colombia
             TÉRMINOS Y CONDICIONES DE USO DE “DOMIX”
             ASPECTOS GENERALES</b>
@@ -225,6 +231,9 @@
     <string name="toast_updated_password">¡Updated password!</string>
     <string name="toast_invalid_credential">Invalid credentials</string>
     <string name="toast_has_ben_delete_account">¡Delete your account!</string>
+    <string name="toast_length_password">Minimum 6 characters for the password</string>
+    <string name="toast_must_choise_vehicle">You must select the means of transport</string>
+    <string name="toast_not_near_delivery">There are no addresses near your location</string>
 
     <string name="title_home">Home</string>
     <string name="title_requested">Your request</string>
@@ -264,6 +273,14 @@
         <item>Bag (40x38x38 cms)</item>
         <item>Trunk (30x30x30 cms)</item>
         <item>Grid</item>
+    </string-array>
+
+    <string name="spinner_vehicle_type">Vehicle</string>
+    <string-array name="options_conveyance">
+        <item>Neither</item>
+        <item>Bicycle</item>
+        <item>Motorcycle</item>
+        <item>Car</item>
     </string-array>
 
 </resources>

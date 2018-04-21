@@ -27,7 +27,6 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/isotipo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -38,7 +37,7 @@
             </LinearLayout>
 
             <ProgressBar
-                android:id="@+id/progressBarlogin"
+                android:id="@+id/prgBlogin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
@@ -58,7 +57,7 @@
                     android:theme="@style/EditTextGrey">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/email"
+                        android:id="@+id/txtInpEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_email"
@@ -71,7 +70,7 @@
                     android:theme="@style/EditTextGrey">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/password"
+                        android:id="@+id/txtInpPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_password"
@@ -79,7 +78,7 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
-                    android:id="@+id/buttonSignin"
+                    android:id="@+id/btnSignin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/button_text_login"
@@ -89,7 +88,7 @@
                     android:theme="@style/RaiseButtonDark" />
 
                 <TextView
-                    android:id="@+id/forgotMyPassword"
+                    android:id="@+id/txtVieForgotMyPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
@@ -114,7 +113,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/createHere"
+                        android:id="@+id/txtVieCreateHere"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/dontHaveAccount"

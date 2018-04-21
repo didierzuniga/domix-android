@@ -35,14 +35,4 @@ public class SignupPresenterImpl implements SignupPresenter {
     public void responseSuccessSignup() {
         view.responseSuccessSignup();
     }
-
-    @Override
-    public void responseCompleteAllFiles() {
-        view.responseCompleteAllFiles();
-    }
-
-    @Override
-    public void responseUnmatchPassword() {
-        view.responseUnmatchPassword();
-    }
 }

@@ -61,9 +61,9 @@ public class UserPresenterImpl implements UserPresenter {
 
     @Override
     public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
-                        String from, String to, String description1, String description2, byte dimenSelected,
+                        String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
                         byte payMethod, int paymentCash, User user) {
-        interactor.request(fieldsWasFill, uid, email, country, city, from, to, description1, description2,
+        interactor.request(fieldsWasFill, uid, email, country, city, from, to, disBetweenPoints, description1, description2,
                 dimenSelected, payMethod, paymentCash, user);
     }
 
@@ -88,8 +88,8 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
-    public void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen, int priceInEcoin) {
-        view.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, priceInEcoin);
+    public void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen, int distanceBetweenPoints) {
+        view.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, distanceBetweenPoints);
     }
 
     @Override

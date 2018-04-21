@@ -13,8 +13,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import co.domix.android.R;
+import co.domix.android.domiciliary.interactor.DomiciliaryInteractor;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.model.Order;
+import co.domix.android.model.Parameter;
 import co.domix.android.model.User;
 
 /**
@@ -23,42 +25,61 @@ import co.domix.android.model.User;
 
 public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
-    private int countChild = 0;
+    private int countChild = 0, minDistanceBetweenRequired;
     private String i;
     private boolean catchedOrderAvailable;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");
     DatabaseReference referenceOrder = database.getReference("order");
+    DatabaseReference referenceParameter = database.getReference("parameter");
     private DomiciliaryPresenter presenter;
+    private DomiciliaryInteractor interactor;
 
-    public DomiciliaryRepositoryImpl(DomiciliaryPresenter presenter) {
+    public DomiciliaryRepositoryImpl(DomiciliaryPresenter presenter, DomiciliaryInteractor interactor) {
         this.presenter = presenter;
+        this.interactor = interactor;
     }
 
     @Override
-    public void searchDeliveries() {
+    public void searchDeliveries(final String latDomi, final String lonDomi) {
         referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Order order = snapshot.getValue(Order.class);
                     boolean catched = order.isX_catched();
-                    if (catched == false){
+                    if (!catched){
                         countChild++;
                         int idOrder = order.getX_id();
                         String ago = order.getRelativeTimeStamp();
-                        String from = order.getX_nameFrom();
-                        String to = order.getX_nameTo();
+                        String from = order.getX_name_from();
+                        String to = order.getX_name_to();
+                        int sizeOrder = order.getX_transport_used();
                         String description1 = order.getX_description1();
                         String description2 = order.getX_description2();
-                        String oriLa = order.getX_latitudeFrom();
-                        String oriLo = order.getX_longitudeFrom();
-                        String desLa = order.getX_latitudeTo();
-                        String desLo = order.getX_longitudeTo();
-                        presenter.goCompareDistance(idOrder, ago, from, to, description1, description2, oriLa, oriLo, desLa, desLo);
+                        String oriLa = order.getX_latitude_from();
+                        String oriLo = order.getX_longitude_from();
+                        String desLa = order.getX_latitude_to();
+                        String desLo = order.getX_longitude_to();
+                        int distanceBetween = order.getX_distance_between_points();
+                        referenceParameter.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Parameter parameter = dataSnapshot.getValue(Parameter.class);
+                                minDistanceBetweenRequired = parameter.getMin_distance_between_points();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                        interactor.goCompareDistance(idOrder, ago, from, to, sizeOrder, description1, description2,
+                                oriLa, oriLo, desLa, desLo, latDomi, lonDomi, distanceBetween, minDistanceBetweenRequired);
                     }
                 }
-                presenter.countChild(countChild);
+//                presenter.countChild(countChild);
+                interactor.countChild(countChild);
                 countChild = 0;
             }
 
@@ -70,7 +91,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
     }
 
     @Override
-    public void sendDataDomiciliary(final Activity activity, int idOrderToSend, final String uid) {
+    public void sendDataDomiciliary(final Activity activity, int idOrderToSend, final String uid, final int transportUsed) {
         i = String.valueOf(idOrderToSend);
         referenceOrder.child(i).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -78,9 +99,13 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                 Order order = dataSnapshot.getValue(Order.class);
                 catchedOrderAvailable = order.isX_catched();
                 if (catchedOrderAvailable == false) {
-                    updateDataDomiciliary(uid, i);
+//                    updateDataDomiciliary(uid, i);
+                    referenceOrder.child(i).child("d_id").setValue(uid);
+                    presenter.responseGoOrderCatched(i);
+                    referenceOrder.child(i).child("x_catched").setValue(true);
+                    referenceOrder.child(i).child("x_transport_used").setValue(transportUsed);
+                    referenceUser.child(uid).child("used_vehicle").setValue(transportUsed); // For User model
                 } else {
-                    Toast.makeText(activity, R.string.toast_order_has_been_taken, Toast.LENGTH_LONG).show();
                     presenter.responseOrderHasBeenTaken();
                 }
             }
@@ -94,9 +119,9 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
     @Override
     public void updateDataDomiciliary(final String uidCurrentUser, final String i) {
-        referenceOrder.child(i).child("d_id").setValue(uidCurrentUser);
-        presenter.responseGoOrderCatched(i);
-        referenceOrder.child(i).child("x_catched").setValue(true);
+//        referenceOrder.child(i).child("d_id").setValue(uidCurrentUser);
+//        presenter.responseGoOrderCatched(i);
+//        referenceOrder.child(i).child("x_catched").setValue(true);
     }
 
     @Override
@@ -105,8 +130,8 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if (user.getFirstName() == null ||
-                        user.getLastName() == null ||
+                if (user.getFirst_name() == null &&
+                        user.getLast_name() == null &&
                         user.getPhone() == null) {
                     presenter.responseForFullnameAndPhone(false);
                 } else {
@@ -132,7 +157,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        String userRate = String.format("%.2f", user.getScoreAsUser());
+                        String userRate = String.format("%.2f", user.getScore_as_user());
                         presenter.responseQueryRate(userRate);
                     }
 
@@ -152,8 +177,8 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
     @Override
     public void sendContactData(String uid, String firstName, String lastName, String phone) {
-        referenceUser.child(uid).child("firstName").setValue(firstName);
-        referenceUser.child(uid).child("lastName").setValue(lastName);
+        referenceUser.child(uid).child("first_name").setValue(firstName);
+        referenceUser.child(uid).child("last_name").setValue(lastName);
         referenceUser.child(uid).child("phone").setValue(phone);
         presenter.contactDataSent();
     }

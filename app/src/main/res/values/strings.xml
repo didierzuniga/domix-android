@@ -22,6 +22,7 @@
     <string name="text_from"><b>Desde:</b></string>
     <string name="text_to"><b>Hasta:</b></string>
     <string name="text_header">Título:</string>
+    <string name="text_size_order"><b>Tamaño:</b></string>
     <string name="text_make_initial_point"><b>En el punto inicial:</b></string>
     <string name="text_make_final_point"><b>En el punto final:</b></string>
     <string name="text_description">Descripción:</string>
@@ -61,7 +62,7 @@
     <string name="text_cash">Efectivo</string>
     <string name="text_dimensions">Dimensiones: </string>
     <string name="text_payment_method">Método de pago</string>
-    <string name="text_terms_condictions"><u>Acepto Términos y Condiciones</u></string>
+    <string name="text_terms_condictions">Acepto Términos y Condiciones</string>
     <string name="text_pay_through">Pagar a través de:</string>
     <string name="text_method_payment_efecty">Puntos Efecty</string>
     <string name="text_method_payment_pse">PSE</string>
@@ -78,6 +79,11 @@
     <string name="text_terms_and_conditions">Términos y condiciones de uso</string>
     <string name="text_agree">Acepto</string>
     <string name="text_do_not_agree">No acepto</string>
+    <string name="text_minimum_amount">El pago mínimo es de</string>
+    <string name="text_letter">Sobre (Carta u Oficio)</string>
+    <string name="text_bag">Baúl o maletero (30x30x30 cms)</string>
+    <string name="text_trunk">Maleta (40x38x38 cms)</string>
+    <string name="text_grid">Parrilla</string>
     <string name="text_terms"><b>Colombia
             TÉRMINOS Y CONDICIONES DE USO DE “DOMIX”
             ASPECTOS GENERALES</b>
@@ -224,6 +230,9 @@
     <string name="toast_updated_password">¡Contraseña actualizada!</string>
     <string name="toast_invalid_credential">Credenciales inválidas</string>
     <string name="toast_has_ben_delete_account">¡Haz eliminado tu cuenta!</string>
+    <string name="toast_length_password">Mínimo 6 caracteres para la contraseña</string>
+    <string name="toast_must_choise_vehicle">Debes seleccionar el medio de transporte</string>
+    <string name="toast_not_near_delivery">No hay domicilios cerca a tu ubicación</string>
 
     <string name="title_home">Inicio</string>
     <string name="title_requested">Tu solicitud</string>
@@ -265,5 +274,16 @@
         <item>Maleta (40x38x38 cms)</item>
         <item>Parrilla</item>
     </string-array>
+
+    <string name="spinner_vehicle_type">Vehiculo</string>
+    <string-array name="options_conveyance">
+        <item>Ninguno</item>
+        <item>Bicicleta</item>
+        <item>Motocicleta</item>
+        <item>Carro</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

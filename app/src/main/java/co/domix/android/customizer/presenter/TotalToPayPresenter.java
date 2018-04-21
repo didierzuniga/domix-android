@@ -6,5 +6,6 @@ package co.domix.android.customizer.presenter;
 
 public interface TotalToPayPresenter {
     void queryOrderToPay(String uid, int payMethod);
-    void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix);
+    void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix,
+                                String minPayment, boolean enableButtonPay);
 }

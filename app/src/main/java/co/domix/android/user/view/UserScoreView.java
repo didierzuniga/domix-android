@@ -5,6 +5,8 @@ package co.domix.android.user.view;
  */
 
 public interface UserScoreView {
+    void showProgressBar();
+    void hideProgressBar();
     void sendScore(Double score);
     void responseBackHomeActivity();
 }

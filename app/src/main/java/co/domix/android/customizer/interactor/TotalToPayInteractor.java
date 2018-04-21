@@ -6,6 +6,6 @@ package co.domix.android.customizer.interactor;
 
 public interface TotalToPayInteractor {
     void queryOrderToPay(String uid, int payMethod);
-    void responseTotalToPay(int totalToPayCash, double taxe, double payUCommission,
+    void responseTotalToPay(int totalToPayCash, double taxe, double fareDomix, int minPayment, double payUCommission,
                             int payURate, String country);
 }

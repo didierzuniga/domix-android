@@ -23,8 +23,7 @@ import co.domix.android.user.view.UserScore;
 
 public class Splash extends AppCompatActivity implements SplashView {
 
-    private ProgressBar progressBarSplash;
-
+    private ProgressBar progressBar;
     private AlertDialog alert = null;
     private DomixApplication app;
     private SplashPresenter presenter;
@@ -35,17 +34,17 @@ public class Splash extends AppCompatActivity implements SplashView {
         setContentView(R.layout.activity_splash);
         app = (DomixApplication) getApplicationContext();
         presenter = new SplashPresenterImpl(this);
-        progressBarSplash = (ProgressBar) findViewById(R.id.progressBarSplash);
+        progressBar = (ProgressBar) findViewById(R.id.prgBarSplash);
     }
 
     @Override
     public void showProgressBar() {
-        progressBarSplash.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-        progressBarSplash.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

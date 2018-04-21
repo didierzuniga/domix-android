@@ -45,10 +45,10 @@ public class AdapterHistory extends RecyclerView.Adapter<AdapterHistory.AdapterV
     @Override
     public void onBindViewHolder(AdapterViewHolder holder, int position) {
         Order order = orders.get(position);
-        holder.textViewFrom.setText(order.getX_nameFrom());
-        holder.textViewTo.setText(order.getX_nameTo());
+        holder.textViewFrom.setText(order.getX_name_from());
+        holder.textViewTo.setText(order.getX_name_to());
         holder.textViewTimeAgo.setText(String.valueOf(order.getX_date()) + " " + order.getX_time());
-        holder.textViewMoney.setText(String.valueOf(order.getX_moneyToPay()));
+        holder.textViewMoney.setText(String.valueOf(order.getX_money_to_pay()));
 
     }
 
@@ -86,16 +86,16 @@ public class AdapterHistory extends RecyclerView.Adapter<AdapterHistory.AdapterV
 //            intent.putExtra("uidAuthord", order.getA_id());
 //            intent.putExtra("agod", order.getRelativeTimeStamp());
 //            intent.putExtra("cityd", order.getA_city());
-//            intent.putExtra("fromd", order.getX_nameFrom());
-//            intent.putExtra("tod", order.getX_nameTo());
-//            intent.putExtra("latFromd", order.getX_latitudeFrom());
+//            intent.putExtra("fromd", order.getX_name_from());
+//            intent.putExtra("tod", order.getX_name_to());
+//            intent.putExtra("latFromd", order.getX_latitude_from());
 //            intent.putExtra("latTod", order.getX_latitudeTo());
 //            intent.putExtra("lonFromd", order.getX_longitudeFrom());
 //            intent.putExtra("lonTod", order.getX_longitudeTo());
 //            intent.putExtra("headerd", order.getX_title());
 //            intent.putExtra("descriptiond", order.getX_description());
 //            intent.putExtra("authord", order.getA_email());
-//            intent.putExtra("moneyd", order.getX_moneyToPay().toString());
+//            intent.putExtra("moneyd", order.getX_money_to_pay().toString());
 //            this.ctx.startActivity(intent);
 //        }
     }

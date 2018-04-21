@@ -3,9 +3,11 @@ package co.domix.android.customizer.view.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,6 +29,9 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     private ProgressBar progressBarPay;
     private LinearLayout linearPayPerDomicilies, linearPaytaxes, linearPayTotal;
     private TextView toPayDomix, toPayDomixTotal, toPayTaxe;
+    private Button buttonToPay;
+    private String miniPayment;
+    private boolean enablePayment;
     private DomixApplication app;
     private TotalToPayPresenter presenter;
 
@@ -55,9 +60,19 @@ public class TotalToPay extends Fragment implements TotalToPayView {
         toPayDomix = (TextView) view.findViewById(R.id.toPayDomix);
         toPayDomixTotal = (TextView) view.findViewById(R.id.toPayDomixTotal);
         toPayTaxe = (TextView) view.findViewById(R.id.toPayTaxe);
-
+        buttonToPay = (Button) view.findViewById(R.id.btnGoToPay);
+        buttonToPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (enablePayment){
+                    Toast.makeText(getActivity(), "Pagando...", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        buttonToPay.setEnabled(false);
         presenter.queryOrderToPay(app.uId, app.payMethod);
-
         return view;
     }
 
@@ -72,7 +87,15 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     }
 
     @Override
-    public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix) {
+    public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix,
+                                       String minPayment, boolean enableButtonPay) {
+        buttonToPay.setEnabled(true);
+        enablePayment = true;
+        miniPayment = minPayment;
+        if (!enableButtonPay){
+            enablePayment = false;
+            Toast.makeText(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment, Toast.LENGTH_LONG).show();
+        }
         hideProgressBar();
         linearPayPerDomicilies.setVisibility(View.VISIBLE);
         linearPaytaxes.setVisibility(View.VISIBLE);

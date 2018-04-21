@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import co.domix.android.user.presenter.UserScorePresenterImpl;
 public class UserScore extends AppCompatActivity implements UserScoreView {
 
     private UserScorePresenter presenter;
+    private ProgressBar progressBar;
     private Button buttonSendScoreUserToDomi;
     private RatingBar ratingBarUserToDomi;
     private DomixApplication app;
@@ -38,11 +40,13 @@ public class UserScore extends AppCompatActivity implements UserScoreView {
         presenter = new UserScorePresenterImpl(this);
         app = (DomixApplication) getApplicationContext();
 
+        progressBar = (ProgressBar) findViewById(R.id.progressRateUser);
         ratingBarUserToDomi = (RatingBar) findViewById(R.id.ratingBarUserToDomi);
         buttonSendScoreUserToDomi = (Button) findViewById(R.id.buttonSendScoreUsToDo);
         buttonSendScoreUserToDomi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showProgressBar();
                 Double score = Double.valueOf(ratingBarUserToDomi.getRating());
                 sendScore(score);
             }
@@ -55,12 +59,23 @@ public class UserScore extends AppCompatActivity implements UserScoreView {
     }
 
     @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
     public void sendScore(Double score) {
         presenter.sendScore(score, app.idOrder, this);
     }
 
     @Override
     public void responseBackHomeActivity() {
+        hideProgressBar();
         app.idOrder = 0;
         Intent intent = new Intent(this, Home.class);
         startActivity(intent);

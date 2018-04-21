@@ -33,8 +33,7 @@ public class UserScoreRepositoryImpl implements UserScoreRepository {
 
     @Override
     public void sendScore(final Double score, int idOrder, Activity activity) {
-        referenceOrder.child(String.valueOf(idOrder)).child("x_scoreDomiciliary").setValue(score);
-        referenceOrder.child(String.valueOf(idOrder)).child("x_scored").setValue(true);
+        referenceOrder.child(String.valueOf(idOrder)).child("x_score_deliveryman").setValue(score);
         referenceOrder.child(String.valueOf(idOrder)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -59,8 +58,8 @@ public class UserScoreRepositoryImpl implements UserScoreRepository {
                 if (u == null){
                     return Transaction.success(mutableData);
                 }
-                u.scoreAsDomiciliary = ((u.scoreAsDomiciliary * u.counterScoreAsDomi) + score) / (u.counterScoreAsDomi + 1);
-                u.counterScoreAsDomi = u.counterScoreAsDomi + 1;
+                u.score_as_deliveryman = ((u.score_as_deliveryman * u.counter_score_as_deliveryman) + score) / (u.counter_score_as_deliveryman + 1);
+                u.counter_score_as_deliveryman += 1;
                 mutableData.setValue(u);
                 return Transaction.success(mutableData);
             }

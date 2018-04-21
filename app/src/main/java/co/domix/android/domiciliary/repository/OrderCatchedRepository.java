@@ -12,9 +12,9 @@ public interface OrderCatchedRepository {
                                String toAuthor, String titleAuthor, String descriptionAuthor,
                                String oriLa, String oriLo, String desLa, String desLo, int moneyAuthor);
     void dialogCancel(String idOrder, String uid, Activity activity);
-    void dialogFinish(String idOrder, String uidDomicili, Activity activity);
+    void dialogFinish(String idOrder);
     void submitCoord(String uid, String la, String lo, Activity activity);
-    void verifyOrderActive(String uid, Activity activity);
+    void verifyStatusOrder(String uid, String idorder, Activity activity);
     void removeCoordDomiciliary(String id);
-    void deductCounterRealtime();
+    void modifyCounterRealtimeAndDone();
 }

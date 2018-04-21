@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.os.Process;
 import android.provider.Settings;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,19 +46,19 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     private ScrollView scrollView;
     private RadioGroup radioGroup;
     private LinearLayout linearNotInternet;
-    private Button buttonRequestOrder, buttonSendFullnameAndPhone, buttonRefresh;
-    private TextView from, to, buttonSelectFrom, buttonSelectTo, paymentCash;
+    private Button buttonRequestOrder, btnSendFullnameAndPhone, btnBack, buttonRefresh;
+    private TextView txtFrom, txtTo, buttonSelectFrom, buttonSelectTo, paymentCash;
     private EditText description1, description2;
-    private Spinner spinnerDimensions;
+    private Spinner spiDimensions;
     private byte dimenSelected;
     private TextInputEditText firstName, lastName, phone;
     private String countryOrigen, cityOrigen;
     private byte payMethod;
-    private int priceInCash;
+    private int priceInCash, disBetweenPoints;
     private ProgressBar progressBarRequest;
     private AlertDialog alert = null;
     private android.app.AlertDialog alertDialog;
-    private SharedPreferences location;
+    private SharedPreferences shaPref;
     private boolean fieldsWasFill;
     private SharedPreferences.Editor editor;
     private DomixApplication app;
@@ -70,8 +72,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.text_make_your_order);
-
-
+        presenter = new UserPresenterImpl(this);
         app = (DomixApplication) getApplicationContext();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -85,20 +86,19 @@ public class User extends AppCompatActivity implements UserView, LocationListene
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, this);
 
         scrollView = (ScrollView) findViewById(R.id.rootScroll);
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
-        presenter = new UserPresenterImpl(this);
         progressBarRequest = (ProgressBar) findViewById(R.id.progressBarRequest);
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
-        editor = location.edit();
+        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        editor = shaPref.edit();
 
-        spinnerDimensions = (Spinner) findViewById(R.id.spinnerDimensions);
-        spinnerDimensions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spiDimensions = (Spinner) findViewById(R.id.spinnerDimensions);
+        spiDimensions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                dimenSelected = (byte) spinnerDimensions.getSelectedItemId();
+                dimenSelected = (byte) spiDimensions.getSelectedItemId();
             }
 
             @Override
@@ -113,7 +113,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId) {
+                switch (checkedId) {
                     case R.id.payWithCash:
                         payMethod = 0;
                         break;
@@ -155,9 +155,9 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                 scrollView.setVisibility(View.GONE);
                 showProgressBar();
                 presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
-                                from.getText().toString(), to.getText().toString(),
-                                description1.getText().toString(), description2.getText().toString(),
-                                dimenSelected, payMethod, priceInCash, User.this);
+                        txtFrom.getText().toString(), txtTo.getText().toString(), disBetweenPoints,
+                        description1.getText().toString(), description2.getText().toString(),
+                        dimenSelected, payMethod, priceInCash, User.this);
             }
         });
 
@@ -205,7 +205,8 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         alertDialog = new android.app.AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        buttonSendFullnameAndPhone = (Button) view.findViewById(R.id.buttonSendContactData);
+        btnSendFullnameAndPhone = (Button) view.findViewById(R.id.btnSendContactData);
+        btnBack = (Button) view.findViewById(R.id.btnBack);
         firstName = (TextInputEditText) view.findViewById(R.id.firstName);
         lastName = (TextInputEditText) view.findViewById(R.id.lastName);
         phone = (TextInputEditText) view.findViewById(R.id.phone);
@@ -219,17 +220,23 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS
         );
 
-        buttonSendFullnameAndPhone.setOnClickListener(new View.OnClickListener() {
+        btnSendFullnameAndPhone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String getFirstName = firstName.getText().toString();
-                String getLastName = lastName.getText().toString();
+                String getFirst_name = firstName.getText().toString();
+                String getLast_name = lastName.getText().toString();
                 String getPhone = phone.getText().toString();
-                if (getFirstName.equals("") || getLastName.equals("") || getPhone.equals("")) {
+                if (getFirst_name.equals("") || getLast_name.equals("") || getPhone.equals("")) {
                     Toast.makeText(User.this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
                 } else {
-                    sendContactData(getFirstName, getLastName, getPhone);
+                    sendContactData(getFirst_name, getLast_name, getPhone);
                     alertDialog.dismiss();
                 }
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
             }
         });
         alertDialog.setView(view);
@@ -280,6 +287,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        presenter.requestForFullnameAndPhone(app.uId);
                         hideProgressBar();
                         buttonRequestOrder.callOnClick();
                     }
@@ -296,12 +304,12 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void responseFromName(String fromm) {
-        from.setText(fromm);
+        txtFrom.setText(fromm);
     }
 
     @Override
     public void responseToName(String too) {
-        to.setText(too);
+        txtTo.setText(too);
     }
 
     @Override
@@ -312,10 +320,11 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     }
 
     @Override
-    public void responseCash(int priceInCashh, String countryO, String countryOrigenn, String cityOrigenn, int priceInEcoinn) {
+    public void responseCash(int priceInCashh, String countryO, String countryOrigenn, String cityOrigenn, int distanceBetweenPoints) {
         countryOrigen = countryOrigenn;
         cityOrigen = cityOrigenn;
         priceInCash = priceInCashh;
+        disBetweenPoints = distanceBetweenPoints;
         paymentCash.setText(" " + priceInCash + " " + countryO);
     }
 
@@ -328,8 +337,12 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void showYesInternet() {
-        linearNotInternet.setVisibility(View.GONE);
-        scrollView.setVisibility(View.VISIBLE);
+        try {
+            linearNotInternet.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
+        } catch (Exception e){
+
+        }
     }
 
     @Override
@@ -339,21 +352,29 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void hideProgressBar() {
-        presenter.requestForFullnameAndPhone(app.uId);
-        progressBarRequest.setVisibility(View.GONE);
+        try {
+            progressBarRequest.setVisibility(View.GONE);
+        } catch (Exception e){
+
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        from = (TextView) findViewById(R.id.idFrom);
-        to = (TextView) findViewById(R.id.idTo);
-        presenter.requestGeolocationAndDistance(location.getString("latFrom", ""),
-                                                location.getString("lonFrom", ""),
-                                                location.getString("latTo", ""),
-                                                location.getString("lonTo", ""),
-                                                location.getInt("whatAddress", 2),
-                                                this);
+        txtFrom = (TextView) findViewById(R.id.idFrom);
+        txtTo = (TextView) findViewById(R.id.idTo);
+
+        try {
+            presenter.requestGeolocationAndDistance(shaPref.getString("latFrom", ""),
+                    shaPref.getString("lonFrom", ""),
+                    shaPref.getString("latTo", ""),
+                    shaPref.getString("lonTo", ""),
+                    shaPref.getInt("whatAddress", 2),
+                    this);
+        } catch (Exception e){
+
+        }
     }
 
     @Override
@@ -365,7 +386,13 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        editor.clear().commit();
+//        txtFrom.setText("");
+//        txtTo.setText("");
+//        editor.remove("latFrom");
+//        editor.remove("lonFrom");
+//        editor.remove("latTo");
+//        editor.remove("lonTo");
+//        editor.commit();
     }
 
     @Override

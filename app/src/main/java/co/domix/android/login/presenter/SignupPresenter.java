@@ -12,6 +12,4 @@ public interface SignupPresenter {
     void signup(String email, String password, String confirmPassword, Signup signup, FirebaseAuth firebaseAuth);
     void responseErrorSignup();
     void responseSuccessSignup();
-    void responseCompleteAllFiles();
-    void responseUnmatchPassword();
 }

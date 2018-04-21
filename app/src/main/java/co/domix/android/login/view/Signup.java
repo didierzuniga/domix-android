@@ -6,18 +6,14 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.login.presenter.SignupPresenter;
 import co.domix.android.login.presenter.SignupPresenterImpl;
@@ -25,12 +21,11 @@ import co.domix.android.login.presenter.SignupPresenterImpl;
 public class Signup extends AppCompatActivity implements SignupView {
 
     private TextInputEditText emailFieldForSignup, passwordFieldForSignup, confirmPasswordFieldForSignup;
-    private TextView terms;
     private Button buttonSignup, buttonBack;
-    private ProgressBar progressBarLogin;
-    private CheckBox checkBox;
+    private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
     private SignupPresenter presenter;
+    private DomixApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,36 +33,17 @@ public class Signup extends AppCompatActivity implements SignupView {
         setContentView(R.layout.activity_signup);
         presenter = new SignupPresenterImpl(this);
         firebaseAuth = FirebaseAuth.getInstance();
+        app = (DomixApplication) getApplicationContext();
 
-        checkBox = (CheckBox) findViewById(R.id.checkTerms);
-        terms = (TextView) findViewById(R.id.textViewTerms);
-        progressBarLogin = (ProgressBar) findViewById(R.id.progressBarlogin);
-        emailFieldForSignup = (TextInputEditText) findViewById(R.id.emailSignup);
-        passwordFieldForSignup = (TextInputEditText) findViewById(R.id.passwordSignup);
-        confirmPasswordFieldForSignup = (TextInputEditText) findViewById(R.id.confirmPasswordSignup);
-        buttonSignup = (Button) findViewById(R.id.buttonSignup);
-        buttonBack = (Button) findViewById(R.id.buttonBack);
-        buttonSignup.setEnabled(false);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    buttonSignup.setEnabled(true);
-                } else {
-                    buttonSignup.setEnabled(false);
-                }
-            }
-        });
-        terms.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogShowTerms();
-            }
-        });
+        progressBar = (ProgressBar) findViewById(R.id.prgBarSignup);
+        emailFieldForSignup = (TextInputEditText) findViewById(R.id.txtInpEmailSignup);
+        passwordFieldForSignup = (TextInputEditText) findViewById(R.id.txtInpPasswordSignup);
+        confirmPasswordFieldForSignup = (TextInputEditText) findViewById(R.id.txtInpConfirmPasswordSignup);
+        buttonSignup = (Button) findViewById(R.id.btnSignup);
+        buttonBack = (Button) findViewById(R.id.btnBack);
         buttonSignup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showProgressBar();
-                signup(emailFieldForSignup.getText().toString(),
+                dialogShowTerms(emailFieldForSignup.getText().toString(),
                         passwordFieldForSignup.getText().toString(),
                         confirmPasswordFieldForSignup.getText().toString());
             }
@@ -82,43 +58,45 @@ public class Signup extends AppCompatActivity implements SignupView {
 
     @Override
     public void showProgressBar() {
-        progressBarLogin.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-        progressBarLogin.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
     }
 
-    public void dialogShowTerms(){
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.text_terms_and_conditions))
-                .setPositiveButton(getString(R.string.text_agree), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        checkBox.setChecked(true);
-                    }
-                })
-                .setNegativeButton(getString(R.string.text_do_not_agree), null)
-                .setMessage(getString(R.string.text_terms))
-                .show();
+    public void dialogShowTerms(String email, String password, String confirmPassword){
+        if (email.equals("") || password.equals("") || confirmPassword.equals("")){
+            Toast.makeText(this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
+        } else {
+            int result = app.matchPassword(password, confirmPassword);
+            if (result == 0){
+                new AlertDialog.Builder(this)
+                        .setTitle(getString(R.string.text_terms_and_conditions))
+                        .setPositiveButton(getString(R.string.text_agree), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                signup(emailFieldForSignup.getText().toString(),
+                                        passwordFieldForSignup.getText().toString(),
+                                        confirmPasswordFieldForSignup.getText().toString());
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.text_do_not_agree), null)
+                        .setMessage(getString(R.string.text_terms))
+                        .show();
+            } else if (result == 1){
+                Toast.makeText(this, getString(R.string.toast_unmatch_password), Toast.LENGTH_SHORT).show();
+            } else if (result == 2){
+                Toast.makeText(this, getString(R.string.toast_length_password), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
     public void signup(String email, String password, String confirmPassword) {
+        showProgressBar();
         presenter.signup(email, password, confirmPassword, this, firebaseAuth);
-    }
-
-    @Override
-    public void responseCompleteAllFiles() {
-        hideProgressBar();
-        Toast.makeText(this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void responseUnmatchPassword() {
-        hideProgressBar();
-        Toast.makeText(this, R.string.toast_unmatch_password, Toast.LENGTH_SHORT).show();
     }
 
     @Override

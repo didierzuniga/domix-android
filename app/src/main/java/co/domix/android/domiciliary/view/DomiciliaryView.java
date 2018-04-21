@@ -16,6 +16,7 @@ public interface DomiciliaryView {
 
     void searchDeliveries();
     void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex);
+    void showResultNotOrder();
     void goPreviewRouteOrder();
     void responseOrderHasBeenTaken();
     void responseGoOrderCatched(String idOrder);

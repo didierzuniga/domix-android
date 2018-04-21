@@ -22,6 +22,7 @@ public interface DomiciliaryPresenter {
 //                           String desLon);
 //    void countChild(int countChild);
     void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex);
+    void showResultNotOrder();
     void responseOrderHasBeenTaken();
     void responseGoOrderCatched(String idOrder);
     void queryForFullnameAndPhone(String uid);

@@ -233,6 +233,7 @@
     <string name="toast_has_ben_delete_account">¡Delete your account!</string>
     <string name="toast_length_password">Minimum 6 characters for the password</string>
     <string name="toast_must_choise_vehicle">You must select the means of transport</string>
+    <string name="toast_not_near_delivery">There are no addresses near your location</string>
 
     <string name="title_home">Home</string>
     <string name="title_requested">Your request</string>

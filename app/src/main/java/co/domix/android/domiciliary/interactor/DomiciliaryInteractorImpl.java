@@ -170,18 +170,23 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
 
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
+        boolean matchForAnyOrder = false;
         for (Route route : routes) {
             int newDistance = route.distance.value;
-            if (vehicleSelected == 1 && (Integer.valueOf(listica.get(11)) + route.distance.value) <= minDistanceBetweenRequired){
-                if (distMin != 0) {
-                    if (distMin > newDistance) {
+            if (vehicleSelected == 1){
+                if ((Integer.valueOf(listica.get(11)) + route.distance.value) <= minDistanceBetweenRequired){
+                    matchForAnyOrder = true;
+                    if (distMin != 0) {
+                        if (distMin > newDistance) {
+                            distMin = newDistance;
+                            countIndex = countIndexTemp;
+                        }
+                    } else {
                         distMin = newDistance;
-                        countIndex = countIndexTemp;
                     }
-                } else {
-                    distMin = newDistance;
                 }
             } else {
+                matchForAnyOrder = true;
                 if (distMin != 0) {
                     if (distMin > newDistance) {
                         distMin = newDistance;
@@ -194,7 +199,11 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
             countIndexTemp++;
         }
         if (countIndexTemp == countChilds) {
-            presenter.showResultOrder(diccionario, countIndex);
+            if (matchForAnyOrder){
+                presenter.showResultOrder(diccionario, countIndex);
+            } else {
+                presenter.showResultNotOrder();
+            }
         }
     }
 }

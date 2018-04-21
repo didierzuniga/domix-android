@@ -279,6 +279,12 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     }
 
     @Override
+    public void showResultNotOrder() {
+        switchAB.setChecked(false);
+        ToastsKt.toastLong(this, getString(R.string.toast_not_near_delivery));
+    }
+
+    @Override
     public void goPreviewRouteOrder() {
         editor.putBoolean("SearchDelivery", false);
         editor.commit();
@@ -425,6 +431,8 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     @Override
     protected void onResume() {
         super.onResume();
+        la = "";
+        lo = "";
         presenter.verifyLocationAndInternet(this);
     }
 

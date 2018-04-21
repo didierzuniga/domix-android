@@ -33,8 +33,7 @@ public class UserScoreRepositoryImpl implements UserScoreRepository {
 
     @Override
     public void sendScore(final Double score, int idOrder, Activity activity) {
-        referenceOrder.child(String.valueOf(idOrder)).child("X_score_deliveryman").setValue(score);
-        referenceOrder.child(String.valueOf(idOrder)).child("x_scored").setValue(true);
+        referenceOrder.child(String.valueOf(idOrder)).child("x_score_deliveryman").setValue(score);
         referenceOrder.child(String.valueOf(idOrder)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -232,6 +232,7 @@
     <string name="toast_has_ben_delete_account">¡Haz eliminado tu cuenta!</string>
     <string name="toast_length_password">Mínimo 6 caracteres para la contraseña</string>
     <string name="toast_must_choise_vehicle">Debes seleccionar el medio de transporte</string>
+    <string name="toast_not_near_delivery">No hay domicilios cerca a tu ubicación</string>
 
     <string name="title_home">Inicio</string>
     <string name="title_requested">Tu solicitud</string>

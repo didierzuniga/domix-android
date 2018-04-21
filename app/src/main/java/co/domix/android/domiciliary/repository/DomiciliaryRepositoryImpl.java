@@ -130,8 +130,8 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if (user.getFirst_name() == null ||
-                        user.getLast_name() == null ||
+                if (user.getFirst_name() == null &&
+                        user.getLast_name() == null &&
                         user.getPhone() == null) {
                     presenter.responseForFullnameAndPhone(false);
                 } else {

@@ -75,6 +75,11 @@ public class DomiciliaryPresenterImpl implements DomiciliaryPresenter {
     }
 
     @Override
+    public void showResultNotOrder() {
+        view.showResultNotOrder();
+    }
+
+    @Override
     public void responseOrderHasBeenTaken() {
         view.responseOrderHasBeenTaken();
     }

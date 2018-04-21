@@ -33,7 +33,7 @@ public class DomiciliaryScoreRepositoryImpl implements DomiciliaryScoreRepositor
 
     @Override
     public void sendScore(final Double score, int idOrder, Activity activity) {
-        referenceOrder.child(String.valueOf(idOrder)).child("x_scoreAuthor").setValue(score);
+        referenceOrder.child(String.valueOf(idOrder)).child("x_score_author").setValue(score);
         referenceOrder.child(String.valueOf(idOrder)).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

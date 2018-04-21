@@ -137,7 +137,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     @Override
     public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
-                        String from, String to, String description1, String description2, byte dimenSelected,
+                        String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
                         byte payMethod, int paymentCash, Activity activity) {
         if (from.equals("")) {
             presenter.responseEmptyFields(activity.getString(R.string.toast_indicate_starting_point));
@@ -151,7 +151,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             presenter.responseEmptyFields(activity.getString(R.string.toast_enter_payment_amount));
         } else {
             if (fieldsWasFill) {
-                repository.request(uid, email, country, city, from, to, description1, description2,
+                repository.request(uid, email, country, city, from, to, disBetweenPoints, description1, description2,
                                     dimenSelected, payMethod, paymentCash, activity);
             } else {
                 presenter.openDialogSendContactData();
@@ -186,7 +186,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             if (priceInCash < minFare) {
                 priceInCash = minFare;
             }
-            presenter.responseCash(priceInCash, countryO, countryOrigen, cityOrigen);
+            presenter.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, route.distance.value);
         }
     }
 }

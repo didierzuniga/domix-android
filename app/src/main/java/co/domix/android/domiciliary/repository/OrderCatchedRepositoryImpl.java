@@ -50,15 +50,15 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                 String uidAuthor = order.getA_id();
                 String countryAuthor = order.getX_country();
                 String cityAuthor = order.getX_city();
-                String fromAuthor = order.getX_nameFrom();
-                String toAuthor = order.getX_nameTo();
+                String fromAuthor = order.getX_name_from();
+                String toAuthor = order.getX_name_to();
                 String titleAuthor = order.getX_description1();
                 String descriptionAuthor = order.getX_description2();
-                String oriLa = order.x_latitudeFrom.toString();
-                String oriLo = order.x_longitudeFrom.toString();
-                String desLa = order.x_latitudeTo.toString();
-                String desLo = order.x_longitudeTo.toString();
-                int moneyAuthor = order.getX_moneyToPay();
+                String oriLa = order.x_latitude_from.toString();
+                String oriLo = order.x_longitude_from.toString();
+                String desLa = order.x_latitude_to.toString();
+                String desLo = order.x_longitude_to.toString();
+                int moneyAuthor = order.getX_money_to_pay();
                 getNameAndPhoneAuthor(uidAuthor, countryAuthor, cityAuthor, fromAuthor, toAuthor,
                         titleAuthor, descriptionAuthor, oriLa, oriLo,
                         desLa, desLo, moneyAuthor);
@@ -82,8 +82,8 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                String firstName = user.getFirstName();
-                String lastName = user.getLastName();
+                String firstName = user.getFirst_name();
+                String lastName = user.getLast_name();
                 String fullName = firstName + " " + lastName;
                 String phone = user.getPhone();
                 presenter.responseUserRequested(fullName, phone, countryAuthor, cityAuthor, fromAuthor,
@@ -115,7 +115,7 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
         finishedByDeliveryman = true;
         referenceOrder.child(idOrder).child("x_completed").setValue(true);
         //Remove coordinates???
-        deductCounterRealtime();
+        modifyCounterRealtimeAndDone();
     }
 
     @Override
@@ -202,7 +202,7 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
     }
 
     @Override
-    public void deductCounterRealtime() {
+    public void modifyCounterRealtimeAndDone() {
         referenceCounter.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -210,7 +210,8 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                 if (c == null){
                     return Transaction.success(mutableData);
                 }
-                c.countRealTime = c.countRealTime - 1;
+                c.count_realtime -= 1;
+                c.counter_done += 1;
                 mutableData.setValue(c);
                 return Transaction.success(mutableData);
             }

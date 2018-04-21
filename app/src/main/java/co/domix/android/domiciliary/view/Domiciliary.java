@@ -64,7 +64,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     private Switch switchAB;
     private android.app.AlertDialog alertDialog;
     private TextInputEditText firstName, lastName, phone;
-    private Button btnViewMap, btnAcceptDelivery, btnDismissDelivery, buttonSendFullnameAndPhone, buttonRefresh;
+    private Button btnViewMap, btnAcceptDelivery, btnDismissDelivery, btnSendFullnameAndPhone, btnBack, buttonRefresh;
     private Hashtable<Integer, List> diccionario;
     private TextView tvAgo, tvFrom, tvTo, tvDimensions, tvDescription1, tvDescription2, waitinDeliveries, textRateUser, rateUser;
     private LinearLayout lnrSpiVehicle, lnrShowData, lnrNotInternet;
@@ -330,7 +330,8 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         alertDialog = new android.app.AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        buttonSendFullnameAndPhone = (Button) view.findViewById(R.id.buttonSendContactData);
+        btnSendFullnameAndPhone = (Button) view.findViewById(R.id.btnSendContactData);
+        btnBack = (Button) view.findViewById(R.id.btnBack);
         firstName = (TextInputEditText) view.findViewById(R.id.firstName);
         lastName = (TextInputEditText) view.findViewById(R.id.lastName);
         phone = (TextInputEditText) view.findViewById(R.id.phone);
@@ -344,17 +345,23 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS
         );
 
-        buttonSendFullnameAndPhone.setOnClickListener(new View.OnClickListener() {
+        btnSendFullnameAndPhone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String getFirstName = firstName.getText().toString();
-                String getLastName = lastName.getText().toString();
+                String getFirst_name = firstName.getText().toString();
+                String getLast_name = lastName.getText().toString();
                 String getPhone = phone.getText().toString();
-                if (getFirstName.equals("") || getLastName.equals("") || getPhone.equals("")) {
+                if (getFirst_name.equals("") || getLast_name.equals("") || getPhone.equals("")) {
                     Toast.makeText(Domiciliary.this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
                 } else {
                     alertDialog.dismiss();
-                    sendContactData(getFirstName, getLastName, getPhone);
+                    sendContactData(getFirst_name, getLast_name, getPhone);
                 }
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
             }
         });
         alertDialog.setView(view);

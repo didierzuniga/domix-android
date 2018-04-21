@@ -16,5 +16,5 @@ public interface OrderCatchedRepository {
     void submitCoord(String uid, String la, String lo, Activity activity);
     void verifyStatusOrder(String uid, String idorder, Activity activity);
     void removeCoordDomiciliary(String id);
-    void deductCounterRealtime();
+    void modifyCounterRealtimeAndDone();
 }

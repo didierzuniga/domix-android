@@ -173,6 +173,8 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
             // 4000 mts max
             int betweenStartEnd = 300; // Distance between start and end points
             if (vehicleSelected == 1){
+                // Sum = betweenStartEnd + route.distance.value
+                // if (Sum <= 9000)
                 if (betweenStartEnd <= 4000 && route.distance.value <= 1500){
                     int newDistance = route.distance.value;
                     //Get distance between Deliveryman and start point

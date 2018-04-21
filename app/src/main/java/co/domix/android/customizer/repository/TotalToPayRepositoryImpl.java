@@ -47,10 +47,10 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Order order = snapshot.getValue(Order.class);
                     if ((order.getD_id()).equals(uid)) {
-                        if (!order.isX_paidOut()){
+                        if (!order.isX_paid_out()){
                             country = order.getX_country();
                             listOrders.add(snapshot.getKey()); //ID to save
-                            totalToPayCash += order.getX_moneyToPay();
+                            totalToPayCash += order.getX_money_to_pay();
                         }
                     }
                 }
@@ -58,10 +58,10 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Fare fare = dataSnapshot.getValue(Fare.class);
-                        taxe = fare.getTaxe();
-                        payUCommission = fare.getPayU_commission();
-                        payUFullRate = fare.getPayU_fullRate();
-                        minPayment = fare.getMinPayment();
+                        taxe = fare.getNational_tax();
+                        payUCommission = fare.getPayu_commission();
+                        payUFullRate = fare.getPayu_full_rate();
+                        minPayment = fare.getMin_payment();
                         interactor.responseTotalToPay(totalToPayCash, taxe, minPayment,
                                                       payUCommission, payUFullRate, country);
                     }

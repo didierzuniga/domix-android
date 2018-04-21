@@ -37,9 +37,9 @@ public class ProfileRepositoryImpl implements ProfileRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                boolean verifyGlide = user.isImageProfile();
-                interactor.responseDataUser(verifyGlide, user.getFirstName(), user.getLastName(),
-                                            user.getEmail(), String.format("%.2f", user.getScoreAsDomiciliary()), String.format("%.2f", user.getScoreAsUser()));
+                boolean verifyGlide = user.isImage_profile();
+                interactor.responseDataUser(verifyGlide, user.getFirst_name(), user.getLast_name(),
+                                            user.getEmail(), String.format("%.2f", user.getScore_as_deliveryman()), String.format("%.2f", user.getScore_as_user()));
             }
 
             @Override
@@ -51,6 +51,6 @@ public class ProfileRepositoryImpl implements ProfileRepository {
 
     @Override
     public void trueImageSeted(String uid) {
-        referenceUser.child(uid).child("imageProfile").setValue(true);
+        referenceUser.child(uid).child("image_profile").setValue(true);
     }
 }

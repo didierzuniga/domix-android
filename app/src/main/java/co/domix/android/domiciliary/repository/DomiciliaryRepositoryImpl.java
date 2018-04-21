@@ -50,17 +50,15 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                         countChild++;
                         int idOrder = order.getX_id();
                         String ago = order.getRelativeTimeStamp();
-                        String from = order.getX_nameFrom();
-                        String to = order.getX_nameTo();
-                        int sizeOrder = order.getX_transportUsed();
+                        String from = order.getX_name_from();
+                        String to = order.getX_name_to();
+                        int sizeOrder = order.getX_transport_used();
                         String description1 = order.getX_description1();
                         String description2 = order.getX_description2();
-                        String oriLa = order.getX_latitudeFrom();
-                        String oriLo = order.getX_longitudeFrom();
-                        String desLa = order.getX_latitudeTo();
-                        String desLo = order.getX_longitudeTo();
-//                        presenter.goCompareDistance(idOrder, ago, from, to, description1, description2,
-//                                                    oriLa, oriLo, desLa, desLo, latDomi, lonDomi);
+                        String oriLa = order.getX_latitude_from();
+                        String oriLo = order.getX_longitude_from();
+                        String desLa = order.getX_latitude_to();
+                        String desLo = order.getX_longitude_to();
                         interactor.goCompareDistance(idOrder, ago, from, to, sizeOrder, description1, description2,
                                 oriLa, oriLo, desLa, desLo, latDomi, lonDomi);
                     }
@@ -117,8 +115,8 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if (user.getFirstName() == null ||
-                        user.getLastName() == null ||
+                if (user.getFirst_name() == null ||
+                        user.getLast_name() == null ||
                         user.getPhone() == null) {
                     presenter.responseForFullnameAndPhone(false);
                 } else {
@@ -144,7 +142,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        String userRate = String.format("%.2f", user.getScoreAsUser());
+                        String userRate = String.format("%.2f", user.getScore_as_user());
                         presenter.responseQueryRate(userRate);
                     }
 

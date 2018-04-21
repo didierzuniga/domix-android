@@ -45,8 +45,8 @@ public class SplashRepositoryImpl extends AppCompatActivity implements SplashRep
                     uidAuthor = order.getA_id();
                     uidDomiciliary = order.getD_id();
                     completed = order.isX_completed();
-                    scoreDomiciliary = order.getX_scoreDomiciliary();
-                    scoreAuthor = order.getX_scoreAuthor();
+                    scoreDomiciliary = order.getX_score_deliveryman();
+                    scoreAuthor = order.getX_score_author();
                     if (uid.equals(uidAuthor)) {
                         withoutOrder = 1;
                         if (completed == false) {

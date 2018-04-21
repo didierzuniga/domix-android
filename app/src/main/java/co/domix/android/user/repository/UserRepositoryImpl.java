@@ -3,6 +3,7 @@ package co.domix.android.user.repository;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,7 +39,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public Double fare;
     private Timer timer;
-    private int couForResponse, countFinal, vvPaymentCash;
+    private int couForResponse, countFinal, vvPaymentCash, disbetween;
     private Double scoreAuthor, scoreDomiciliary;
     private byte dimenSelected, payMethod;
     private String couString, uidCurrentUser, country, city, from, to, latFrom, lonFrom, latTo, lonTo, description1,
@@ -63,8 +64,8 @@ public class UserRepositoryImpl implements UserRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if (user.getFirstName() == null ||
-                        user.getLastName() == null ||
+                if (user.getFirst_name() == null &&
+                        user.getLast_name() == null &&
                         user.getPhone() == null) {
                     presenter.responseForFullnameAndPhone(false);
                 } else {
@@ -81,15 +82,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity) {
-        referenceUser.child(uid).child("firstName").setValue(firstName);
-        referenceUser.child(uid).child("lastName").setValue(lastName);
+        referenceUser.child(uid).child("first_name").setValue(firstName);
+        referenceUser.child(uid).child("last_name").setValue(lastName);
         referenceUser.child(uid).child("phone").setValue(phone);
         presenter.contactDataSent();
     }
 
     @Override
     public void request(String uid, String email, final String countryCode, final String cityCode,
-                        final String fromm, final String too, final String descriptionOne, final String descriptionTwo,
+                        final String fromm, final String too, int disBetweenPoints, final String descriptionOne, final String descriptionTwo,
                         final byte dimenSelect, final byte payMeth, int paymentCash, final Activity activity) {
         SharedPreferences location = activity
                 .getSharedPreferences("domx_prefs", Context.MODE_PRIVATE);
@@ -102,6 +103,7 @@ public class UserRepositoryImpl implements UserRepository {
         lonFrom = location.getString("lonFrom", "");
         latTo = location.getString("latTo", "");
         lonTo = location.getString("lonTo", "");
+        disbetween = disBetweenPoints;
         description1 = descriptionOne;
         description2 = descriptionTwo;
         dimenSelected = dimenSelect;
@@ -129,18 +131,6 @@ public class UserRepositoryImpl implements UserRepository {
         });
         //DATETIME
 
-        referenceFare.child(country).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Fare fa = dataSnapshot.getValue(Fare.class);
-                String f = String.format("%.2f", fa.getFarePerMeter());
-                fare = Double.valueOf(f);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
         referenceCounter.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -148,13 +138,12 @@ public class UserRepositoryImpl implements UserRepository {
                 if (c == null) {
                     return Transaction.success(mutableData);
                 }
-                if (c.countFull != 0) {
-                    c.countFull++;
-                    c.counterDone++;
-                    c.countRealTime++;
-                    couForResponse = c.countFull;
-                    couString = String.valueOf(c.countFull);
-                    countFinal = c.countFull;
+                if (c.count_full != 0) {
+                    c.count_full++;
+                    c.count_realtime++;
+                    couForResponse = c.count_full;
+                    couString = String.valueOf(c.count_full);
+                    countFinal = c.count_full;
                     timer = new Timer();
                     timer.schedule(new sendData(), 1000, 1000);
                 }
@@ -173,10 +162,9 @@ public class UserRepositoryImpl implements UserRepository {
         @Override
         public void run() {
             if (timeNow != null){
-                Order order = new Order(uidCurrentUser, country, city, countFinal, from, to,
-                        latFrom, lonFrom, latTo, lonTo, description1, description2, dimenSelected, payMethod,
-                        vvPaymentCash, fare, dateNow, timeNow, new Date().getTime(),
-                        scoreAuthor, scoreDomiciliary);
+                Order order = new Order(uidCurrentUser, countFinal, country, city, from, to,
+                        latFrom, lonFrom, latTo, lonTo, disbetween, description1, description2, dimenSelected, payMethod,
+                        vvPaymentCash, dateNow, timeNow, new Date().getTime());
                 referenceOrder.child(couString).setValue(order);
                 timer.cancel();
                 presenter.responseSuccessRequest(couForResponse);
@@ -191,7 +179,7 @@ public class UserRepositoryImpl implements UserRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Fare fare = dataSnapshot.getValue(Fare.class);
-                interactor.responseFare(fare.getFarePerMeter());
+                interactor.responseFare(fare.getFare_per_meter());
             }
 
             @Override

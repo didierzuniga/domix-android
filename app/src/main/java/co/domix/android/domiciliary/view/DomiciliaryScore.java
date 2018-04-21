@@ -38,7 +38,7 @@ public class DomiciliaryScore extends AppCompatActivity implements DomiciliarySc
 
         app = (DomixApplication) getApplicationContext();
         presenter = new DomiciliaryScorePresenterImpl(this);
-        progressBar = (ProgressBar) findViewById(R.id.progressRateDomi);
+        progressBar = (ProgressBar) findViewById(R.id.prgBarRateDomi);
         ratingBarDomiToUser = (RatingBar) findViewById(R.id.rateDomiToUser);
         buttonSendScoreDomiToUser = (Button) findViewById(R.id.buttonSendScoreDomiToUser);
         buttonSendScoreDomiToUser.setOnClickListener(new View.OnClickListener() {

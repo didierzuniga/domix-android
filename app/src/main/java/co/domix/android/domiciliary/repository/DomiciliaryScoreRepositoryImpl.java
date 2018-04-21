@@ -58,8 +58,8 @@ public class DomiciliaryScoreRepositoryImpl implements DomiciliaryScoreRepositor
                 if (u == null){
                     return Transaction.success(mutableData);
                 }
-                u.scoreAsUser = ((u.scoreAsUser * u.counterScoreAsUser) + score) / (u.counterScoreAsUser + 1);
-                u.counterScoreAsUser = u.counterScoreAsUser + 1;
+                u.score_as_user = ((u.score_as_user * u.counter_score_as_user) + score) / (u.counter_score_as_user + 1);
+                u.counter_score_as_user += 1;
                 mutableData.setValue(u);
                 return Transaction.success(mutableData);
             }

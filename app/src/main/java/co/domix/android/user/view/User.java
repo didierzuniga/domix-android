@@ -45,7 +45,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     private ScrollView scrollView;
     private RadioGroup radioGroup;
     private LinearLayout linearNotInternet;
-    private Button buttonRequestOrder, buttonSendFullnameAndPhone, buttonRefresh;
+    private Button buttonRequestOrder, btnSendFullnameAndPhone, btnBack, buttonRefresh;
     private TextView from, to, buttonSelectFrom, buttonSelectTo, paymentCash;
     private EditText description1, description2;
     private Spinner spiDimensions;
@@ -53,7 +53,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     private TextInputEditText firstName, lastName, phone;
     private String countryOrigen, cityOrigen;
     private byte payMethod;
-    private int priceInCash;
+    private int priceInCash, disBetweenPoints;
     private ProgressBar progressBarRequest;
     private AlertDialog alert = null;
     private android.app.AlertDialog alertDialog;
@@ -154,7 +154,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                 scrollView.setVisibility(View.GONE);
                 showProgressBar();
                 presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
-                        from.getText().toString(), to.getText().toString(),
+                        from.getText().toString(), to.getText().toString(), disBetweenPoints,
                         description1.getText().toString(), description2.getText().toString(),
                         dimenSelected, payMethod, priceInCash, User.this);
             }
@@ -204,7 +204,8 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         alertDialog = new android.app.AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        buttonSendFullnameAndPhone = (Button) view.findViewById(R.id.buttonSendContactData);
+        btnSendFullnameAndPhone = (Button) view.findViewById(R.id.btnSendContactData);
+        btnBack = (Button) view.findViewById(R.id.btnBack);
         firstName = (TextInputEditText) view.findViewById(R.id.firstName);
         lastName = (TextInputEditText) view.findViewById(R.id.lastName);
         phone = (TextInputEditText) view.findViewById(R.id.phone);
@@ -218,17 +219,23 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                         InputType.TYPE_TEXT_FLAG_CAP_WORDS
         );
 
-        buttonSendFullnameAndPhone.setOnClickListener(new View.OnClickListener() {
+        btnSendFullnameAndPhone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String getFirstName = firstName.getText().toString();
-                String getLastName = lastName.getText().toString();
+                String getFirst_name = firstName.getText().toString();
+                String getLast_name = lastName.getText().toString();
                 String getPhone = phone.getText().toString();
-                if (getFirstName.equals("") || getLastName.equals("") || getPhone.equals("")) {
+                if (getFirst_name.equals("") || getLast_name.equals("") || getPhone.equals("")) {
                     Toast.makeText(User.this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
                 } else {
-                    sendContactData(getFirstName, getLastName, getPhone);
+                    sendContactData(getFirst_name, getLast_name, getPhone);
                     alertDialog.dismiss();
                 }
+            }
+        });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
             }
         });
         alertDialog.setView(view);
@@ -279,6 +286,7 @@ public class User extends AppCompatActivity implements UserView, LocationListene
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        presenter.requestForFullnameAndPhone(app.uId);
                         hideProgressBar();
                         buttonRequestOrder.callOnClick();
                     }
@@ -311,10 +319,11 @@ public class User extends AppCompatActivity implements UserView, LocationListene
     }
 
     @Override
-    public void responseCash(int priceInCashh, String countryO, String countryOrigenn, String cityOrigenn) {
+    public void responseCash(int priceInCashh, String countryO, String countryOrigenn, String cityOrigenn, int distanceBetweenPoints) {
         countryOrigen = countryOrigenn;
         cityOrigen = cityOrigenn;
         priceInCash = priceInCashh;
+        disBetweenPoints = distanceBetweenPoints;
         paymentCash.setText(" " + priceInCash + " " + countryO);
     }
 
@@ -342,7 +351,6 @@ public class User extends AppCompatActivity implements UserView, LocationListene
 
     @Override
     public void hideProgressBar() {
-        presenter.requestForFullnameAndPhone(app.uId);
         try {
             progressBarRequest.setVisibility(View.GONE);
         } catch (Exception e){

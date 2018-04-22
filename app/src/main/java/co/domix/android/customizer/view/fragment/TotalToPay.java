@@ -15,10 +15,13 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.List;
+
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.customizer.presenter.TotalToPayPresenter;
 import co.domix.android.customizer.presenter.TotalToPayPresenterImpl;
+import co.domix.android.utils.ToastsKt;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +34,7 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     private TextView toPayDomix, toPayDomixTotal, toPayTaxe;
     private Button buttonToPay;
     private String miniPayment;
+    private List<String> list;
     private boolean enablePayment;
     private DomixApplication app;
     private TotalToPayPresenter presenter;
@@ -65,7 +69,8 @@ public class TotalToPay extends Fragment implements TotalToPayView {
             @Override
             public void onClick(View view) {
                 if (enablePayment){
-                    Toast.makeText(getActivity(), "Pagando...", Toast.LENGTH_LONG).show();
+                    ToastsKt.toastLong(getActivity(), list.toString());
+                    ToastsKt.toastShort(getActivity(), "Pagando...");
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment, Toast.LENGTH_LONG).show();
                 }
@@ -88,7 +93,8 @@ public class TotalToPay extends Fragment implements TotalToPayView {
 
     @Override
     public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix,
-                                       String minPayment, boolean enableButtonPay) {
+                                       String minPayment, boolean enableButtonPay, List<String> listOrders) {
+        list = listOrders;
         buttonToPay.setEnabled(true);
         enablePayment = true;
         miniPayment = minPayment;

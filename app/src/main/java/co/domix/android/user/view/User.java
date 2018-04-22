@@ -12,7 +12,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
-import android.os.Process;
 import android.provider.Settings;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;

@@ -62,6 +62,7 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
                                         payTaxe,
                                         payTotalToDomix,
                                         miniPayment,
-                                        enableButtonPay);
+                                        enableButtonPay,
+                                        listOrders);
     }
 }

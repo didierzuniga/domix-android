@@ -179,7 +179,7 @@ public class UserRepositoryImpl implements UserRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Fare fare = dataSnapshot.getValue(Fare.class);
-                interactor.responseFare(fare.getFare_per_meter(), fare.getMin_fare_cost());
+                interactor.responseFare(fare.getCurrency_code(), fare.getFare_per_meter(), fare.getMin_fare_cost());
             }
 
             @Override

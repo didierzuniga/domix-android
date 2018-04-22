@@ -31,7 +31,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     private DomixApplication app;
     private int minFare, priceInCash;
     private double fareToApply;
-    private String coordsFromPrice, coordsToPrice, cityOrigen, countryOrigen, countryO;
+    private String coordsFromPrice, coordsToPrice, cityOrigen, countryOrigen, currencyCode;
     private List<Address> geocodeMatches = null;
     private UserPresenter presenter;
     private UserRepository repository;
@@ -160,7 +160,8 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     }
 
     @Override
-    public void responseFare(double fare, int minFareCost) {
+    public void responseFare(String currency, double fare, int minFareCost) {
+        currencyCode = currency;
         fareToApply = fare;
         minFare = minFareCost;
     }
@@ -177,18 +178,10 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             String dos = String.format("%.1f", priceDouble / 1000);
             double tres = Double.valueOf(dos);
             priceInCash = (int) (tres * 1000);
-            if (countryOrigen.equals("CO")) {
-                countryO = "COP";
-            } else if (countryOrigen.equals("CL")) {
-                countryO = "CLP";
-            } else if (countryOrigen.equals("MX")){
-                countryO = "MXN";
-            }
-
             if (priceInCash < minFare) {
                 priceInCash = minFare;
             }
-            presenter.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, route.distance.value);
+            presenter.responseCash(priceInCash, currencyCode, countryOrigen, cityOrigen, route.distance.value);
         }
     }
 }

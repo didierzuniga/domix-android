@@ -22,7 +22,7 @@ import co.domix.android.model.Order;
 
 public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
-    String country = "CO";
+    private String country, currencyCode;
     private int totalToPayCash;
     private int payUFullRate, minPayment;
     private float nationalTaxe, payUCommission, fareDomix;
@@ -43,7 +43,7 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
         referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> listOrders = new ArrayList<String>();
+                final List<String> listOrders = new ArrayList<String>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Order order = snapshot.getValue(Order.class);
                     if ((order.getD_id()).equals(uid)) {
@@ -58,13 +58,14 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Fare fare = dataSnapshot.getValue(Fare.class);
+                        currencyCode = fare.getCurrency_code();
                         nationalTaxe = fare.getNational_tax();
                         fareDomix = fare.getFare_domix();
                         payUCommission = fare.getPayu_commission();
                         payUFullRate = fare.getPayu_full_rate();
                         minPayment = fare.getMin_payment();
-                        interactor.responseTotalToPay(totalToPayCash, nationalTaxe, fareDomix, minPayment,
-                                                      payUCommission, payUFullRate, country);
+                        interactor.responseTotalToPay(currencyCode, totalToPayCash, nationalTaxe, fareDomix, minPayment,
+                                                      payUCommission, payUFullRate, country, listOrders);
                     }
 
                     @Override

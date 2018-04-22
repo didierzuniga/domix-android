@@ -2,6 +2,8 @@ package co.domix.android.customizer.interactor;
 
 import android.util.Log;
 
+import java.util.List;
+
 import co.domix.android.customizer.presenter.TotalToPayPresenter;
 import co.domix.android.customizer.repository.TotalToPayRepository;
 import co.domix.android.customizer.repository.TotalToPayRepositoryImpl;
@@ -28,16 +30,8 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
     }
 
     @Override
-    public void responseTotalToPay(int totalToPayCash, double taxe, double fareDomix, int minPayment,
-                                   double payUCommission, int payURate, String country) {
-        String showCountry = "";
-        if (country.equals("CO")){
-            showCountry = "COP";
-        } else if (country.equals("CL")){
-            showCountry = "CLP";
-        } else if (country.equals("MX")){
-            showCountry = "MXN";
-        }
+    public void responseTotalToPay(String currencyCode, int totalToPayCash, double taxe, double fareDomix, int minPayment,
+                                   double payUCommission, int payURate, String country, List<String> listOrders) {
 
         int commissionDomix = (int) (totalToPayCash * fareDomix);
         String payTaxe;
@@ -51,20 +45,20 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
             int payUIvaOverCommission = (int) (payUTotalCommission * taxe);
             int payUTotalCommissionWithIva = payUTotalCommission + payUIvaOverCommission;
 
-            payTaxe = String.valueOf(payUTotalCommissionWithIva) + " " + showCountry;
-            payTotalToDomix = String.valueOf(commissionDomix + payUTotalCommissionWithIva) + " " + showCountry;
+            payTaxe = String.valueOf(payUTotalCommissionWithIva) + " " + currencyCode;
+            payTotalToDomix = String.valueOf(commissionDomix + payUTotalCommissionWithIva) + " " + currencyCode;
             if ((commissionDomix + payUTotalCommissionWithIva) >= minPayment){
                 enableButtonPay = true;
             } else {
-                miniPayment = String.valueOf(minPayment) + " " +showCountry;
+                miniPayment = String.valueOf(minPayment) + " " +currencyCode;
                 enableButtonPay = false;
             }
         } else {
-            payTaxe = "0.00 " + showCountry;
-            payTotalToDomix = "0.00 " + showCountry;
+            payTaxe = "0.00 " + currencyCode;
+            payTotalToDomix = "0.00 " + currencyCode;
             enableButtonPay = false;
         }
-        presenter.responseTotalToPayCash(String.valueOf(commissionDomix) + " " + showCountry,
+        presenter.responseTotalToPayCash(String.valueOf(commissionDomix) + " " + currencyCode,
                                         payTaxe,
                                         payTotalToDomix,
                                         miniPayment,

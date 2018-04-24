@@ -42,7 +42,6 @@ public class CoordinateService extends Service {
 
         public LocationListener(String provider)
         {
-            //Log.w("jjj", "LocationListener-> " + provider);
             mLastLocation = new Location(provider);
         }
 

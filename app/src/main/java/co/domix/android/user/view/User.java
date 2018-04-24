@@ -41,7 +41,7 @@ import co.domix.android.user.presenter.UserPresenterImpl;
 
 public class User extends AppCompatActivity implements UserView, LocationListener {
 
-    protected LocationManager locationManager;
+    private LocationManager locationManager;
     private ScrollView scrollView;
     private RadioGroup radioGroup;
     private LinearLayout linearNotInternet;
@@ -75,7 +75,8 @@ public class User extends AppCompatActivity implements UserView, LocationListene
         app = (DomixApplication) getApplicationContext();
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding

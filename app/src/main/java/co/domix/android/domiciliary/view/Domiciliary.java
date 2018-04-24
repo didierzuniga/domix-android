@@ -253,8 +253,9 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     }
 
     @Override
-    public void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex) {
+    public void showResultOrder(Hashtable<Integer, List> dictionary, int countIndx) {
         diccionario = dictionary;
+        countIndex = countIndx;
         queryUserRate(dictionary.get(countIndex).get(0).toString());
         idOrderToSend = Integer.valueOf(dictionary.get(countIndex).get(0).toString());
         String sizeOrder = "";
@@ -322,10 +323,10 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
 
     @Override
     public void queryForFullnameAndPhone() {
-        distMin = 0;
-        countForDictionary = 0;
-        countIndex = 0;
-        countIndexTemp = 0;
+//        distMin = 0;
+//        countForDictionary = 0;
+//        countIndex = 0;
+//        countIndexTemp = 0;
         presenter.queryForFullnameAndPhone(app.uId);
     }
 

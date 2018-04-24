@@ -27,7 +27,7 @@ import co.domix.android.model.User;
 
 public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
-    private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false, wasTaked = false;
+    private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false;
     private OrderCatchedPresenter presenter;
     private DomixApplication app;
 
@@ -129,22 +129,33 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
         referenceOrder.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean wasTakedByDeliveryman = false;
+                long countTotalOrders = dataSnapshot.getChildrenCount();
+                long counter = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    counter++;
                     Order order = snapshot.getValue(Order.class);
-                    if (uid.equals(order.getD_id()) && !(order.isX_completed())) {
-                        wasTaked = true;
-                    } else {
-                        if (wasTaked){
-                            if (finishedByDeliveryman || cancelledByDeliveryman){
-                                referenceOrder.removeEventListener(this);
+
+
+                    if (!finishedByDeliveryman && !cancelledByDeliveryman){
+                        if (!wasTakedByDeliveryman){
+                            if (uid.equals(order.getD_id()) && !(order.isX_completed())) {
+                                wasTakedByDeliveryman = true;
                             } else {
-                                presenter.showToastUserCancelledOrder();
-                                presenter.responseBackDomiciliaryActivity();
-                                removeCoordDomiciliary(uid);
-                                referenceOrder.removeEventListener(this);
+                                if (counter == countTotalOrders) {
+                                    presenter.showToastUserCancelledOrder();
+                                    presenter.responseBackDomiciliaryActivity();
+                                    removeCoordDomiciliary(uid);
+                                    referenceOrder.removeEventListener(this);
+                                }
                             }
                         }
+                    } else {
+                        referenceOrder.removeEventListener(this);
                     }
+
+
+
                 }
             }
 

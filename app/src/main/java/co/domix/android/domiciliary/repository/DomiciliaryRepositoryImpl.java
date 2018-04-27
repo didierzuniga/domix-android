@@ -78,7 +78,6 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                                 oriLa, oriLo, desLa, desLo, latDomi, lonDomi, distanceBetween, minDistanceBetweenRequired);
                     }
                 }
-//                presenter.countChild(countChild);
                 interactor.countChild(countChild);
                 countChild = 0;
             }

@@ -152,9 +152,10 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
                         queryForFullnameAndPhone();
                     }
                 } else {
+                    lnrShowData.setVisibility(View.GONE);
+                    lnrSpiVehicle.setVisibility(View.VISIBLE);
                     editor.putBoolean("SearchDelivery", false);
                     editor.commit();
-                    Domiciliary.super.recreate();
                 }
             }
         });
@@ -180,9 +181,9 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
             public void onClick(View v) {
                 onStart();
                 switchAB.setChecked(false);
-                switchAB.setChecked(true);
-                waitinDeliveries.setVisibility(View.VISIBLE);
+                waitinDeliveries.setVisibility(View.GONE);
                 lnrShowData.setVisibility(View.GONE);
+                lnrSpiVehicle.setVisibility(View.VISIBLE);
             }
         });
         buttonRefresh = (Button) findViewById(R.id.btnRefreshDomiciliary);
@@ -269,12 +270,12 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
             sizeOrder = getString(R.string.text_grid);
         }
 
-        tvAgo.append(" " + dictionary.get(countIndex).get(1).toString());
-        tvFrom.append(" " + dictionary.get(countIndex).get(2).toString());
-        tvDimensions.append(" " + sizeOrder);
-        tvTo.append(" " + dictionary.get(countIndex).get(3).toString());
-        tvDescription1.append(" " + dictionary.get(countIndex).get(4).toString());
-        tvDescription2.append(" " + dictionary.get(countIndex).get(5).toString());
+        tvAgo.setText(dictionary.get(countIndex).get(1).toString());
+        tvFrom.setText(dictionary.get(countIndex).get(2).toString());
+        tvDimensions.setText(sizeOrder);
+        tvTo.setText(dictionary.get(countIndex).get(3).toString());
+        tvDescription1.setText(dictionary.get(countIndex).get(4).toString());
+        tvDescription2.setText(dictionary.get(countIndex).get(5).toString());
         waitinDeliveries.setVisibility(View.GONE);
         lnrShowData.setVisibility(View.VISIBLE);
     }
@@ -440,7 +441,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     @Override
     protected void onRestart() {
         super.onRestart();
-        Domiciliary.super.recreate();
     }
 
     @Override

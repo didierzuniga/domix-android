@@ -3,6 +3,7 @@ package co.domix.android.home.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +31,7 @@ import co.domix.android.domiciliary.view.Domiciliary;
 import co.domix.android.home.presenter.HomePresenter;
 import co.domix.android.home.presenter.HomePresenterImpl;
 import co.domix.android.login.view.Login;
+import co.domix.android.services.LocationService;
 import co.domix.android.user.view.User;
 
 public class Home extends AppCompatActivity
@@ -163,6 +165,15 @@ public class Home extends AppCompatActivity
     public void goPayment() {
         Intent intent = new Intent(this, Pay.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void startGetLocation() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            startService(new Intent(this, LocationService.class));
+        } else {
+            startForegroundService(new Intent(this, LocationService.class));
+        }
     }
 
     @Override

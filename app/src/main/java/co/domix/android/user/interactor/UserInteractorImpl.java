@@ -8,6 +8,11 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.util.Log;
 
+import com.google.android.gms.location.places.GeoDataApi;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceDetectionApi;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -58,6 +63,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             if (!app.isOnline()) {
                 presenter.showNotInternet();
             } else {
+                presenter.startGetLocation();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

@@ -8,12 +8,12 @@ import java.util.List;
  */
 
 public interface DomiciliaryView {
+    void startGetLocation();
     void alertNoGps();
     void showYesInternet();
     void showNotInternet();
     void showProgressBar();
     void hideProgressBar();
-
     void searchDeliveries();
     void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex);
     void showResultNotOrder();

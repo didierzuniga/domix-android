@@ -1,11 +1,22 @@
 package co.domix.android.user.view;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -17,12 +28,16 @@ import co.domix.android.R;
 
 public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
 
+//    GoogleApiClient.OnConnectionFailedListener
+
+    int PLACE_PICKER_REQUEST = 1;
     private String latit, longi;
     private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private FloatingActionButton fabOk;
     private FloatingActionButton fabFail;
     private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +78,33 @@ public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
         });
     }
 
+//        mGoogleApiClient = new GoogleApiClient
+//                .Builder(this)
+//                .addApi(Places.GEO_DATA_API)
+//                .addApi(Places.PLACE_DETECTION_API)
+//                .enableAutoManage(this, this)
+//                .build();
+
+//        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+//        try {
+//            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+//        } catch (GooglePlayServicesRepairableException e) {
+//            e.printStackTrace();
+//        } catch (GooglePlayServicesNotAvailableException e) {
+//            e.printStackTrace();
+//        }
+
+//
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == PLACE_PICKER_REQUEST) {
+//            if (resultCode == RESULT_OK) {
+//                Place place = PlacePicker.getPlace(data, this);
+//                String toastMsg = String.format("Place: %s", place.getName());
+//                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -79,4 +121,9 @@ public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
     }
+
+//    @Override
+//    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+//
+//    }
 }

@@ -48,6 +48,11 @@ public class DomiciliaryPresenterImpl implements DomiciliaryPresenter {
     }
 
     @Override
+    public void startGetLocation() {
+        view.startGetLocation();
+    }
+
+    @Override
     public void searchDeliveries(String lat, String lon, int vehSelected) {
         interactor.searchDeliveries(lat, lon, vehSelected);
     }

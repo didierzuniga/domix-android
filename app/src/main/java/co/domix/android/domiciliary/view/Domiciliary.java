@@ -1,24 +1,19 @@
 package co.domix.android.domiciliary.view;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,31 +27,23 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polyline;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
-import co.domix.android.directionModule.DirectionFinder;
-import co.domix.android.directionModule.DirectionFinderListener;
-import co.domix.android.directionModule.Route;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenterImpl;
 import co.domix.android.domiciliary.service.NotificationService;
+import co.domix.android.services.LocationService;
 import co.domix.android.utils.ToastsKt;
 
 /**
  * Created by unicorn on 11/12/2017.
  */
 
-public class Domiciliary extends AppCompatActivity implements DomiciliaryView, LocationListener {
+public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
-    protected LocationManager locationManager;
     private String la, lo;
     private int distMin, countForDictionary, countIndex, countIndexTemp, countChilds, idOrderToSend;
     private boolean fieldsWasFill;
@@ -72,13 +59,14 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     private int vehSelected;
     private ScrollView scrollView;
     private AlertDialog alert = null;
-    private SharedPreferences location;
+    private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private DomiciliaryPresenter presenter;
     private DomixApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.w("jjj", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_domiciliary);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -86,19 +74,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         app = (DomixApplication) getApplicationContext();
         presenter = new DomiciliaryPresenterImpl(this);
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 
         switchAB = (Switch) findViewById(R.id.switchAB);
         lnrSpiVehicle = (LinearLayout) findViewById(R.id.lnrSpiVehicle);
@@ -111,13 +86,13 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         btnAcceptDelivery = (Button) findViewById(R.id.btnAcceptRequest);
         btnDismissDelivery = (Button) findViewById(R.id.btnDismissRequest);
 
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
-        editor = location.edit();
+        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        editor = shaPref.edit();
         editor.putBoolean("SearchDelivery", false);
         editor.putBoolean("IsServiceActive", false);
         editor.commit();
 
-        if (location.getBoolean("backFromServiceNotification", false)) {
+        if (shaPref.getBoolean("backFromServiceNotification", false)) {
             switchAB.setChecked(false);
             switchAB.setChecked(true);
             editor.putBoolean("backFromServiceNotification", false);
@@ -204,6 +179,15 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     }
 
     @Override
+    public void startGetLocation() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            startService(new Intent(this, LocationService.class));
+        } else {
+            startForegroundService(new Intent(this, LocationService.class));
+        }
+    }
+
+    @Override
     public void alertNoGps() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.message_location_deactivate)
@@ -250,7 +234,8 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
 
     @Override
     public void searchDeliveries() {
-        presenter.searchDeliveries(la, lo, vehSelected);
+//        presenter.searchDeliveries(la, lo, vehSelected);
+        presenter.searchDeliveries(shaPref.getString("latitude", ""), shaPref.getString("longitude", ""), vehSelected);
     }
 
     @Override
@@ -405,7 +390,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
 
     @Override
     public void responseForFullnameAndPhone(boolean result) {
-        if (location.getBoolean("SearchDelivery", false)) {
+        if (shaPref.getBoolean("SearchDelivery", false)) {
             fieldsWasFill = result;
             if (!fieldsWasFill) {
                 openDialogSendContactData();
@@ -417,6 +402,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
 
     @Override
     protected void onStart() {
+        Log.w("jjj", "onStart");
         super.onStart();
         stopService(new Intent(this, NotificationService.class));
 
@@ -432,6 +418,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
 
     @Override
     protected void onResume() {
+        Log.w("jjj", "onResume");
         super.onResume();
         la = "";
         lo = "";
@@ -439,41 +426,17 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
     protected void onStop() {
+        Log.w("jjj", "onStop");
         super.onStop();
-        if ((location.getBoolean("SearchDelivery", false))) {
+        if ((shaPref.getBoolean("SearchDelivery", false))) {
             startService(new Intent(this, NotificationService.class));
         }
     }
 
     @Override
     protected void onDestroy() {
+        Log.w("jjj", "onDestroy");
         super.onDestroy();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        la = String.valueOf(location.getLatitude());
-        lo = String.valueOf(location.getLongitude());
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 }

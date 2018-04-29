@@ -1,12 +1,17 @@
 package co.domix.android.login.view;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.app.ServiceCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -18,6 +23,7 @@ import co.domix.android.domiciliary.view.OrderCatched;
 import co.domix.android.home.view.Home;
 import co.domix.android.login.presenter.SplashPresenter;
 import co.domix.android.login.presenter.SplashPresenterImpl;
+import co.domix.android.services.LocationService;
 import co.domix.android.user.view.Requested;
 import co.domix.android.user.view.UserScore;
 
@@ -160,11 +166,6 @@ public class Splash extends AppCompatActivity implements SplashView {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
 //        firebaseAuth.removeAuthStateListener(authStateListener);
@@ -173,5 +174,6 @@ public class Splash extends AppCompatActivity implements SplashView {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        stopService(new Intent(this, LocationService.class));
     }
 }

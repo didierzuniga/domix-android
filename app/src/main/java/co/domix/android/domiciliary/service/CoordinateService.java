@@ -40,8 +40,7 @@ public class CoordinateService extends Service {
 
         Location mLastLocation;
 
-        public LocationListener(String provider)
-        {
+        public LocationListener(String provider) {
             mLastLocation = new Location(provider);
         }
 

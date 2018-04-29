@@ -25,6 +25,11 @@ public class HomePresenterImpl implements HomePresenter {
     }
 
     @Override
+    public void startGetLocation() {
+        view.startGetLocation();
+    }
+
+    @Override
     public void alertNoGps() {
         view.alertNoGps();
     }

@@ -62,6 +62,7 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
             if (!app.isOnline()) {
                 presenter.showNotInternet();
             } else {
+                presenter.startGetLocation();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

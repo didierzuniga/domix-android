@@ -26,6 +26,7 @@
 
         <service android:name=".domiciliary.service.NotificationService" />
         <service android:name=".domiciliary.service.CoordinateService" />
+        <service android:name=".services.LocationService" />
 
         <activity
             android:name=".login.view.Splash"

@@ -5,6 +5,7 @@ package co.domix.android.user.view;
  */
 
 public interface UserView {
+    void startGetLocation();
     void responseForFullnameAndPhone(boolean result);
     void alertNoGps();
     void openDialogSendContactData();

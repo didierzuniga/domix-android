@@ -2,6 +2,7 @@ package co.domix.android.login.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,8 @@ public class Signup extends AppCompatActivity implements SignupView {
     private Button buttonSignup, buttonBack;
     private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
+    private SharedPreferences shaPref;
+    private SharedPreferences.Editor editor;
     private SignupPresenter presenter;
     private DomixApplication app;
 
@@ -34,6 +37,9 @@ public class Signup extends AppCompatActivity implements SignupView {
         presenter = new SignupPresenterImpl(this);
         firebaseAuth = FirebaseAuth.getInstance();
         app = (DomixApplication) getApplicationContext();
+
+        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        editor = shaPref.edit();
 
         progressBar = (ProgressBar) findViewById(R.id.prgBarSignup);
         emailFieldForSignup = (TextInputEditText) findViewById(R.id.txtInpEmailSignup);
@@ -96,7 +102,8 @@ public class Signup extends AppCompatActivity implements SignupView {
     @Override
     public void signup(String email, String password, String confirmPassword) {
         showProgressBar();
-        presenter.signup(email, password, confirmPassword, this, firebaseAuth);
+        presenter.signup(email, password, confirmPassword, shaPref.getString("latitude", ""),
+                        shaPref.getString("longitude", ""), this, firebaseAuth);
     }
 
     @Override

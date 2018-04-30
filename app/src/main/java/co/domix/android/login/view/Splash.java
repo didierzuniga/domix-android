@@ -54,6 +54,15 @@ public class Splash extends AppCompatActivity implements SplashView {
     }
 
     @Override
+    public void startGetLocation() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            startService(new Intent(this, LocationService.class));
+        } else {
+            startForegroundService(new Intent(this, LocationService.class));
+        }
+    }
+
+    @Override
     public void queryStatePosition(String uid) {
         presenter.queryStatePosition(uid, this);
     }

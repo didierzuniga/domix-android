@@ -60,6 +60,7 @@ public class SplashInteractorImpl implements SplashInteractor {
             if (!isOnline){
                 presenter.notInternetConnection();
             } else {
+                presenter.startGetLocation();
                 if (firebaseUser != null) {
                     repository.queryStatePosition(uid, activity);
                 } else {

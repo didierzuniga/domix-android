@@ -33,6 +33,11 @@ public class SplashPresenterImpl implements SplashPresenter {
     }
 
     @Override
+    public void startGetLocation() {
+        view.startGetLocation();
+    }
+
+    @Override
     public void goOrderCatched(int idOrder) {
         view.goOrderCatched(idOrder);
     }

@@ -22,8 +22,9 @@ public class SignupPresenterImpl implements SignupPresenter {
     }
 
     @Override
-    public void signup(String email, String password, String confirmPassword, Signup signup, FirebaseAuth firebaseAuth) {
-        interactor.signup(email, password, confirmPassword, signup, firebaseAuth);
+    public void signup(String email, String password, String confirmPassword, String latitude,
+                       String longitude, Signup signup, FirebaseAuth firebaseAuth) {
+        interactor.signup(email, password, confirmPassword, latitude, longitude, signup, firebaseAuth);
     }
 
     @Override

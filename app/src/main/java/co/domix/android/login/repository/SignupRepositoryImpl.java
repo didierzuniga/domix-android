@@ -15,9 +15,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import co.domix.android.login.presenter.SignupPresenter;
 import co.domix.android.model.Counter;
+import co.domix.android.model.Fare;
 import co.domix.android.model.User;
 
 /**
@@ -26,18 +28,20 @@ import co.domix.android.model.User;
 
 public class SignupRepositoryImpl implements SignupRepository {
 
+    private int welCredit;
     private FirebaseUser user;
     private SignupPresenter presenter;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference referenceCounter = database.getReference("counter");
     private DatabaseReference referenceUser = database.getReference("user");
+    private DatabaseReference referenceFare = database.getReference("fare");
 
     public SignupRepositoryImpl(SignupPresenter presenter) {
         this.presenter = presenter;
     }
 
     @Override
-    public void signup(final String email, String password, final Activity activity, final FirebaseAuth firebaseAuth) {
+    public void signup(final String email, String password, final String codeCountry, final Activity activity, final FirebaseAuth firebaseAuth) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -47,7 +51,7 @@ public class SignupRepositoryImpl implements SignupRepository {
                             if (user != null) {
                                 final String mail = user.getEmail();
                                 final String uid = user.getUid();
-                                sendEmailVerification(mail, uid);
+                                sendEmailVerification(mail, uid, codeCountry);
                             }
                         } else {
                             presenter.responseErrorSignup();
@@ -57,19 +61,31 @@ public class SignupRepositoryImpl implements SignupRepository {
     }
 
     @Override
-    public void sendEmailVerification(final String email, final String uid) {
+    public void sendEmailVerification(final String email, final String uid, final String codeCountry) {
         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    setDataUser(email, uid);
+                    setDataUser(email, uid, codeCountry);
                 }
             }
         });
     }
 
     @Override
-    public void setDataUser(final String email, final String uid) {
+    public void setDataUser(final String email, final String uid, String codeCountry) {
+        referenceFare.child(codeCountry).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Fare fare = dataSnapshot.getValue(Fare.class);
+                welCredit = fare.getWelcome_credit();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         referenceCounter.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -78,7 +94,7 @@ public class SignupRepositoryImpl implements SignupRepository {
                     return Transaction.success(mutableData);
                 }
                 c.count_user++;
-                User usr = new User(email, 0.0, 0.0, 0,
+                User usr = new User(email, welCredit, 0.0, 0.0, 0,
                         0, false, false);
                 referenceUser.child(uid).setValue(usr);
                 mutableData.setValue(c);

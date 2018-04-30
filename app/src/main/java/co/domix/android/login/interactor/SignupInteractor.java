@@ -9,5 +9,6 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 
 public interface SignupInteractor {
-    void signup(String email, String password, String confirmPassword, Activity activity, FirebaseAuth firebaseAuth);
+    void signup(String email, String password, String confirmPassword, String latitude, String longitude,
+                Activity activity, FirebaseAuth firebaseAuth);
 }

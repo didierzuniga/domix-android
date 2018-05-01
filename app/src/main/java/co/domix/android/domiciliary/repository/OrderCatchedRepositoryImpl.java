@@ -29,7 +29,6 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
     private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false;
     private OrderCatchedPresenter presenter;
-    private DomixApplication app;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");

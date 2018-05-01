@@ -34,7 +34,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     private LocationManager locationManager;
     private DomixApplication app;
-    private int minFare, priceInCash;
+    private int minFare, priceInCash, myCredit;
     private double fareToApply;
     private String coordsFromPrice, coordsToPrice, cityOrigen, countryOrigen, currencyCode;
     private List<Address> geocodeMatches = null;
@@ -87,7 +87,8 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     }
 
     @Override
-    public void requestGeolocationAndDistance(String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, Activity activity) {
+    public void requestGeolocationAndDistance(String uid, String latFrom, String lonFrom, String latTo,
+                                              String lonTo, int whatAddress, Activity activity) {
         if (whatAddress == 0){
             if (!latFrom.equals(null) || !lonFrom.equals(null)){
                 String arr [] = getGeolocation(latFrom, lonFrom, activity);
@@ -100,7 +101,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
                 coordsToPrice = arr[3];
                 countryOrigen = arr[0];
                 cityOrigen = arr[1];
-                repository.requestFare(arr[0]);
+                repository.requestFareAndMyCredit(arr[0], uid);
                 presenter.responseToName(arr[2]);
             }
         }
@@ -144,7 +145,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     @Override
     public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                         String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
-                        byte payMethod, int paymentCash, Activity activity) {
+                        byte payMethod, int paymentCash, int creditUsed, Activity activity) {
         if (from.equals("")) {
             presenter.responseEmptyFields(activity.getString(R.string.toast_indicate_starting_point));
         } else if (to.equals("")) {
@@ -158,7 +159,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
         } else {
             if (fieldsWasFill) {
                 repository.request(uid, email, country, city, from, to, disBetweenPoints, description1, description2,
-                                    dimenSelected, payMethod, paymentCash, activity);
+                                    dimenSelected, payMethod, paymentCash, creditUsed, activity);
             } else {
                 presenter.openDialogSendContactData();
             }
@@ -166,10 +167,11 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     }
 
     @Override
-    public void responseFare(String currency, double fare, int minFareCost) {
+    public void responseFareAndMyCredit(String currency, double fare, int minFareCost, int credit) {
         currencyCode = currency;
         fareToApply = fare;
         minFare = minFareCost;
+        myCredit = credit;
     }
 
     @Override
@@ -187,7 +189,8 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             if (priceInCash < minFare) {
                 priceInCash = minFare;
             }
-            presenter.responseCash(priceInCash, currencyCode, countryOrigen, cityOrigen, route.distance.value);
+
+            presenter.responseCash(priceInCash, currencyCode, countryOrigen, cityOrigen, route.distance.value, myCredit);
         }
     }
 }

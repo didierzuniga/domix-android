@@ -39,7 +39,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public Double fare;
     private Timer timer;
-    private int couForResponse, countFinal, vvPaymentCash, disbetween;
+    private int couForResponse, countFinal, vvPaymentCash, credit, disbetween;
     private Double scoreAuthor, scoreDomiciliary;
     private byte dimenSelected, payMethod;
     private String couString, uidCurrentUser, country, city, from, to, latFrom, lonFrom, latTo, lonTo, description1,
@@ -90,8 +90,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void request(String uid, String email, final String countryCode, final String cityCode,
-                        final String fromm, final String too, int disBetweenPoints, final String descriptionOne, final String descriptionTwo,
-                        final byte dimenSelect, final byte payMeth, int paymentCash, final Activity activity) {
+                        final String fromm, final String too, int disBetweenPoints, final String descriptionOne,
+                        final String descriptionTwo, final byte dimenSelect, final byte payMeth, int paymentCash,
+                        int creditUsed, final Activity activity) {
         SharedPreferences location = activity
                 .getSharedPreferences("domx_prefs", Context.MODE_PRIVATE);
         uidCurrentUser = uid;
@@ -109,6 +110,7 @@ public class UserRepositoryImpl implements UserRepository {
         dimenSelected = dimenSelect;
         payMethod = payMeth;
         vvPaymentCash = paymentCash;
+        credit = creditUsed;
         scoreAuthor = null;
         scoreDomiciliary = null;
 
@@ -164,7 +166,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (timeNow != null){
                 Order order = new Order(uidCurrentUser, countFinal, country, city, from, to,
                         latFrom, lonFrom, latTo, lonTo, disbetween, description1, description2, dimenSelected, payMethod,
-                        vvPaymentCash, dateNow, timeNow, new Date().getTime());
+                        vvPaymentCash, credit, dateNow, timeNow, new Date().getTime());
                 referenceOrder.child(couString).setValue(order);
                 timer.cancel();
                 presenter.responseSuccessRequest(couForResponse);
@@ -174,12 +176,26 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void requestFare(final String codeCountry) {
+    public void requestFareAndMyCredit(final String codeCountry, final String uid) {
         referenceFare.child(codeCountry).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Fare fare = dataSnapshot.getValue(Fare.class);
-                interactor.responseFare(fare.getCurrency_code(), fare.getFare_per_meter(), fare.getMin_fare_cost());
+                final Fare fare = dataSnapshot.getValue(Fare.class);
+
+                referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+
+                        interactor.responseFareAndMyCredit(fare.getCurrency_code(), fare.getFare_per_meter(),
+                                                           fare.getMin_fare_cost(), user.getMy_credit());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override

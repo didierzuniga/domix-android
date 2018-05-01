@@ -12,6 +12,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -33,21 +35,23 @@ import co.domix.android.R;
 import co.domix.android.services.LocationService;
 import co.domix.android.user.presenter.UserPresenter;
 import co.domix.android.user.presenter.UserPresenterImpl;
+import co.domix.android.utils.ToastsKt;
 
 public class User extends AppCompatActivity implements UserView {
 
     private ScrollView scrollView;
     private RadioGroup radioGroup;
-    private LinearLayout linearNotInternet;
+    private LinearLayout linearNotInternet, lnrSwiCredit;
+    private SwitchCompat switchCompat;
     private Button buttonRequestOrder, btnSendFullnameAndPhone, btnBack, buttonRefresh;
     private TextView txtFrom, txtTo, buttonSelectFrom, buttonSelectTo, paymentCash;
     private EditText description1, description2;
     private Spinner spiDimensions;
     private byte dimenSelected;
     private TextInputEditText firstName, lastName, phone;
-    private String countryOrigen, cityOrigen;
+    private String countryOrigen, cityOrigen, codeCountry;
     private byte payMethod;
-    private int priceInCash, disBetweenPoints;
+    private int priceInCash, disBetweenPoints, mCredit, costDelDesCredit, updateCredit, creditUsed;
     private ProgressBar progressBarRequest;
     private AlertDialog alert = null;
     private android.app.AlertDialog alertDialog;
@@ -69,6 +73,8 @@ public class User extends AppCompatActivity implements UserView {
         app = (DomixApplication) getApplicationContext();
 
         scrollView = (ScrollView) findViewById(R.id.rootScroll);
+        lnrSwiCredit = (LinearLayout) findViewById(R.id.lnrSwiCredit);
+        switchCompat = (SwitchCompat) findViewById(R.id.swiCredit);
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
         progressBarRequest = (ProgressBar) findViewById(R.id.progressBarRequest);
         shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
@@ -112,6 +118,7 @@ public class User extends AppCompatActivity implements UserView {
         buttonSelectFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                switchCompat.setChecked(false);
                 editor.putInt("whatAddress", 0);
                 editor.commit();
                 goPickMap();
@@ -122,9 +129,34 @@ public class User extends AppCompatActivity implements UserView {
         buttonSelectTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                switchCompat.setChecked(false);
                 editor.putInt("whatAddress", 1);
                 editor.commit();
                 goPickMap();
+            }
+        });
+
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    costDelDesCredit = priceInCash - mCredit;
+
+                    if (costDelDesCredit < 0){
+                        paymentCash.setText(" " + 0.00 + " " + codeCountry);
+                        updateCredit = costDelDesCredit * -1;
+                        creditUsed = mCredit - updateCredit;
+                        Log.w("jjj", "Credito nuevo: "+updateCredit);
+                        Log.w("jjj", "Credito usado: "+creditUsed);
+
+                    } else {
+                        paymentCash.setText(" " + costDelDesCredit + " " + codeCountry);
+                        updateCredit = 0;
+                        creditUsed = mCredit;
+                    }
+                } else {
+                    paymentCash.setText(" " + priceInCash + " " + codeCountry);
+                }
             }
         });
 
@@ -134,10 +166,17 @@ public class User extends AppCompatActivity implements UserView {
             public void onClick(View v) {
                 scrollView.setVisibility(View.GONE);
                 showProgressBar();
+//                int creditUsed;
+//                if (switchCompat.isChecked()){
+//                    priceInCash = costDelDesCredit;
+//                    creditUsed = mCredit;
+//                } else {
+//                    creditUsed = 0;
+//                }
                 presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
                         txtFrom.getText().toString(), txtTo.getText().toString(), disBetweenPoints,
                         description1.getText().toString(), description2.getText().toString(),
-                        dimenSelected, payMethod, priceInCash, User.this);
+                        dimenSelected, payMethod, priceInCash, creditUsed, User.this);
             }
         });
 
@@ -309,7 +348,14 @@ public class User extends AppCompatActivity implements UserView {
     }
 
     @Override
-    public void responseCash(int priceInCashh, String countryO, String countryOrigenn, String cityOrigenn, int distanceBetweenPoints) {
+    public void responseCash(int priceInCashh, String countryO, String countryOrigenn, String cityOrigenn,
+                             int distanceBetweenPoints, int myCredit) {
+        mCredit = myCredit;
+        codeCountry = countryO;
+        if (myCredit > 0){
+            lnrSwiCredit.setVisibility(View.VISIBLE);
+            switchCompat.setHint("Usar crédito " + myCredit + " " + countryO);
+        }
         countryOrigen = countryOrigenn;
         cityOrigen = cityOrigenn;
         priceInCash = priceInCashh;
@@ -355,7 +401,7 @@ public class User extends AppCompatActivity implements UserView {
         txtTo = (TextView) findViewById(R.id.idTo);
 
         try {
-            presenter.requestGeolocationAndDistance(shaPref.getString("latFrom", ""),
+            presenter.requestGeolocationAndDistance(app.uId, shaPref.getString("latFrom", ""),
                     shaPref.getString("lonFrom", ""),
                     shaPref.getString("latTo", ""),
                     shaPref.getString("lonTo", ""),

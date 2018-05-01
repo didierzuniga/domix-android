@@ -16,7 +16,8 @@ public interface UserView {
     void responseFromName(String from);
     void responseToName(String to);
     void responseEmptyFields(String toastMessage);
-    void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen, int distanceBetweenPoints);
+    void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen,
+                      int distanceBetweenPoints, int myCredit);
     void responseSuccessRequest(int getCountFull);
 
     void showNotInternet();

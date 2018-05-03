@@ -51,7 +51,7 @@ public class User extends AppCompatActivity implements UserView {
     private TextInputEditText firstName, lastName, phone;
     private String countryOrigen, cityOrigen, codeCountry;
     private byte payMethod;
-    private int priceInCash, disBetweenPoints, mCredit, costDelDesCredit, updateCredit, creditUsed;
+    private int totalCostToDB, priceInCash, disBetweenPoints, mCredit, costDelDesCredit, updateCreditUserToDB, creditUsedToDB;
     private ProgressBar progressBarRequest;
     private AlertDialog alert = null;
     private android.app.AlertDialog alertDialog;
@@ -144,17 +144,17 @@ public class User extends AppCompatActivity implements UserView {
 
                     if (costDelDesCredit < 0){
                         paymentCash.setText(" " + 0.00 + " " + codeCountry);
-                        updateCredit = costDelDesCredit * -1;
-                        creditUsed = mCredit - updateCredit;
-                        Log.w("jjj", "Credito nuevo: "+updateCredit);
-                        Log.w("jjj", "Credito usado: "+creditUsed);
-
+                        totalCostToDB = 0;
+                        updateCreditUserToDB = costDelDesCredit * -1;
+                        creditUsedToDB = mCredit - updateCreditUserToDB;
                     } else {
                         paymentCash.setText(" " + costDelDesCredit + " " + codeCountry);
-                        updateCredit = 0;
-                        creditUsed = mCredit;
+                        totalCostToDB = costDelDesCredit;
+                        updateCreditUserToDB = 0;
+                        creditUsedToDB = mCredit;
                     }
                 } else {
+                    totalCostToDB = priceInCash;
                     paymentCash.setText(" " + priceInCash + " " + codeCountry);
                 }
             }
@@ -166,17 +166,18 @@ public class User extends AppCompatActivity implements UserView {
             public void onClick(View v) {
                 scrollView.setVisibility(View.GONE);
                 showProgressBar();
-//                int creditUsed;
-//                if (switchCompat.isChecked()){
-//                    priceInCash = costDelDesCredit;
-//                    creditUsed = mCredit;
-//                } else {
-//                    creditUsed = 0;
-//                }
+                int creditApplyToDB, updtCreditUserToDB;
+                if (switchCompat.isChecked()){
+                    creditApplyToDB = creditUsedToDB;
+                    updtCreditUserToDB = updateCreditUserToDB;
+                } else {
+                    creditApplyToDB = 0;
+                    updtCreditUserToDB = 0;
+                }
                 presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
                         txtFrom.getText().toString(), txtTo.getText().toString(), disBetweenPoints,
                         description1.getText().toString(), description2.getText().toString(),
-                        dimenSelected, payMethod, priceInCash, creditUsed, User.this);
+                        dimenSelected, payMethod, totalCostToDB, creditApplyToDB, updtCreditUserToDB, User.this);
             }
         });
 

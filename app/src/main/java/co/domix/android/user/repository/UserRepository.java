@@ -11,6 +11,6 @@ public interface UserRepository {
     void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity);
     void request(String uid, String email, String country, String city, String from, String to,
                  int disBetweenPoints, String description1, String description2, byte dimenSelected, byte payMethod,
-                 int paymentCash, int creditUsed, Activity activity);
+                 int paymentCash, int creditUsed, int updateCredit, Activity activity);
     void requestFareAndMyCredit(String codeCountry, String uid);
 }

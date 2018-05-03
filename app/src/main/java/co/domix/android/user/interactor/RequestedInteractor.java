@@ -8,6 +8,6 @@ import android.app.Activity;
 
 public interface RequestedInteractor {
     void listenForUpdate(int idOrder, Activity activity);
-    void dialogCancel(int idOrder, Activity activity);
+    void dialogCancel(String uid, int idOrder, Activity activity);
     void updateDomiPosition(int idOrder, Activity activity);
 }

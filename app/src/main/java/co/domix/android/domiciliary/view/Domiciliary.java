@@ -66,7 +66,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.w("jjj", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_domiciliary);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -402,7 +401,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     protected void onStart() {
-        Log.w("jjj", "onStart");
         super.onStart();
         stopService(new Intent(this, NotificationService.class));
 
@@ -418,7 +416,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     protected void onResume() {
-        Log.w("jjj", "onResume");
         super.onResume();
         la = "";
         lo = "";
@@ -427,7 +424,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     protected void onStop() {
-        Log.w("jjj", "onStop");
         super.onStop();
         if ((shaPref.getBoolean("SearchDelivery", false))) {
             startService(new Intent(this, NotificationService.class));
@@ -436,7 +432,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     protected void onDestroy() {
-        Log.w("jjj", "onDestroy");
         super.onDestroy();
     }
 }

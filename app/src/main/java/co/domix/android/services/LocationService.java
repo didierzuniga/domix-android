@@ -28,7 +28,6 @@ public class LocationService extends Service implements LocationListener, GpsSta
 
     @Override
     public void onCreate() {
-        Log.w("jjj", "onCreate Service");
         super.onCreate();
         shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = shaPref.edit();
@@ -63,7 +62,6 @@ public class LocationService extends Service implements LocationListener, GpsSta
     @Override
     public void onLocationChanged(Location location) {
         if (location != null){
-            Log.w("jjj", "Location Service");
             editor.putString("latitude", String.valueOf(location.getLatitude()));
             editor.putString("longitude", String.valueOf(location.getLongitude()));
             editor.commit();
@@ -89,7 +87,6 @@ public class LocationService extends Service implements LocationListener, GpsSta
     /* Remove the locationlistener updates when Services is stopped */
     @Override
     public void onDestroy() {
-        Log.w("jjj", "onDestroy Service");
         try {
             mLocationManager.removeUpdates(this);
             mLocationManager.removeGpsStatusListener(this);

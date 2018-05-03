@@ -13,6 +13,6 @@ public interface UserInteractor {
     void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity);
     void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                  String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
-                 byte payMethod, int paymentCash, int creditUsed, Activity activity);
+                 byte payMethod, int paymentCash, int creditUsed, int updateCredit, Activity activity);
     void responseFareAndMyCredit(String currency, double fare, int minFareCost, int credit);
 }

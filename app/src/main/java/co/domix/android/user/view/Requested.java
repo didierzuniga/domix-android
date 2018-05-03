@@ -260,7 +260,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     @Override
     public void dialogCancel() {
-        presenter.dialogCancel(app.idOrder, this);
+        presenter.dialogCancel(app.uId, app.idOrder, this);
     }
 
     @Override

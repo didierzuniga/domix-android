@@ -89,7 +89,7 @@ public class RequestedRepositoryImpl implements RequestedRepository {
     }
 
     @Override
-    public void dialogCancel(final int idOrder, final Activity activity) {
+    public void dialogCancel(final String uid, final int idOrder, final Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(R.string.message_cancel_request);
         builder.setPositiveButton(R.string.message_yes,
@@ -97,7 +97,7 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finallyListener = true;
-                        removeOrder(idOrder, activity);
+                        removeOrder(uid, idOrder, activity);
                     }
                 }
         )
@@ -106,7 +106,32 @@ public class RequestedRepositoryImpl implements RequestedRepository {
     }
 
     @Override
-    public void removeOrder(int idOrder, Activity activity) {
+    public void removeOrder(final String uid, int idOrder, Activity activity) {
+        referenceOrder.child(String.valueOf(idOrder)).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Order order = dataSnapshot.getValue(Order.class);
+
+                referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        referenceUser.child(uid).child("my_credit").setValue(order.getX_credit_used() + user.getMy_credit());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         referenceOrder.child(String.valueOf(idOrder)).removeValue();
         deductCounters();
     }

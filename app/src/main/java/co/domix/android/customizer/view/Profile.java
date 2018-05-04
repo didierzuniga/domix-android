@@ -35,7 +35,7 @@ public class Profile extends AppCompatActivity implements ProfileView {
 
     private ProgressBar progressBarProfile;
     private ImageView ivProfile;
-    private TextView firstname, lastname, email, rateAsDomi, rateAsUser;
+    private TextView firstname, lastname, email, myCredit, rateAsDomi, rateAsUser;
     private StorageReference storageReference;
     private Button btnUploadPhoto, btnChoosePhoto;
     private DomixApplication app;
@@ -59,6 +59,7 @@ public class Profile extends AppCompatActivity implements ProfileView {
         progressBarProfile = (ProgressBar) findViewById(R.id.progressBarProfile);
         firstname = (TextView) findViewById(R.id.idFirstnameProfile);
         email = (TextView) findViewById(R.id.idEmailProfile);
+        myCredit = (TextView) findViewById(R.id.idMyCredit);
         lastname = (TextView) findViewById(R.id.idLastnameProfile);
         rateAsDomi = (TextView) findViewById(R.id.idRateAsDomi);
         rateAsUser = (TextView) findViewById(R.id.idRateAsUser);
@@ -127,10 +128,11 @@ public class Profile extends AppCompatActivity implements ProfileView {
 
     @Override
     public void responseDataUser(boolean verifyGlide, String firstName, String lastName, String mail, String scoreAsDomi,
-                                 String scoreAsUser) {
+                                 String scoreAsUser, int credit) {
         firstname.setText(firstName);
         lastname.setText(lastName);
         email.setText(mail);
+        myCredit.append(" " + credit);
         rateAsDomi.append(" " + scoreAsDomi);
         rateAsUser.append(" " + scoreAsUser);
         verifyGlid = verifyGlide;

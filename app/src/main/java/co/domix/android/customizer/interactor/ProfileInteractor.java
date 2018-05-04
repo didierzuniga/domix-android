@@ -8,5 +8,5 @@ public interface ProfileInteractor {
     void queryImageSeted(String uid);
     void trueImageSeted(String uid);
     void responseDataUser(boolean verifyGlide, String firstname, String lastname, String email,
-                          String scoreAsDomi, String scoreAsUser);
+                          String scoreAsDomi, String scoreAsUser, int credit);
 }

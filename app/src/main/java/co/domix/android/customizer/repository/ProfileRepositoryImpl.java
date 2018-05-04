@@ -39,7 +39,8 @@ public class ProfileRepositoryImpl implements ProfileRepository {
                 User user = dataSnapshot.getValue(User.class);
                 boolean verifyGlide = user.isImage_profile();
                 interactor.responseDataUser(verifyGlide, user.getFirst_name(), user.getLast_name(),
-                                            user.getEmail(), String.format("%.2f", user.getScore_as_deliveryman()), String.format("%.2f", user.getScore_as_user()));
+                                            user.getEmail(), String.format("%.2f", user.getScore_as_deliveryman()),
+                                            String.format("%.2f", user.getScore_as_user()), user.getMy_credit());
             }
 
             @Override

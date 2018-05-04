@@ -6,7 +6,7 @@ package co.domix.android.customizer.view;
 
 public interface ProfileView {
     void responseDataUser(boolean verifyGlide, String firstname, String lastname, String email, String scoreAsDomi,
-                          String scoreAsUser);
+                          String scoreAsUser, int credit);
     void queryVerifyGlide();
     void putTrueImage();
     void executeGlide();

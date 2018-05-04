@@ -73,7 +73,7 @@ public class SignupRepositoryImpl implements SignupRepository {
     }
 
     @Override
-    public void setDataUser(final String email, final String uid, String codeCountry) {
+    public void setDataUser(final String email, final String uid, final String codeCountry) {
         referenceFare.child(codeCountry).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -95,7 +95,7 @@ public class SignupRepositoryImpl implements SignupRepository {
                 }
                 c.count_user++;
                 User usr = new User(email, welCredit, 0.0, 0.0, 0,
-                        0, false, false);
+                        0, codeCountry, false, false);
                 referenceUser.child(uid).setValue(usr);
                 mutableData.setValue(c);
                 return Transaction.success(mutableData);

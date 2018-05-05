@@ -1,11 +1,18 @@
 package co.domix.android.home.view;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,7 +26,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.firebase.auth.FirebaseAuth;
 
 import co.domix.android.DomixApplication;
@@ -34,16 +40,21 @@ import co.domix.android.home.presenter.HomePresenterImpl;
 import co.domix.android.login.view.Login;
 import co.domix.android.services.LocationService;
 import co.domix.android.user.view.User;
+import co.domix.android.utils.ToastsKt;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeView {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeView, ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationManager locManager;
+    private Location loc;
+
     private FirebaseAuth firebaseAuth;
     private LinearLayout linearRoot, linearNotInternet;
     private ProgressBar progressBar;
     private AlertDialog alert = null;
     private Button buttonGoUser, buttonGoDomiciliary, buttonRefresh;
+    private SharedPreferences shaPref;
+    private SharedPreferences.Editor editor;
     private HomePresenter presenter;
     public DomixApplication app;
 
@@ -55,7 +66,8 @@ public class Home extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_home));
 
-
+        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        editor = shaPref.edit();
 
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Shrikhand-Regular.ttf");
         presenter = new HomePresenterImpl(this);
@@ -173,10 +185,24 @@ public class Home extends AppCompatActivity
 
     @Override
     public void startGetLocation() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            startService(new Intent(this, LocationService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(Home.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            {
+                ToastsKt.toastShort(Home.this, "No podemos ofrecerte el servicio");
+                return;
+            } else {
+                locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                editor.putString("latitude", String.valueOf(loc.getLatitude()));
+                editor.putString("longitude",String.valueOf(loc.getLongitude()));
+                editor.commit();
+            }
         } else {
-            startForegroundService(new Intent(this, LocationService.class));
+            startService(new Intent(this, LocationService.class));
         }
     }
 
@@ -231,8 +257,13 @@ public class Home extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.verifyLocationAndInternet(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        presenter.verifyLocationAndInternet(this);
     }
 }

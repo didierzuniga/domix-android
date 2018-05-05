@@ -62,6 +62,7 @@ public class LocationService extends Service implements LocationListener, GpsSta
     @Override
     public void onLocationChanged(Location location) {
         if (location != null){
+            Log.w("jjj", "Location: "+location.getLatitude());
             editor.putString("latitude", String.valueOf(location.getLatitude()));
             editor.putString("longitude", String.valueOf(location.getLongitude()));
             editor.commit();

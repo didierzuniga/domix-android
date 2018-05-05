@@ -1,14 +1,20 @@
 package co.domix.android.user.view;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +44,9 @@ import co.domix.android.user.presenter.UserPresenterImpl;
 import co.domix.android.utils.ToastsKt;
 
 public class User extends AppCompatActivity implements UserView {
+
+    private LocationManager locManager;
+    private Location loc;
 
     private ScrollView scrollView;
     private RadioGroup radioGroup;
@@ -78,6 +87,7 @@ public class User extends AppCompatActivity implements UserView {
         switchCompat = (SwitchCompat) findViewById(R.id.swiCredit);
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
         progressBarRequest = (ProgressBar) findViewById(R.id.progressBarRequest);
+
         shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
         editor = shaPref.edit();
 
@@ -197,10 +207,23 @@ public class User extends AppCompatActivity implements UserView {
 
     @Override
     public void startGetLocation() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            startService(new Intent(this, LocationService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(User.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ToastsKt.toastShort(User.this, "No podemos ofrecerte el servicio");
+                return;
+            } else {
+                locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                editor.putString("latitude", String.valueOf(loc.getLatitude()));
+                editor.putString("longitude",String.valueOf(loc.getLongitude()));
+                editor.commit();
+            }
         } else {
-            startForegroundService(new Intent(this, LocationService.class));
+            startService(new Intent(this, LocationService.class));
         }
     }
 
@@ -402,6 +425,7 @@ public class User extends AppCompatActivity implements UserView {
     @Override
     protected void onStart() {
         super.onStart();
+        presenter.verifyLocationAndInternet(this);
         txtFrom = (TextView) findViewById(R.id.idFrom);
         txtTo = (TextView) findViewById(R.id.idTo);
 
@@ -420,7 +444,7 @@ public class User extends AppCompatActivity implements UserView {
     @Override
     protected void onResume() {
         super.onResume();
-        presenter.verifyLocationAndInternet(this);
+//        presenter.verifyLocationAndInternet(this);
     }
 
     @Override

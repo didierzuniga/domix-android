@@ -30,8 +30,8 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     private DomixApplication app;
     private TextView textViewRequestedBy, textViewPhoneRequestedBy, textViewFrom, textViewTo,
-            textViewDescription1, textViewDescription2, textViewMoneyToPay;
-    private String countryO;
+            textViewDescription1, textViewDescription2, textViewMoneyToPay, txtDeliverymanNotReceives,
+            txtDeliverymanReceives;
     private double oriLat, oriLon, desLat, desLon;
     private Button cancelService, finishService, btnViewMap;
     private ImageButton call;
@@ -66,6 +66,9 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         textViewTo = (TextView) findViewById(R.id.txtVieTo);
         textViewDescription1 = (TextView) findViewById(R.id.txtVieDescription1);
         textViewDescription2 = (TextView) findViewById(R.id.txtVieDescription2);
+        textViewMoneyToPay = (TextView) findViewById(R.id.d_moneyToPay);
+        txtDeliverymanNotReceives = (TextView) findViewById(R.id.idDeliverymanNotReceives);
+        txtDeliverymanReceives = (TextView) findViewById(R.id.idDeliverymanReceives);
         textViewMoneyToPay = (TextView) findViewById(R.id.d_moneyToPay);
 
         getUserRequest();
@@ -121,19 +124,21 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     @Override
     public void responseUserRequested(String nameAuthor, String cellphoneAuthor, String countryAuthor, String cityAuthor,
-                                      String fromAuthor, String toAuthor, String titleAuthor,
-                                      String descriptionAuthor, String oriLa, String oriLo,
-                                      String desLa, String desLo, int moneyAuthor) {
-        if (countryAuthor.equals("CO")){
-            countryO = "COP";
-        } else if (countryAuthor.equals("CL")){
-            countryO = "CLP";
+                                      String fromAuthor, String toAuthor, String description1,
+                                      String description2, String oriLa, String oriLo,
+                                      String desLa, String desLo, int totalCostDelivery, boolean cashReceivesDeliveryman,
+                                      int moneyCash) {
+        if (cashReceivesDeliveryman){
+            txtDeliverymanReceives.setVisibility(View.VISIBLE);
+            txtDeliverymanReceives.setText(" " + moneyCash);
+        } else {
+            txtDeliverymanNotReceives.setVisibility(View.VISIBLE);
         }
         textViewRequestedBy.setText(nameAuthor);
         textViewPhoneRequestedBy.setText(cellphoneAuthor);
-        textViewDescription1.setText(titleAuthor);
-        textViewDescription2.setText(descriptionAuthor);
-        textViewMoneyToPay.setText(String.valueOf(moneyAuthor)+" "+countryO);
+        textViewDescription1.setText(description1);
+        textViewDescription2.setText(description2);
+        textViewMoneyToPay.setText(String.valueOf(totalCostDelivery)+" "+countryAuthor);
         oriLat = Double.valueOf(oriLa);
         oriLon = Double.valueOf(oriLo);
         desLat = Double.valueOf(desLa);

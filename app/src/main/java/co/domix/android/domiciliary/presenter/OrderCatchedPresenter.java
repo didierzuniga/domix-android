@@ -11,7 +11,7 @@ public interface OrderCatchedPresenter {
     void responseUserRequested(String nameAuthor, String cellphoneAuthor, String countryAuthor, String cityAuthor,
                              String fromAuthor, String toAuthor, String titleAuthor,
                              String descriptionAuthor, String oriLa, String oriLo, String desLa,
-                             String desLo, int moneyAuthor);
+                             String desLo, int totalCostDelivery, boolean cashReceivesDeliveryman, int moneyCash);
     void dialogCancel(String idOrder, String uid, OrderCatched orderCatched);
     void dialogFinish(String idOrder);
     void showToastDeliverymanCancelledOrder();

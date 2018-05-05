@@ -20,7 +20,7 @@ public class OrderCatchedInteractorImpl implements OrderCatchedInteractor {
 
     public OrderCatchedInteractorImpl(OrderCatchedPresenter presenter) {
         this.presenter = presenter;
-        repository = new OrderCatchedRepositoryImpl(presenter);
+        repository = new OrderCatchedRepositoryImpl(presenter, this);
     }
 
     @Override
@@ -52,5 +52,23 @@ public class OrderCatchedInteractorImpl implements OrderCatchedInteractor {
     @Override
     public void submitCoord(String uid, String la, String lo, Activity activity) {
         repository.submitCoord(uid, la, lo, activity);
+    }
+
+    @Override
+    public void responseUserRequested(String nameAuthor, String cellphoneAuthor, String countryAuthor,
+                                      String cityAuthor, String fromAuthor, String toAuthor, String description1,
+                                      String description2, String oriLa, String oriLo, String desLa,
+                                      String desLo, int moneyCash, int moneyCredit, int paymentMethod) {
+        int totalCostDelivery = moneyCash + moneyCredit;
+        if (paymentMethod == 1 || paymentMethod == 2){
+            presenter.responseUserRequested(nameAuthor, cellphoneAuthor, countryAuthor, cityAuthor, fromAuthor,
+                                            toAuthor, description1, description2, oriLa, oriLo, desLa, desLo,
+                                            totalCostDelivery, false, moneyCash);
+        } else {
+
+            presenter.responseUserRequested(nameAuthor, cellphoneAuthor, countryAuthor, cityAuthor, fromAuthor,
+                    toAuthor, description1, description2, oriLa, oriLo, desLa, desLo,
+                    totalCostDelivery, true, moneyCash);
+        }
     }
 }

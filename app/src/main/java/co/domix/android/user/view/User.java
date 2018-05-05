@@ -41,7 +41,7 @@ public class User extends AppCompatActivity implements UserView {
 
     private ScrollView scrollView;
     private RadioGroup radioGroup;
-    private LinearLayout linearNotInternet, lnrSwiCredit;
+    private LinearLayout linearNotInternet, lnrSwiCredit, lnrPaymentMethod;
     private SwitchCompat switchCompat;
     private Button buttonRequestOrder, btnSendFullnameAndPhone, btnBack, buttonRefresh;
     private TextView txtFrom, txtTo, buttonSelectFrom, buttonSelectTo, paymentCash;
@@ -74,6 +74,7 @@ public class User extends AppCompatActivity implements UserView {
 
         scrollView = (ScrollView) findViewById(R.id.rootScroll);
         lnrSwiCredit = (LinearLayout) findViewById(R.id.lnrSwiCredit);
+        lnrPaymentMethod = (LinearLayout) findViewById(R.id.lnrPaymentMethod);
         switchCompat = (SwitchCompat) findViewById(R.id.swiCredit);
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
         progressBarRequest = (ProgressBar) findViewById(R.id.progressBarRequest);
@@ -141,19 +142,22 @@ public class User extends AppCompatActivity implements UserView {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     costDelDesCredit = priceInCash - mCredit;
-
                     if (costDelDesCredit < 0){
                         paymentCash.setText(" " + 0.00 + " " + codeCountry);
                         totalCostToDB = 0;
                         updateCreditUserToDB = costDelDesCredit * -1;
                         creditUsedToDB = mCredit - updateCreditUserToDB;
+                        lnrPaymentMethod.setVisibility(View.GONE);
+                        payMethod = 2;
                     } else {
                         paymentCash.setText(" " + costDelDesCredit + " " + codeCountry);
                         totalCostToDB = costDelDesCredit;
                         updateCreditUserToDB = 0;
                         creditUsedToDB = mCredit;
+                        lnrPaymentMethod.setVisibility(View.VISIBLE);
                     }
                 } else {
+                    lnrPaymentMethod.setVisibility(View.VISIBLE);
                     totalCostToDB = priceInCash;
                     paymentCash.setText(" " + priceInCash + " " + codeCountry);
                 }
@@ -234,11 +238,11 @@ public class User extends AppCompatActivity implements UserView {
         alertDialog = new android.app.AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        btnSendFullnameAndPhone = (Button) view.findViewById(R.id.btnSendContactData);
-        btnBack = (Button) view.findViewById(R.id.btnBack);
-        firstName = (TextInputEditText) view.findViewById(R.id.firstName);
-        lastName = (TextInputEditText) view.findViewById(R.id.lastName);
-        phone = (TextInputEditText) view.findViewById(R.id.phone);
+        btnSendFullnameAndPhone = view.findViewById(R.id.btnSendContactData);
+        btnBack = view.findViewById(R.id.btnBack);
+        firstName = view.findViewById(R.id.firstName);
+        lastName = view.findViewById(R.id.lastName);
+        phone = view.findViewById(R.id.phone);
 
         firstName.setInputType(
                 InputType.TYPE_CLASS_TEXT |

@@ -9,9 +9,9 @@ public interface OrderCatchedView {
     void hideProgressBar();
     void getUserRequest();
     void responseUserRequested(String nameAuthor, String cellphoneAuthor, String countryAuthor, String cityAuthor,
-                             String fromAuthor, String toAuthor, String titleAuthor,
-                             String descriptionAuthor, String oriLa, String oriLo, String desLa,
-                             String desLo, int moneyAuthor);
+                             String fromAuthor, String toAuthor, String description1,
+                             String description2, String oriLa, String oriLo, String desLa,
+                             String desLo, int totalCostDelivery, boolean cashReceivesDeliveryman, int moneyCash);
     void goPreviewRouteOrder();
     void dialContactPhone(String phoneNumber);
     void dialogCancel();

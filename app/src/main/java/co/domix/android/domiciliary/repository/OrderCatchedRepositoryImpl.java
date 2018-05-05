@@ -16,8 +16,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
+import co.domix.android.domiciliary.interactor.OrderCatchedInteractor;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenter;
 import co.domix.android.model.Counter;
+import co.domix.android.model.Fare;
 import co.domix.android.model.Order;
 import co.domix.android.model.User;
 
@@ -29,15 +31,18 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
     private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false;
     private OrderCatchedPresenter presenter;
+    private OrderCatchedInteractor interactor;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");
+    DatabaseReference referenceFare = database.getReference("fare");
     DatabaseReference referenceOrder = database.getReference("order");
     DatabaseReference referenceCoord = database.getReference("coordinate");
     DatabaseReference referenceCounter = database.getReference("counter");
 
-    public OrderCatchedRepositoryImpl(OrderCatchedPresenter presenter) {
+    public OrderCatchedRepositoryImpl(OrderCatchedPresenter presenter, OrderCatchedInteractor interactor) {
         this.presenter = presenter;
+        this.interactor = interactor;
     }
 
     @Override
@@ -51,16 +56,18 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                 String cityAuthor = order.getX_city();
                 String fromAuthor = order.getX_name_from();
                 String toAuthor = order.getX_name_to();
-                String titleAuthor = order.getX_description1();
-                String descriptionAuthor = order.getX_description2();
+                String description1 = order.getX_description1();
+                String description2 = order.getX_description2();
                 String oriLa = order.x_latitude_from.toString();
                 String oriLo = order.x_longitude_from.toString();
                 String desLa = order.x_latitude_to.toString();
                 String desLo = order.x_longitude_to.toString();
-                int moneyAuthor = order.getX_money_to_pay();
+                int moneyCash = order.getX_money_to_pay();
+                int moneyCredit = order.getX_credit_used();
+                int paymentMethod = order.getX_pay_method();
                 getNameAndPhoneAuthor(uidAuthor, countryAuthor, cityAuthor, fromAuthor, toAuthor,
-                        titleAuthor, descriptionAuthor, oriLa, oriLo,
-                        desLa, desLo, moneyAuthor);
+                        description1, description2, oriLa, oriLo,
+                        desLa, desLo, moneyCash, moneyCredit, paymentMethod);
                 verifyStatusOrder(uid, String.valueOf(idOrder), activity);
 //                referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
             }
@@ -74,21 +81,37 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
     @Override
     public void getNameAndPhoneAuthor(final String uidAuthor, final String countryAuthor, final String cityAuthor, final String fromAuthor,
-                                      final String toAuthor, final String titleAuthor, final String descriptionAuthor,
+                                      final String toAuthor, final String description1, final String description2,
                                       final String oriLa, final String oriLo, final String desLa,
-                                      final String desLo, final int moneyAuthor) {
+                                      final String desLo, final int moneyCash, final int moneyCredit,
+                                      final int paymentMethod) {
         referenceUser.child(uidAuthor).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 String firstName = user.getFirst_name();
                 String lastName = user.getLast_name();
-                String fullName = firstName + " " + lastName;
-                String phone = user.getPhone();
-                presenter.responseUserRequested(fullName, phone, countryAuthor, cityAuthor, fromAuthor,
-                        toAuthor, titleAuthor, descriptionAuthor, oriLa,
-                        oriLo, desLa, desLo, moneyAuthor);
-                referenceUser.child(uidAuthor).removeEventListener(this);
+                final String fullName = firstName + " " + lastName;
+                final String phone = user.getPhone();
+                referenceFare.child(countryAuthor).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Fare fare = dataSnapshot.getValue(Fare.class);
+//                        presenter.responseUserRequested(fullName, phone, fare.getCurrency_code(), cityAuthor, fromAuthor,
+//                                toAuthor, description1, description2, oriLa,
+//                                oriLo, desLa, desLo, moneyCash);
+                        interactor.responseUserRequested(fullName, phone, fare.getCurrency_code(), cityAuthor, fromAuthor,
+                                toAuthor, description1, description2, oriLa,
+                                oriLo, desLa, desLo, moneyCash, moneyCredit, paymentMethod);
+                        referenceUser.child(uidAuthor).removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
 
             @Override
@@ -152,9 +175,6 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                     } else {
                         referenceOrder.removeEventListener(this);
                     }
-
-
-
                 }
             }
 
@@ -163,36 +183,6 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
             }
         });
-
-
-//        isActiveOrder = false;
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).onDisconnect());
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getKey());
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getParent());
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getRoot());
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getRef());
-//
-//        referenceOrder.child(idorder).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Order order = dataSnapshot.getValue(Order.class);
-//                if (!(order.isX_completed())) {
-//                    isActiveOrder = true;
-//                } else {
-//                    referenceOrder.removeEventListener(this);
-//                }
-//                if (!isActiveOrder) {
-//                    Toast.makeText(activity, R.string.toast_user_has_cancelled_order, Toast.LENGTH_SHORT).show();
-//                    presenter.responseBackDomiciliaryActivity();
-//                    removeCoordDomiciliary(uid);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
     @Override

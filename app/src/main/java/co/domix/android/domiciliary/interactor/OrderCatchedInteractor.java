@@ -11,4 +11,8 @@ public interface OrderCatchedInteractor {
     void dialogCancel(String idOrder, String uid, Activity activity);
     void dialogFinish(String idOrder);
     void submitCoord(String uid, String la, String lo, Activity activity);
+    void responseUserRequested(String nameAuthor, String cellphoneAuthor, String countryAuthor, String cityAuthor,
+                                    String fromAuthor, String toAuthor, String description1,
+                                    String description2, String oriLa, String oriLo, String desLa,
+                                    String desLo, int moneyCash, int moneyCredit, int paymentMethod);
 }

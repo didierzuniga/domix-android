@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.firebase.auth.FirebaseAuth;
 
 import co.domix.android.DomixApplication;
@@ -37,6 +38,7 @@ import co.domix.android.user.view.User;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeView {
 
+    private FusedLocationProviderClient mFusedLocationClient;
     private FirebaseAuth firebaseAuth;
     private LinearLayout linearRoot, linearNotInternet;
     private ProgressBar progressBar;
@@ -52,6 +54,8 @@ public class Home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_home));
+
+
 
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Shrikhand-Regular.ttf");
         presenter = new HomePresenterImpl(this);

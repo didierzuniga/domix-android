@@ -45,8 +45,7 @@ import co.domix.android.utils.ToastsKt;
 
 public class User extends AppCompatActivity implements UserView {
 
-    private LocationManager locManager;
-    private Location loc;
+
 
     private ScrollView scrollView;
     private RadioGroup radioGroup;
@@ -216,18 +215,21 @@ public class User extends AppCompatActivity implements UserView {
                 ToastsKt.toastShort(User.this, "No podemos ofrecerte el servicio");
                 return;
             } else {
-                locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                editor.putString("latitude", String.valueOf(loc.getLatitude()));
-                editor.putString("longitude",String.valueOf(loc.getLongitude()));
-                editor.commit();
+                try{
+                    LocationManager locManager;
+                    Location loc;
+                    locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    editor.putString("latitude", String.valueOf(loc.getLatitude()));
+                    editor.putString("longitude",String.valueOf(loc.getLongitude()));
+                    editor.commit();
+                } catch (Exception e){
+                    Log.w("jjj", "Exception-> "+e);
+                }
+
             }
         } else {
-            locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            editor.putString("latitude", String.valueOf(loc.getLatitude()));
-            editor.putString("longitude",String.valueOf(loc.getLongitude()));
-            editor.commit();
+            startService(new Intent(this, LocationService.class));
         }
     }
 

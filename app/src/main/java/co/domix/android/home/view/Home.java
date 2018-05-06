@@ -46,8 +46,6 @@ import co.domix.android.utils.ToastsKt;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeView, ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private LocationManager locManager;
-    private Location loc;
 
     private FirebaseAuth firebaseAuth;
     private LinearLayout linearRoot, linearNotInternet;
@@ -191,24 +189,25 @@ public class Home extends AppCompatActivity
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ToastsKt.toastShort(Home.this, "No podemos ofrecerte el servicio");
                 return;
             } else {
-                locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                editor.putString("latitude", String.valueOf(loc.getLatitude()));
-                editor.putString("longitude",String.valueOf(loc.getLongitude()));
-                editor.commit();
+                try{
+                    LocationManager locManager;
+                    Location loc;
+                    locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    editor.putString("latitude", String.valueOf(loc.getLatitude()));
+                    editor.putString("longitude",String.valueOf(loc.getLongitude()));
+                    editor.commit();
+                } catch (Exception e){
+                    Log.w("jjj", "Exception-> "+e);
+                }
             }
         } else {
-//            startService(new Intent(this, LocationService.class));
-            locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            editor.putString("latitude", String.valueOf(loc.getLatitude()));
-            editor.putString("longitude",String.valueOf(loc.getLongitude()));
-            editor.commit();
+            Log.w("jjj", "Home - StartGetLocation");
+            startService(new Intent(this, LocationService.class));
         }
     }
 

@@ -50,11 +50,8 @@ import co.domix.android.utils.ToastsKt;
 
 public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
-    private LocationManager locManager;
-    private Location loc;
-
     private String la, lo;
-    private int distMin, countForDictionary, countIndex, countIndexTemp, countChilds, idOrderToSend;
+    private int countIndex, idOrderToSend;
     private boolean fieldsWasFill;
     private ProgressBar progressBarDomiciliary;
     private Switch switchAB;
@@ -190,22 +187,49 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     public void startGetLocation() {
-        locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(Domiciliary.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ToastsKt.toastShort(Domiciliary.this, "No podemos ofrecerte el servicio");
+                return;
+            } else {
+                try{
+                    LocationManager locManager;
+                    Location loc;
+                    locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    editor.putString("latitude", String.valueOf(loc.getLatitude()));
+                    editor.putString("longitude",String.valueOf(loc.getLongitude()));
+                    editor.commit();
+                } catch (Exception e){
+                    Log.w("jjj", "Exception-> "+e);
+                }
+
+            }
+        } else {
+            startService(new Intent(this, LocationService.class));
         }
-        loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        Log.w("jjj", "Locations Domiciliary: "+loc.getLongitude());
-        editor.putString("latitude", String.valueOf(loc.getLatitude()));
-        editor.putString("longitude",String.valueOf(loc.getLongitude()));
-        editor.commit();
+
+
+
+//        locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//        editor.putString("latitude", String.valueOf(loc.getLatitude()));
+//        editor.putString("longitude",String.valueOf(loc.getLongitude()));
+//        editor.commit();
     }
 
     @Override

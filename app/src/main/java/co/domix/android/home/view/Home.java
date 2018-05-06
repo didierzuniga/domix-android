@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -202,7 +203,12 @@ public class Home extends AppCompatActivity
                 editor.commit();
             }
         } else {
-            startService(new Intent(this, LocationService.class));
+//            startService(new Intent(this, LocationService.class));
+            locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            editor.putString("latitude", String.valueOf(loc.getLatitude()));
+            editor.putString("longitude",String.valueOf(loc.getLongitude()));
+            editor.commit();
         }
     }
 

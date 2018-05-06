@@ -1,14 +1,20 @@
 package co.domix.android.domiciliary.view;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -44,6 +50,9 @@ import co.domix.android.utils.ToastsKt;
 
 public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
+    private LocationManager locManager;
+    private Location loc;
+
     private String la, lo;
     private int distMin, countForDictionary, countIndex, countIndexTemp, countChilds, idOrderToSend;
     private boolean fieldsWasFill;
@@ -75,6 +84,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
         presenter = new DomiciliaryPresenterImpl(this);
 
         switchAB = (Switch) findViewById(R.id.switchAB);
+        switchAB.setChecked(false);
         lnrSpiVehicle = (LinearLayout) findViewById(R.id.lnrSpiVehicle);
         lnrNotInternet = (LinearLayout) findViewById(R.id.lnrNotInternet);
         scrollView = (ScrollView) findViewById(R.id.scrVieDomiciliary);
@@ -115,7 +125,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (vehSelected == 0){
+                    if (vehSelected == 0) {
                         ToastsKt.toastShort(Domiciliary.this, getString(R.string.toast_must_choise_vehicle));
                         switchAB.setChecked(false);
                     } else {
@@ -126,6 +136,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
                         queryForFullnameAndPhone();
                     }
                 } else {
+                    waitinDeliveries.setVisibility(View.GONE);
                     lnrShowData.setVisibility(View.GONE);
                     lnrSpiVehicle.setVisibility(View.VISIBLE);
                     editor.putBoolean("SearchDelivery", false);
@@ -179,11 +190,22 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     public void startGetLocation() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            startService(new Intent(this, LocationService.class));
-        } else {
-            startForegroundService(new Intent(this, LocationService.class));
+        locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
+        loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Log.w("jjj", "Locations Domiciliary: "+loc.getLongitude());
+        editor.putString("latitude", String.valueOf(loc.getLatitude()));
+        editor.putString("longitude",String.valueOf(loc.getLongitude()));
+        editor.commit();
     }
 
     @Override

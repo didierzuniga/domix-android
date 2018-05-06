@@ -223,7 +223,11 @@ public class User extends AppCompatActivity implements UserView {
                 editor.commit();
             }
         } else {
-            startService(new Intent(this, LocationService.class));
+            locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            editor.putString("latitude", String.valueOf(loc.getLatitude()));
+            editor.putString("longitude",String.valueOf(loc.getLongitude()));
+            editor.commit();
         }
     }
 

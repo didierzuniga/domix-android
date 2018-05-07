@@ -212,24 +212,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
         } else {
             startService(new Intent(this, LocationService.class));
         }
-
-
-
-//        locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            return;
-//        }
-//        loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-//        editor.putString("latitude", String.valueOf(loc.getLatitude()));
-//        editor.putString("longitude",String.valueOf(loc.getLongitude()));
-//        editor.commit();
     }
 
     @Override
@@ -279,7 +261,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     public void searchDeliveries() {
-//        presenter.searchDeliveries(la, lo, vehSelected);
         presenter.searchDeliveries(shaPref.getString("latitude", ""), shaPref.getString("longitude", ""), vehSelected);
     }
 
@@ -354,10 +335,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     public void queryForFullnameAndPhone() {
-//        distMin = 0;
-//        countForDictionary = 0;
-//        countIndex = 0;
-//        countIndexTemp = 0;
         presenter.queryForFullnameAndPhone(app.uId);
     }
 
@@ -368,11 +345,11 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
         alertDialog = new android.app.AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        btnSendFullnameAndPhone = (Button) view.findViewById(R.id.btnSendContactData);
-        btnBack = (Button) view.findViewById(R.id.btnBack);
-        firstName = (TextInputEditText) view.findViewById(R.id.firstName);
-        lastName = (TextInputEditText) view.findViewById(R.id.lastName);
-        phone = (TextInputEditText) view.findViewById(R.id.phone);
+        btnSendFullnameAndPhone = view.findViewById(R.id.btnSendContactData);
+        btnBack = view.findViewById(R.id.btnBack);
+        firstName = view.findViewById(R.id.firstName);
+        lastName = view.findViewById(R.id.lastName);
+        phone = view.findViewById(R.id.phone);
 
         firstName.setInputType(
                 InputType.TYPE_CLASS_TEXT |
@@ -448,6 +425,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
     @Override
     protected void onStart() {
         super.onStart();
+        presenter.verifyLocationAndInternet(this);
         stopService(new Intent(this, NotificationService.class));
 
         lnrShowData = (LinearLayout) findViewById(R.id.lnrShowData);
@@ -465,7 +443,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
         super.onResume();
         la = "";
         lo = "";
-        presenter.verifyLocationAndInternet(this);
     }
 
     @Override

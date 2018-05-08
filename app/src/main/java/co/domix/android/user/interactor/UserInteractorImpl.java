@@ -16,6 +16,8 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
@@ -34,9 +36,9 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     private LocationManager locationManager;
     private DomixApplication app;
-    private int minFare, priceInCash, myCredit;
-    private double fareToApply;
-    private String coordsFromPrice, coordsToPrice, cityOrigen, countryOrigen, currencyCode;
+    private int minFare, priceInCash, myCredit, routeInt;
+    private double fareToApply, routeDouble;
+    private String coordsFromPrice, coordsToPrice, cityOrigen, countryOrigen, currencyCode, userID;
     private List<Address> geocodeMatches = null;
     private UserPresenter presenter;
     private UserRepository repository;
@@ -89,19 +91,20 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     @Override
     public void requestGeolocationAndDistance(String uid, String latFrom, String lonFrom, String latTo,
                                               String lonTo, int whatAddress, Activity activity) {
+        userID = uid;
         if (whatAddress == 0){
-            if (!latFrom.equals(null) || !lonFrom.equals(null)){
+            if (!latFrom.equals("") || !lonFrom.equals("")){
                 String arr [] = getGeolocation(latFrom, lonFrom, activity);
                 coordsFromPrice = arr[3];
                 presenter.responseFromName(arr[2]);
             }
         } else if (whatAddress == 1){
-            if (!latTo.equals(null) || !lonTo.equals(null)){
+            if (!latTo.equals("") || !lonTo.equals("")){
                 String arr [] = getGeolocation(latTo, lonTo, activity);
                 coordsToPrice = arr[3];
                 countryOrigen = arr[0];
                 cityOrigen = arr[1];
-                repository.requestFareAndMyCredit(arr[0], uid);
+//                repository.requestFareAndMyCredit(arr[0], uid);
                 presenter.responseToName(arr[2]);
             }
         }
@@ -172,6 +175,14 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
         fareToApply = fare;
         minFare = minFareCost;
         myCredit = credit;
+        routeDouble = routeInt * fareToApply;
+        String dos = String.format("%.1f", routeDouble / 1000);
+        double tres = Double.valueOf(dos);
+        priceInCash = (int) (tres * 1000);
+        if (priceInCash < minFare) {
+            priceInCash = minFare;
+        }
+        presenter.responseCash(priceInCash, currencyCode, countryOrigen, cityOrigen, routeInt, myCredit);
     }
 
     @Override
@@ -182,15 +193,8 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
         for (Route route : routes) {
-            double priceDouble = route.distance.value * fareToApply;
-            String dos = String.format("%.1f", priceDouble / 1000);
-            double tres = Double.valueOf(dos);
-            priceInCash = (int) (tres * 1000);
-            if (priceInCash < minFare) {
-                priceInCash = minFare;
-            }
-
-            presenter.responseCash(priceInCash, currencyCode, countryOrigen, cityOrigen, route.distance.value, myCredit);
+            routeInt = route.distance.value;
+            repository.requestFareAndMyCredit(countryOrigen, userID);
         }
     }
 }

@@ -145,9 +145,7 @@ public class CoordinateService extends Service {
                 return;
             }
             loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            Log.w("jjj", "CoordinateService Location: "+loc.getLongitude());
             if (loc != null){
-                Log.w("jjj", "CoordinateService - leo coordenadas antes de enviar a DB");
                 editor.putString("latitude", String.valueOf(loc.getLatitude()));
                 editor.putString("longitude",String.valueOf(loc.getLongitude()));
                 editor.commit();
@@ -187,7 +185,6 @@ public class CoordinateService extends Service {
 //    }
 
     public void sendCoordinates() {
-        Log.w("jjj", "CoordinateService - envio coordenadas a DB");
         referenceCoord.child(app.uId).child("latitude").setValue(shaPref.getString("latitude", ""));
         referenceCoord.child(app.uId).child("longitude").setValue(shaPref.getString("longitude", ""));
 //        timer.schedule(new inicializar(), 5000, 5000);

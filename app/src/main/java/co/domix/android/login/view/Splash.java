@@ -83,7 +83,6 @@ public class Splash extends AppCompatActivity implements SplashView, ActivityCom
 //                editor.commit();
 //            }
         } else {
-            Log.w("jjj", "Splash - StartGetLocation");
             startService(new Intent(this, LocationService.class));
         }
     }
@@ -186,14 +185,12 @@ public class Splash extends AppCompatActivity implements SplashView, ActivityCom
     @Override
     protected void onStart() {
         super.onStart();
-        Log.w("jjj", "Start - verification");
         presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.w("jjj", "resume");
         showProgressBar();
 //        Lo quité para que no se replique infinitamente la lectura de location, lo puse en onStart
 //        presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
@@ -202,7 +199,6 @@ public class Splash extends AppCompatActivity implements SplashView, ActivityCom
     @Override
     protected void onPause() {
         super.onPause();
-        Log.w("jjj", "pause");
     }
 
     @Override

@@ -394,7 +394,7 @@ public class User extends AppCompatActivity implements UserView {
         cityOrigen = cityOrigenn;
         priceInCash = priceInCashh;
         disBetweenPoints = distanceBetweenPoints;
-        paymentCash.setText(" " + priceInCash + " " + countryO);
+        paymentCash.setText(" " + priceInCash + " " + codeCountry);
     }
 
     @Override

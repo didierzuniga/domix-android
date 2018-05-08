@@ -206,7 +206,6 @@ public class Home extends AppCompatActivity
                 }
             }
         } else {
-            Log.w("jjj", "Home - StartGetLocation");
             startService(new Intent(this, LocationService.class));
         }
     }

@@ -63,7 +63,7 @@ public class User extends AppCompatActivity implements UserView {
     private ProgressBar progressBarRequest;
     private AlertDialog alert = null;
     private android.app.AlertDialog alertDialog;
-    private boolean fieldsWasFill;
+    private boolean fieldsWasFill, radioGroupActive;
     private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private DomixApplication app;
@@ -84,6 +84,7 @@ public class User extends AppCompatActivity implements UserView {
         lnrSwiCredit = (LinearLayout) findViewById(R.id.lnrSwiCredit);
         lnrPaymentMethod = (LinearLayout) findViewById(R.id.lnrPaymentMethod);
         switchCompat = (SwitchCompat) findViewById(R.id.swiCredit);
+        radioGroupActive = false;
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
         progressBarRequest = (ProgressBar) findViewById(R.id.progressBarRequest);
 
@@ -111,9 +112,11 @@ public class User extends AppCompatActivity implements UserView {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.payWithCash:
+                        radioGroupActive = true;
                         payMethod = 0;
                         break;
                     case R.id.payWithCredit:
+                        radioGroupActive = true;
                         payMethod = 1;
                         break;
                 }
@@ -152,7 +155,7 @@ public class User extends AppCompatActivity implements UserView {
                 if (isChecked){
                     costDelDesCredit = priceInCash - mCredit;
                     if (costDelDesCredit < 0){
-                        paymentCash.setText(" " + 0.00 + " " + codeCountry);
+                        paymentCash.setText(" 0.00 " + codeCountry);
                         totalCostToDB = 0;
                         updateCreditUserToDB = costDelDesCredit * -1;
                         creditUsedToDB = mCredit - updateCreditUserToDB;
@@ -167,6 +170,8 @@ public class User extends AppCompatActivity implements UserView {
                     }
                 } else {
                     lnrPaymentMethod.setVisibility(View.VISIBLE);
+                    radioGroup.clearCheck();
+                    radioGroupActive = false;
                     totalCostToDB = priceInCash;
                     paymentCash.setText(" " + priceInCash + " " + codeCountry);
                 }
@@ -187,10 +192,26 @@ public class User extends AppCompatActivity implements UserView {
                     creditApplyToDB = 0;
                     updtCreditUserToDB = 0;
                 }
-                presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
-                        txtFrom.getText().toString(), txtTo.getText().toString(), disBetweenPoints,
-                        description1.getText().toString(), description2.getText().toString(),
-                        dimenSelected, payMethod, totalCostToDB, creditApplyToDB, updtCreditUserToDB, User.this);
+                if (radioGroupActive){
+                    presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
+                            txtFrom.getText().toString(), txtTo.getText().toString(), disBetweenPoints,
+                            description1.getText().toString(), description2.getText().toString(),
+                            dimenSelected, payMethod, totalCostToDB, creditApplyToDB, updtCreditUserToDB, User.this);
+                } else {
+                    if (payMethod == 2){
+                        presenter.request(fieldsWasFill, app.uId, app.email, countryOrigen, cityOrigen,
+                                txtFrom.getText().toString(), txtTo.getText().toString(), disBetweenPoints,
+                                description1.getText().toString(), description2.getText().toString(),
+                                dimenSelected, payMethod, totalCostToDB, creditApplyToDB, updtCreditUserToDB, User.this);
+                    } else {
+                        scrollView.setVisibility(View.VISIBLE);
+                        hideProgressBar();
+                        ToastsKt.toastShort(User.this, getString(R.string.toast_choose_payment_method));
+                    }
+                }
+
+
+
             }
         });
 
@@ -434,17 +455,19 @@ public class User extends AppCompatActivity implements UserView {
         presenter.verifyLocationAndInternet(this);
         txtFrom = (TextView) findViewById(R.id.idFrom);
         txtTo = (TextView) findViewById(R.id.idTo);
+        if (!switchCompat.isChecked()){
+            try {
+                presenter.requestGeolocationAndDistance(app.uId, shaPref.getString("latFrom", ""),
+                        shaPref.getString("lonFrom", ""),
+                        shaPref.getString("latTo", ""),
+                        shaPref.getString("lonTo", ""),
+                        shaPref.getInt("whatAddress", 2),
+                        this);
+            } catch (Exception e){
 
-        try {
-            presenter.requestGeolocationAndDistance(app.uId, shaPref.getString("latFrom", ""),
-                    shaPref.getString("lonFrom", ""),
-                    shaPref.getString("latTo", ""),
-                    shaPref.getString("lonTo", ""),
-                    shaPref.getInt("whatAddress", 2),
-                    this);
-        } catch (Exception e){
-
+            }
         }
+
     }
 
     @Override

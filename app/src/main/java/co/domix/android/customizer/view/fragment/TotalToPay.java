@@ -1,6 +1,7 @@
 package co.domix.android.customizer.view.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -21,6 +22,7 @@ import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.customizer.presenter.TotalToPayPresenter;
 import co.domix.android.customizer.presenter.TotalToPayPresenterImpl;
+import co.domix.android.customizer.view.Pay;
 import co.domix.android.utils.ToastsKt;
 
 /**
@@ -109,5 +111,12 @@ public class TotalToPay extends Fragment implements TotalToPayView {
         toPayDomix.setText(commissionDomix);
         toPayTaxe.setText(payTaxe);
         toPayDomixTotal.setText(payTotalToDomix);
+    }
+
+    @Override
+    public void thereAreNotOrders() {
+        ToastsKt.toastLong(getActivity(), "No tienes saldos pendientes");
+        Intent intent = new Intent(getActivity(), Pay.class);
+        startActivity(intent);
     }
 }

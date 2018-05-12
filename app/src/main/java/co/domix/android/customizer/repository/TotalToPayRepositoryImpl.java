@@ -15,6 +15,7 @@ import co.domix.android.customizer.interactor.TotalToPayInteractor;
 import co.domix.android.customizer.presenter.TotalToPayPresenter;
 import co.domix.android.model.Fare;
 import co.domix.android.model.Order;
+import co.domix.android.model.User;
 
 /**
  * Created by unicorn on 1/14/2018.
@@ -26,6 +27,7 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
     private int totalToPayCash;
     private int payUFullRate, minPayment;
     private float nationalTaxe, payUCommission, fareDomix;
+    private boolean areThereOrders;
     private TotalToPayPresenter presenter;
     private TotalToPayInteractor interactor;
 
@@ -37,42 +39,68 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceOrder = database.getReference("order");
     DatabaseReference referenceFare = database.getReference("fare");
+    DatabaseReference referenceUser = database.getReference("user");
 
     @Override
     public void queryOrderToPay(final String uid) {
-        referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
+        areThereOrders = false;
+
+        referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<String> listOrders = new ArrayList<String>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Order order = snapshot.getValue(Order.class);
-                    if ((order.getD_id()).equals(uid)) {
-                        if (!order.isX_paid_out()){
-                            country = order.getX_country();
-                            listOrders.add(snapshot.getKey()); //ID to save
-                            totalToPayCash += order.getX_money_to_pay();
+                User user = dataSnapshot.getValue(User.class);
+
+                if (user.getCounter_score_as_deliveryman() > 0){
+                    referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            final List<String> listOrders = new ArrayList<String>();
+
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                Order order = snapshot.getValue(Order.class);
+
+                                if ((order.getD_id()).equals(uid)) {
+                                    if (!order.isX_paid_out()) {
+                                        areThereOrders = true;
+                                        country = order.getX_country();
+                                        listOrders.add(snapshot.getKey()); //ID to save
+                                        totalToPayCash += order.getX_money_to_pay();
+                                    }
+                                }
+                            }
+                            if (areThereOrders) {
+                                referenceFare.child(country).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Fare fare = dataSnapshot.getValue(Fare.class);
+                                        currencyCode = fare.getCurrency_code();
+                                        nationalTaxe = fare.getNational_tax();
+                                        fareDomix = fare.getFare_domix();
+                                        payUCommission = fare.getPayu_commission();
+                                        payUFullRate = fare.getPayu_full_rate();
+                                        minPayment = fare.getMin_payment();
+                                        interactor.responseTotalToPay(currencyCode, totalToPayCash, nationalTaxe, fareDomix, minPayment,
+                                                payUCommission, payUFullRate, country, listOrders);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            } else {
+                                presenter.thereAreNotOrders();
+                            }
                         }
-                    }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    presenter.thereAreNotOrders();
                 }
-                referenceFare.child(country).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Fare fare = dataSnapshot.getValue(Fare.class);
-                        currencyCode = fare.getCurrency_code();
-                        nationalTaxe = fare.getNational_tax();
-                        fareDomix = fare.getFare_domix();
-                        payUCommission = fare.getPayu_commission();
-                        payUFullRate = fare.getPayu_full_rate();
-                        minPayment = fare.getMin_payment();
-                        interactor.responseTotalToPay(currencyCode, totalToPayCash, nationalTaxe, fareDomix, minPayment,
-                                                      payUCommission, payUFullRate, country, listOrders);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
             }
 
             @Override
@@ -80,5 +108,7 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
             }
         });
+
+
     }
 }

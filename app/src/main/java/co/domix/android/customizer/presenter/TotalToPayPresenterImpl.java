@@ -31,4 +31,9 @@ public class TotalToPayPresenterImpl implements TotalToPayPresenter {
                                        String minPayment, boolean enableButtonPay, List<String> listOrders) {
         view.responseTotalToPayCash(commissionDomix, payTaxe, payTotalToDomix, minPayment, enableButtonPay, listOrders);
     }
+
+    @Override
+    public void thereAreNotOrders() {
+        view.thereAreNotOrders();
+    }
 }

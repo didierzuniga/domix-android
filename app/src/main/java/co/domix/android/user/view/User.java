@@ -154,7 +154,7 @@ public class User extends AppCompatActivity implements UserView {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     costDelDesCredit = priceInCash - mCredit;
-                    if (costDelDesCredit < 0){
+                    if (costDelDesCredit <= 0){
                         paymentCash.setText(" 0.00 " + codeCountry);
                         totalCostToDB = 0;
                         updateCreditUserToDB = costDelDesCredit * -1;

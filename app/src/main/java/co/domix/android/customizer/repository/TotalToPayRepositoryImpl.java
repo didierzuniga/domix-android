@@ -24,7 +24,7 @@ import co.domix.android.model.User;
 public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
     private String country, currencyCode;
-    private int totalToPayCash;
+    private int paymentCash;
     private int payUFullRate, minPayment;
     private float nationalTaxe, payUCommission, fareDomix;
     private boolean areThereOrders;
@@ -64,7 +64,7 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                                         areThereOrders = true;
                                         country = order.getX_country();
                                         listOrders.add(snapshot.getKey()); //ID to save
-                                        totalToPayCash += order.getX_money_to_pay();
+                                        paymentCash += order.getX_money_to_pay() + order.getX_credit_used();
                                     }
                                 }
                             }
@@ -79,7 +79,7 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                                         payUCommission = fare.getPayu_commission();
                                         payUFullRate = fare.getPayu_full_rate();
                                         minPayment = fare.getMin_payment();
-                                        interactor.responseTotalToPay(currencyCode, totalToPayCash, nationalTaxe, fareDomix, minPayment,
+                                        interactor.responseTotalToPay(currencyCode, paymentCash, nationalTaxe, fareDomix, minPayment,
                                                 payUCommission, payUFullRate, country, listOrders);
                                     }
 

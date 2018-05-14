@@ -28,8 +28,10 @@ public class TotalToPayPresenterImpl implements TotalToPayPresenter {
 
     @Override
     public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix,
-                                       String minPayment, boolean enableButtonPay, List<String> listOrders) {
-        view.responseTotalToPayCash(commissionDomix, payTaxe, payTotalToDomix, minPayment, enableButtonPay, listOrders);
+                                       String minPayment, boolean enableButtonPay, int balanceToUpdate,
+                                       List<String> listOrders) {
+        view.responseTotalToPayCash(commissionDomix, payTaxe, payTotalToDomix, minPayment, enableButtonPay,
+                                    balanceToUpdate, listOrders);
     }
 
     @Override

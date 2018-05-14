@@ -94,8 +94,8 @@ public class SignupRepositoryImpl implements SignupRepository {
                     return Transaction.success(mutableData);
                 }
                 c.count_user++;
-                User usr = new User(email, welCredit, 0.0, 0.0, 0,
-                        0, codeCountry, false, false);
+                User usr = new User(email, welCredit, 0, 0.0, 0.0,
+                        0, 0, codeCountry, false, false);
                 referenceUser.child(uid).setValue(usr);
                 mutableData.setValue(c);
                 return Transaction.success(mutableData);

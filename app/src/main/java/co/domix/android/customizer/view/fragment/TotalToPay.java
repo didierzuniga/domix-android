@@ -36,6 +36,7 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     private TextView toPayDomix, toPayDomixTotal, toPayTaxe;
     private Button buttonToPay;
     private String miniPayment;
+    private int balanceUpdate;
     private List<String> list;
     private boolean enablePayment;
     private DomixApplication app;
@@ -57,16 +58,16 @@ public class TotalToPay extends Fragment implements TotalToPayView {
         progressBarPay = (ProgressBar) view.findViewById(R.id.progressBarPay);
         showProgressBar();
 
-        linearPayPerDomicilies = (LinearLayout) view.findViewById(R.id.linearPayPerDomicilies);
-        linearPaytaxes = (LinearLayout) view.findViewById(R.id.linearPayTaxes);
-        linearPayTotal = (LinearLayout) view.findViewById(R.id.linearPayTotal);
+        linearPayPerDomicilies = view.findViewById(R.id.linearPayPerDomicilies);
+        linearPaytaxes = view.findViewById(R.id.linearPayTaxes);
+        linearPayTotal = view.findViewById(R.id.linearPayTotal);
         linearPayPerDomicilies.setVisibility(View.GONE);
         linearPaytaxes.setVisibility(View.GONE);
         linearPayTotal.setVisibility(View.GONE);
-        toPayDomix = (TextView) view.findViewById(R.id.toPayDomix);
-        toPayDomixTotal = (TextView) view.findViewById(R.id.toPayDomixTotal);
-        toPayTaxe = (TextView) view.findViewById(R.id.toPayTaxe);
-        buttonToPay = (Button) view.findViewById(R.id.btnGoToPay);
+        toPayDomix = view.findViewById(R.id.toPayDomix);
+        toPayDomixTotal = view.findViewById(R.id.toPayDomixTotal);
+        toPayTaxe = view.findViewById(R.id.toPayTaxe);
+        buttonToPay = view.findViewById(R.id.btnGoToPay);
         buttonToPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,7 +75,7 @@ public class TotalToPay extends Fragment implements TotalToPayView {
                     ToastsKt.toastLong(getActivity(), list.toString());
                     ToastsKt.toastShort(getActivity(), "Pagando...");
                 } else {
-                    Toast.makeText(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment, Toast.LENGTH_LONG).show();
+                    ToastsKt.toastShort(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment);
                 }
             }
         });
@@ -95,8 +96,11 @@ public class TotalToPay extends Fragment implements TotalToPayView {
 
     @Override
     public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix,
-                                       String minPayment, boolean enableButtonPay, List<String> listOrders) {
+                                       String minPayment, boolean enableButtonPay, int balanceToUpdate,
+                                       List<String> listOrders) {
+        ToastsKt.toastLong(getActivity(), "Ahora su balance es: "+balanceToUpdate);
         list = listOrders;
+        balanceUpdate = balanceToUpdate;
         buttonToPay.setEnabled(true);
         enablePayment = true;
         miniPayment = minPayment;

@@ -9,6 +9,7 @@ import java.util.List;
 public interface TotalToPayPresenter {
     void queryOrderToPay(String uid, int payMethod);
     void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix,
-                                String minPayment, boolean enableButtonPay, List<String> listOrders);
+                                String minPayment, boolean enableButtonPay, int balanceToUpdate,
+                                List<String> listOrders);
     void thereAreNotOrders();
 }

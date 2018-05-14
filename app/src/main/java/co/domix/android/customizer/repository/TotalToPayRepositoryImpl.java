@@ -24,8 +24,7 @@ import co.domix.android.model.User;
 public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
     private String country, currencyCode;
-    private int paymentCash;
-    private int payUFullRate, minPayment;
+    private int payUFullRate, minPayment, paymentCash, pagado;
     private float nationalTaxe, payUCommission, fareDomix;
     private boolean areThereOrders;
     private TotalToPayPresenter presenter;
@@ -44,11 +43,10 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
     @Override
     public void queryOrderToPay(final String uid) {
         areThereOrders = false;
-
         referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
+                final User user = dataSnapshot.getValue(User.class);
 
                 if (user.getCounter_score_as_deliveryman() > 0){
                     referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -65,6 +63,11 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                                         country = order.getX_country();
                                         listOrders.add(snapshot.getKey()); //ID to save
                                         paymentCash += order.getX_money_to_pay() + order.getX_credit_used();
+                                        if (order.getX_pay_method() == 1 || order.getX_pay_method() == 2){
+                                            pagado += order.getX_money_to_pay() + order.getX_credit_used();
+                                        } else if (order.getX_credit_used() > 0){
+                                            pagado += order.getX_credit_used();
+                                        }
                                     }
                                 }
                             }
@@ -79,8 +82,9 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                                         payUCommission = fare.getPayu_commission();
                                         payUFullRate = fare.getPayu_full_rate();
                                         minPayment = fare.getMin_payment();
-                                        interactor.responseTotalToPay(currencyCode, paymentCash, nationalTaxe, fareDomix, minPayment,
-                                                payUCommission, payUFullRate, country, listOrders);
+                                        interactor.responseTotalToPay(currencyCode, paymentCash, (pagado + user.getPositive_balance()),
+                                                nationalTaxe, fareDomix, minPayment, payUCommission,
+                                                payUFullRate, country, listOrders);
                                     }
 
                                     @Override

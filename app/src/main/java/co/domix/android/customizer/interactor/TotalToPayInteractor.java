@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface TotalToPayInteractor {
     void queryOrderToPay(String uid, int payMethod);
-    void responseTotalToPay(String currencyCode, int totalToPayCash, double taxe, double fareDomix,
+    void responseTotalToPay(String currencyCode, int totalToPayCash, int pagado, double taxe, double fareDomix,
                             int minPayment, double payUCommission, int payURate, String country, List<String> listOrders);
 }

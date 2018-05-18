@@ -72,8 +72,8 @@ public class TotalToPay extends Fragment implements TotalToPayView {
             @Override
             public void onClick(View view) {
                 if (enablePayment){
-                    ToastsKt.toastLong(getActivity(), list.toString());
                     ToastsKt.toastShort(getActivity(), "Pagando...");
+                    presenter.goPayU(list, balanceUpdate);
                 } else {
                     ToastsKt.toastShort(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment);
                 }
@@ -98,7 +98,6 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix,
                                        String minPayment, boolean enableButtonPay, int balanceToUpdate,
                                        List<String> listOrders) {
-        ToastsKt.toastLong(getActivity(), "Ahora su balance es: "+balanceToUpdate);
         list = listOrders;
         balanceUpdate = balanceToUpdate;
         buttonToPay.setEnabled(true);

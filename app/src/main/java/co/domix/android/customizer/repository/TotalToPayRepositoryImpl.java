@@ -23,9 +23,10 @@ import co.domix.android.model.User;
 
 public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
-    private String country, currencyCode;
-    private int payUFullRate, minPayment, paymentCash, pagado;
-    private float nationalTaxe, payUCommission, fareDomix;
+    private Order order;
+    private String country, currencyCode, userId;
+    private int payUFullRate, minPayment, fareToPayDomix, pagado;
+    private float nationalTaxe, payUCommission, fareDomix, fareDomixForCyclist;
     private boolean areThereOrders;
     private TotalToPayPresenter presenter;
     private TotalToPayInteractor interactor;
@@ -43,35 +44,20 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
     @Override
     public void queryOrderToPay(final String uid) {
         areThereOrders = false;
+        userId = uid;
         referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final User user = dataSnapshot.getValue(User.class);
-
                 if (user.getCounter_score_as_deliveryman() > 0){
+                    final List<String> listOrders = new ArrayList<String>();
                     referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            final List<String> listOrders = new ArrayList<String>();
 
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Order order = snapshot.getValue(Order.class);
-
-                                if ((order.getD_id()).equals(uid)) {
-                                    if (!order.isX_paid_out()) {
-                                        areThereOrders = true;
-                                        country = order.getX_country();
-                                        listOrders.add(snapshot.getKey()); //ID to save
-                                        paymentCash += order.getX_money_to_pay() + order.getX_credit_used();
-                                        if (order.getX_pay_method() == 1 || order.getX_pay_method() == 2){
-                                            pagado += order.getX_money_to_pay() + order.getX_credit_used();
-                                        } else if (order.getX_credit_used() > 0){
-                                            pagado += order.getX_credit_used();
-                                        }
-                                    }
-                                }
-                            }
-                            if (areThereOrders) {
+                            for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                order = snapshot.getValue(Order.class);
+                                country = order.getX_country();
                                 referenceFare.child(country).addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -79,12 +65,32 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                                         currencyCode = fare.getCurrency_code();
                                         nationalTaxe = fare.getNational_tax();
                                         fareDomix = fare.getFare_domix();
+                                        fareDomixForCyclist = fare.getFare_domix_for_cyclist();
                                         payUCommission = fare.getPayu_commission();
                                         payUFullRate = fare.getPayu_full_rate();
                                         minPayment = fare.getMin_payment();
-                                        interactor.responseTotalToPay(currencyCode, paymentCash, (pagado + user.getPositive_balance()),
-                                                nationalTaxe, fareDomix, minPayment, payUCommission,
-                                                payUFullRate, country, listOrders);
+
+                                        if ((order.getD_id()).equals(uid)) {
+                                            if (!order.isX_paid_out()) {
+                                                Log.w("jjj", "Entro a la orden");
+                                                areThereOrders = true;
+                                                listOrders.add(snapshot.getKey()); //ID to save
+                                                if (order.getX_transport_used() == 1){
+                                                    fareToPayDomix += (int) ((order.getX_money_to_pay() * fareDomixForCyclist) +
+                                                            (order.getX_credit_used() * fareDomixForCyclist));
+                                                    Log.w("jjj", "Normal-> "+fareDomix);
+                                                    Log.w("jjj", "Cyclist-> "+fareDomixForCyclist);
+                                                } else {
+                                                    fareToPayDomix += (int) ((order.getX_money_to_pay() * fareDomix) +
+                                                            (order.getX_credit_used() * fareDomix));
+                                                }
+                                                if (order.getX_pay_method() == 1 || order.getX_pay_method() == 2){
+                                                    pagado += order.getX_money_to_pay() + order.getX_credit_used();
+                                                } else if (order.getX_credit_used() > 0){
+                                                    pagado += order.getX_credit_used();
+                                                }
+                                            }
+                                        }
                                     }
 
                                     @Override
@@ -92,7 +98,14 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
                                     }
                                 });
+                            }
+
+                            if (areThereOrders) {
+                                interactor.responseTotalToPay(currencyCode, fareToPayDomix,
+                                        (pagado + user.getPositive_balance()), nationalTaxe,
+                                        minPayment, payUCommission, payUFullRate, country, listOrders);
                             } else {
+                                Log.w("jjj", "No hay ordenes");
                                 presenter.thereAreNotOrders();
                             }
                         }
@@ -114,5 +127,14 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
         });
 
 
+    }
+
+    @Override
+    public void goPayU(List<String> list, int balance) {
+        for (int i = 0; i < list.size(); i++) {
+            referenceOrder.child(String.valueOf(list.get(i))).child("x_paid_out").setValue(true);
+        }
+
+        referenceUser.child(userId).child("positive_balance").setValue(balance);
     }
 }

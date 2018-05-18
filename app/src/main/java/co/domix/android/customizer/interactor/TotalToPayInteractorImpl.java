@@ -30,24 +30,23 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
     }
 
     @Override
-    public void responseTotalToPay(String currencyCode, int totalToPayCash, int pagado, double taxe,
-                                   double fareDomix, int minPayment, double payUCommission, int payURate,
-                                   String country, List<String> listOrders) {
-        int commissionDomix = (int) (totalToPayCash * fareDomix);
+    public void responseTotalToPay(String currencyCode, int fareToPayDomix, int pagado, double taxe,
+                                   int minPayment, double payUCommission, int payURate, String country,
+                                   List<String> listOrders) {
         String payTaxe;
         String payTotalToDomix;
         int balanceToUpdate = -1;
         String miniPayment = "";
         boolean enableButtonPay;
-        if (totalToPayCash != 0) {
+        if (fareToPayDomix != 0) {
 
-            int payUCommissionCost = (int) (commissionDomix * payUCommission);
+            int payUCommissionCost = (int) (fareToPayDomix * payUCommission);
             int payUTotalCommission = payUCommissionCost + payURate;
             int payUIvaOverCommission = (int) (payUTotalCommission * taxe);
             int payUTotalCommissionWithIva = payUTotalCommission + payUIvaOverCommission;
             payTaxe = String.valueOf(payUTotalCommissionWithIva) + " " + currencyCode;
 
-            int saldo = pagado - (commissionDomix + payUTotalCommissionWithIva);
+            int saldo = pagado - (fareToPayDomix + payUTotalCommissionWithIva);
             if (saldo >= 0){
                 // Enviar a positive_balance --saldo--
                 // Y mostrar 0 total a pagar
@@ -73,12 +72,17 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
             payTotalToDomix = "0.00 " + currencyCode;
             enableButtonPay = false;
         }
-        presenter.responseTotalToPayCash(String.valueOf(commissionDomix) + " " + currencyCode,
+        presenter.responseTotalToPayCash(String.valueOf(fareToPayDomix) + " " + currencyCode,
                                         payTaxe,
                                         payTotalToDomix,
                                         miniPayment,
                                         enableButtonPay,
                                         balanceToUpdate,
                                         listOrders);
+    }
+
+    @Override
+    public void goPayU(List<String> list, int balance) {
+        repository.goPayU(list, balance);
     }
 }

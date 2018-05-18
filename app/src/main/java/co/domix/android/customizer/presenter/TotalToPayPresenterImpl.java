@@ -38,4 +38,9 @@ public class TotalToPayPresenterImpl implements TotalToPayPresenter {
     public void thereAreNotOrders() {
         view.thereAreNotOrders();
     }
+
+    @Override
+    public void goPayU(List<String> list, int balance) {
+        interactor.goPayU(list, balance);
+    }
 }

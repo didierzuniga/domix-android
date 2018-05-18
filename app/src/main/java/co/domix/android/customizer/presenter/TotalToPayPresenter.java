@@ -12,4 +12,5 @@ public interface TotalToPayPresenter {
                                 String minPayment, boolean enableButtonPay, int balanceToUpdate,
                                 List<String> listOrders);
     void thereAreNotOrders();
+    void goPayU(List<String> list, int balance);
 }

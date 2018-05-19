@@ -1,4 +1,4 @@
-package co.domix.android.domiciliary.service;
+package co.domix.android.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;

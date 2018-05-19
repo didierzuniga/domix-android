@@ -40,7 +40,6 @@ import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenterImpl;
-import co.domix.android.domiciliary.service.NotificationService;
 import co.domix.android.services.LocationService;
 import co.domix.android.utils.ToastsKt;
 
@@ -50,7 +49,7 @@ import co.domix.android.utils.ToastsKt;
 
 public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
-    private String la, lo;
+    private String country; //la, lo
     private int countIndex, idOrderToSend;
     private boolean fieldsWasFill;
     private ProgressBar progressBarDomiciliary;
@@ -154,7 +153,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
             public void onClick(View v) {
                 lnrShowData.setVisibility(View.GONE);
                 showProgressBar();
-                presenter.sendDataDomiciliary(Domiciliary.this, idOrderToSend, app.uId, vehSelected);
+                presenter.sendDataDomiciliary(Domiciliary.this, idOrderToSend, app.uId, vehSelected, country);
             }
         });
 
@@ -261,13 +260,15 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     public void searchDeliveries() {
-        presenter.searchDeliveries(shaPref.getString("latitude", ""), shaPref.getString("longitude", ""), vehSelected);
+        presenter.searchDeliveries(shaPref.getString("latitude", ""),
+                                                      shaPref.getString("longitude", ""),
+                                                      vehSelected);
     }
 
     @Override
     public void showResultOrder(Hashtable<Integer, List> dictionary, int countIndx) {
         diccionario = dictionary;
-        countIndex = countIndx;
+        country = dictionary.get(countIndex).get(12).toString();
         queryUserRate(dictionary.get(countIndex).get(0).toString());
         idOrderToSend = Integer.valueOf(dictionary.get(countIndex).get(0).toString());
         String sizeOrder = "";
@@ -426,7 +427,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
     protected void onStart() {
         super.onStart();
         presenter.verifyLocationAndInternet(this);
-        stopService(new Intent(this, NotificationService.class));
 
         lnrShowData = (LinearLayout) findViewById(R.id.lnrShowData);
         tvAgo = (TextView) findViewById(R.id.txtVieAgo);
@@ -441,16 +441,13 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
     @Override
     protected void onResume() {
         super.onResume();
-        la = "";
-        lo = "";
+//        la = "";
+//        lo = "";
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if ((shaPref.getBoolean("SearchDelivery", false))) {
-            startService(new Intent(this, NotificationService.class));
-        }
     }
 
     @Override

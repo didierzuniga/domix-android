@@ -92,11 +92,11 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     }
 
     @Override
-    public void goCompareDistance(int idOrder, String ago, String from, String to, int sizeOrder, String description1,
-                                  String description2, String oriLat, String oriLon, String desLat,
-                                  String desLon, String latDomi, String lonDomi, int distanceBetween, int minDistanceRequired) {
+    public void goCompareDistance(int idOrder, String ago, String country, String from, String to,
+                                  int sizeOrder, String description1, String description2, String oriLat,
+                                  String oriLon, String desLat, String desLon, String latDomi, String lonDomi,
+                                  int distanceBetween, int minDistanceRequired) {
         minDistanceBetweenRequired = minDistanceRequired;
-
         listica = new ArrayList<String>();
         String idOrderStr = String.valueOf(idOrder);
         listica.add(idOrderStr);
@@ -111,6 +111,7 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
         listica.add(desLon);
         listica.add(String.valueOf(sizeOrder));
         listica.add(String.valueOf(distanceBetween));
+        listica.add(country);
 
         diccionario.put(countForDictionary, listica);
         try {
@@ -129,8 +130,9 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     }
 
     @Override
-    public void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed) {
-        repository.sendDataDomiciliary(activity, idOrderToSend, uid, transportUsed);
+    public void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed,
+                                    String country) {
+        repository.sendDataDomiciliary(activity, idOrderToSend, uid, transportUsed, country);
     }
 
     @Override

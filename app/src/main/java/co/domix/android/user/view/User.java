@@ -414,6 +414,7 @@ public class User extends AppCompatActivity implements UserView {
         countryOrigen = countryOrigenn;
         cityOrigen = cityOrigenn;
         priceInCash = priceInCashh;
+        totalCostToDB = priceInCashh;
         disBetweenPoints = distanceBetweenPoints;
         paymentCash.setText(" " + priceInCash + " " + codeCountry);
     }

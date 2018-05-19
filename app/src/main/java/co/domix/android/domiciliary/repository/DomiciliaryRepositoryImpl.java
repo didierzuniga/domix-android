@@ -12,9 +12,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+
 import co.domix.android.R;
 import co.domix.android.domiciliary.interactor.DomiciliaryInteractor;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
+import co.domix.android.model.Fare;
 import co.domix.android.model.Order;
 import co.domix.android.model.Parameter;
 import co.domix.android.model.User;
@@ -31,6 +34,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");
     DatabaseReference referenceOrder = database.getReference("order");
+    DatabaseReference referenceFare = database.getReference("fare");
     DatabaseReference referenceParameter = database.getReference("parameter");
     private DomiciliaryPresenter presenter;
     private DomiciliaryInteractor interactor;
@@ -50,23 +54,26 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                     boolean catched = order.isX_catched();
                     if (!catched){
                         countChild++;
-                        int idOrder = order.getX_id();
-                        String ago = order.getRelativeTimeStamp();
-                        String from = order.getX_name_from();
-                        String to = order.getX_name_to();
-                        int sizeOrder = order.getX_transport_used();
-                        String description1 = order.getX_description1();
-                        String description2 = order.getX_description2();
-                        String oriLa = order.getX_latitude_from();
-                        String oriLo = order.getX_longitude_from();
-                        String desLa = order.getX_latitude_to();
-                        String desLo = order.getX_longitude_to();
-                        int distanceBetween = order.getX_distance_between_points();
+                        final int idOrder = order.getX_id();
+                        final String ago = order.getRelativeTimeStamp();
+                        final String country = order.getX_country();
+                        final String from = order.getX_name_from();
+                        final String to = order.getX_name_to();
+                        final int sizeOrder = order.getX_transport_used();
+                        final String description1 = order.getX_description1();
+                        final String description2 = order.getX_description2();
+                        final String oriLa = order.getX_latitude_from();
+                        final String oriLo = order.getX_longitude_from();
+                        final String desLa = order.getX_latitude_to();
+                        final String desLo = order.getX_longitude_to();
+                        final int distanceBetween = order.getX_distance_between_points();
                         referenceParameter.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Parameter parameter = dataSnapshot.getValue(Parameter.class);
                                 minDistanceBetweenRequired = parameter.getMin_distance_between_points();
+                                interactor.goCompareDistance(idOrder, ago, country, from, to, sizeOrder, description1, description2,
+                                        oriLa, oriLo, desLa, desLo, latDomi, lonDomi, distanceBetween, minDistanceBetweenRequired);
                             }
 
                             @Override
@@ -74,8 +81,8 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
                             }
                         });
-                        interactor.goCompareDistance(idOrder, ago, from, to, sizeOrder, description1, description2,
-                                oriLa, oriLo, desLa, desLo, latDomi, lonDomi, distanceBetween, minDistanceBetweenRequired);
+//                        interactor.goCompareDistance(idOrder, ago, country, from, to, sizeOrder, description1, description2,
+//                                oriLa, oriLo, desLa, desLo, latDomi, lonDomi, distanceBetween, minDistanceBetweenRequired);
                     }
                 }
                 interactor.countChild(countChild);
@@ -90,28 +97,49 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
     }
 
     @Override
-    public void sendDataDomiciliary(final Activity activity, int idOrderToSend, final String uid, final int transportUsed) {
-        i = String.valueOf(idOrderToSend);
-        referenceOrder.child(i).addListenerForSingleValueEvent(new ValueEventListener() {
+    public void sendDataDomiciliary(final Activity activity, final int idOrderToSend, final String uid,
+                                    final int transportUsed, String country) {
+        referenceFare.child(country).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Order order = dataSnapshot.getValue(Order.class);
-                catchedOrderAvailable = order.isX_catched();
-                if (catchedOrderAvailable == false) {
-//                    updateDataDomiciliary(uid, i);
-                    referenceOrder.child(i).child("d_id").setValue(uid);
-                    presenter.responseGoOrderCatched(i);
-                    referenceOrder.child(i).child("x_catched").setValue(true);
-                    referenceOrder.child(i).child("x_transport_used").setValue(transportUsed);
-                    referenceUser.child(uid).child("used_vehicle").setValue(transportUsed); // For User model
+                Fare fare = dataSnapshot.getValue(Fare.class);
+                final float appliedFare;
+                if (transportUsed == 1){
+                    appliedFare = fare.getFare_domix_for_cyclist();
                 } else {
-                    presenter.responseOrderHasBeenTaken();
+                    appliedFare = fare.getFare_domix();
                 }
+
+                i = String.valueOf(idOrderToSend);
+                referenceOrder.child(i).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Order order = dataSnapshot.getValue(Order.class);
+                        catchedOrderAvailable = order.isX_catched();
+                        if (!catchedOrderAvailable) {
+                            DecimalFormat df = new DecimalFormat();
+                            df.setMaximumFractionDigits(2);
+                            referenceOrder.child(i).child("d_id").setValue(uid);
+                            presenter.responseGoOrderCatched(i);
+                            referenceOrder.child(i).child("x_applied_fare").setValue(Float.valueOf(df.format(appliedFare)));
+                            referenceOrder.child(i).child("x_catched").setValue(true);
+                            referenceOrder.child(i).child("x_transport_used").setValue(transportUsed);
+                            referenceUser.child(uid).child("used_vehicle").setValue(transportUsed); // For User model
+                        } else {
+                            presenter.responseOrderHasBeenTaken();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Error en sendDataDomiciliary
+                    }
+                });
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Error en sendDataDomiciliary
+
             }
         });
     }

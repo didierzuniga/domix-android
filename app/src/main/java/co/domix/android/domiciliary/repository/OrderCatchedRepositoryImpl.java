@@ -124,6 +124,7 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
     @Override
     public void dialogCancel(final String idOrder, String uid, final Activity activity) {
         referenceOrder.child(idOrder).child("d_id").removeValue();
+        referenceOrder.child(idOrder).child("x_applied_fare").removeValue();
         referenceOrder.child(idOrder).child("x_transportUsed").removeValue();
         referenceOrder.child(idOrder).child("x_catched").setValue(false);
         removeCoordDomiciliary(uid);

@@ -17,7 +17,8 @@ public interface DomiciliaryPresenter {
     void verifyLocationAndInternet(Domiciliary domiciliary);
     void startGetLocation();
     void searchDeliveries(String lat, String lon, int vehSelected);
-    void sendDataDomiciliary(Domiciliary domiciliary, int idOrderToSend, String uid, int transportUsed);
+    void sendDataDomiciliary(Domiciliary domiciliary, int idOrderToSend, String uid, int transportUsed,
+                             String country);
 //    void goCompareDistance(int idOrder, String ago, String from, String to, String description1,
 //                           String description2, String oriLat, String oriLon, String desLat,
 //                           String desLon);

@@ -58,8 +58,9 @@ public class DomiciliaryPresenterImpl implements DomiciliaryPresenter {
     }
 
     @Override
-    public void sendDataDomiciliary(Domiciliary domiciliary, int idOrderToSend, String uid, int transportUsed) {
-        interactor.sendDataDomiciliary(domiciliary, idOrderToSend, uid, transportUsed);
+    public void sendDataDomiciliary(Domiciliary domiciliary, int idOrderToSend, String uid, int transportUsed,
+                                    String country) {
+        interactor.sendDataDomiciliary(domiciliary, idOrderToSend, uid, transportUsed, country);
     }
 
 //    @Override

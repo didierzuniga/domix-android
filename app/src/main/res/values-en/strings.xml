@@ -210,7 +210,10 @@
     <string name="toast_please_complete_all_files">Please complete all fields</string>
     <string name="toast_account_created">We have sent a verification link to registered mail</string>
     <string name="toast_account_not_created">An error has occurred, please try again</string>
-    <string name="toast_error_signin">You must register!</string>
+    <string name="toast_signin_invalid_password">Invalid password!</string>
+    <string name="toast_signin_user_not_registered">Unregistered email!</string>
+
+
     <string name="toast_indicate_starting_point">Indicate a starting point</string>
     <string name="toast_specify_destination_point">Specify a destination point</string>
     <string name="toast_enter_description1">Field of starting point is missing</string>

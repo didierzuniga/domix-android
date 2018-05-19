@@ -11,7 +11,7 @@ public interface LoginView {
     void showProgressBar();
     void hideProgressBar();
 
-    void signinError(String err);
+    void signinError(String msg);
     void goOrderCatched(String uid, String email, int idOrder);
     void goOrderRequested(String uid, String email, int idOrder);
     void goUserScore(String uid, String email, int idOrder);

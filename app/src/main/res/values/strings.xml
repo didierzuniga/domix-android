@@ -209,7 +209,10 @@
     <string name="toast_please_complete_all_files">Diligencie todos los campos</string>
     <string name="toast_account_created">Hemos enviado un enlace de verificación al correo registrado</string>
     <string name="toast_account_not_created">Ha ocurrido un error, por favor vuelve a intentarlo</string>
-    <string name="toast_error_signin">¡Debes registrarte!</string>
+    <string name="toast_signin_invalid_password">¡Contraseña inválida!</string>
+    <string name="toast_signin_user_not_registered">¡Correo electrónico no registrado!</string>
+
+
     <string name="toast_indicate_starting_point">Indique un punto de partida</string>
     <string name="toast_specify_destination_point">Indique un punto de destino</string>
     <string name="toast_enter_description1">Falta campo del punto de partida</string>

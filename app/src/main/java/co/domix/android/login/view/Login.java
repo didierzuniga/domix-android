@@ -29,6 +29,7 @@ import co.domix.android.login.presenter.LoginPresenter;
 import co.domix.android.login.presenter.LoginPresenterImpl;
 import co.domix.android.user.view.Requested;
 import co.domix.android.user.view.UserScore;
+import co.domix.android.utils.ToastsKt;
 
 public class Login extends AppCompatActivity implements LoginView {
 
@@ -113,11 +114,15 @@ public class Login extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void signinError(String err) {
+    public void signinError(String msg) {
         firebaseAuth.getInstance().signOut();
         enableInputs();
         hideProgressBar();
-        Toast.makeText(this, R.string.toast_error_signin, Toast.LENGTH_SHORT).show();
+        if (msg == "The password is invalid or the user does not have a password."){
+            ToastsKt.toastShort(this, getString(R.string.toast_signin_invalid_password));
+        } else if (msg == "There is no user record corresponding to this identifier. The user may have been deleted."){
+            ToastsKt.toastShort(this, getString(R.string.toast_signin_user_not_registered));
+        }
     }
 
     @Override

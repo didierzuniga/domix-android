@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,22 +30,27 @@ import co.domix.android.model.Order;
 
 public class NotificationService extends Service {
 
+    private int identifyOrder;
     private SharedPreferences location;
     private SharedPreferences.Editor editor;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference referenceOrder = database.getReference("order");
 
     public void queryForNewOrder(){
+        identifyOrder = 100;
         referenceOrder.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Order order = snapshot.getValue(Order.class);
                     if (!order.isX_catched()) {
-                        if (location.getBoolean("IsServiceActive", false)){
-                            createNotification();
-                        } else {
-                            referenceOrder.removeEventListener(this);
+                        if (order.getX_id() > identifyOrder){
+                            identifyOrder = order.getX_id();
+                            if (location.getBoolean("IsServiceActive", false)) {
+                                createNotification();
+                            } else {
+                                referenceOrder.removeEventListener(this);
+                            }
                         }
                     }
                 }

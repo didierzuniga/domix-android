@@ -31,6 +31,7 @@ import co.domix.android.R;
 import co.domix.android.customizer.presenter.SettingPresenter;
 import co.domix.android.customizer.presenter.SettingPresenterImpl;
 import co.domix.android.login.view.Login;
+import co.domix.android.services.NotificationService;
 
 public class Setting extends AppCompatActivity implements SettingView {
 
@@ -39,7 +40,7 @@ public class Setting extends AppCompatActivity implements SettingView {
     private TextInputEditText editTextEmailReauthenticate, editTextPasswordReauthenticate, editTextPassword1, editTextPassword2;
     private Button buttonChangePassword, buttonDeleteAccount, buttonReauthenticate, buttonBack;
     private android.app.AlertDialog alertDialog;
-    private SharedPreferences location;
+    private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private SettingPresenter presenter;
     private DomixApplication app;
@@ -55,8 +56,8 @@ public class Setting extends AppCompatActivity implements SettingView {
 
         app = (DomixApplication) getApplicationContext();
         presenter = new SettingPresenterImpl(this);
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
-        editor = location.edit();
+        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        editor = shaPref.edit();
 
         progressBar = (ProgressBar) findViewById(R.id.progressBarSetting);
         buttonChangePassword = (Button) findViewById(R.id.buttonChangePassword);
@@ -200,5 +201,18 @@ public class Setting extends AppCompatActivity implements SettingView {
         Intent intent = new Intent(this, Login.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (shaPref.getBoolean("notifications", false)){
+            startService(new Intent(this, NotificationService.class));
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

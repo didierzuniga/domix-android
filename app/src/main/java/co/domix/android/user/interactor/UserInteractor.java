@@ -9,7 +9,8 @@ import android.app.Activity;
 public interface UserInteractor {
     void verifyLocationAndInternet(Activity activity);
     void requestForFullnameAndPhone(String uid);
-    void requestGeolocationAndDistance(String uid, String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, Activity activity);
+    void requestGeolocationAndDistance(String uid, String latFrom, String lonFrom, String latTo, String lonTo,
+                                       int whatAddress, Activity activity);
     void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity);
     void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                  String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,

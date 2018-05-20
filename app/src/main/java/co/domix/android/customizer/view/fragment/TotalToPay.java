@@ -97,23 +97,26 @@ public class TotalToPay extends Fragment implements TotalToPayView {
     @Override
     public void responseTotalToPayCash(String commissionDomix, String payTaxe, String payTotalToDomix,
                                        String minPayment, boolean enableButtonPay, int balanceToUpdate,
-                                       List<String> listOrders) {
+                                       List<String> listOrders, String currencyCode) {
         list = listOrders;
         balanceUpdate = balanceToUpdate;
         buttonToPay.setEnabled(true);
         enablePayment = true;
-        miniPayment = minPayment;
+        miniPayment = minPayment + " " + currencyCode;
         if (!enableButtonPay){
             enablePayment = false;
-            Toast.makeText(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment, Toast.LENGTH_LONG).show();
+            ToastsKt.toastLong(getActivity(), getString(R.string.text_minimum_amount) + " " + miniPayment);
         }
         hideProgressBar();
         linearPayPerDomicilies.setVisibility(View.VISIBLE);
         linearPaytaxes.setVisibility(View.VISIBLE);
         linearPayTotal.setVisibility(View.VISIBLE);
-        toPayDomix.setText(commissionDomix);
-        toPayTaxe.setText(payTaxe);
-        toPayDomixTotal.setText(payTotalToDomix);
+        toPayDomix.setText(commissionDomix + " " + currencyCode);
+        toPayTaxe.setText(payTaxe + " " + currencyCode);
+//        This data has ben send to PayU
+//        float py = Float.valueOf(payTotalToDomix);
+//        int yp = (int)(py);
+        toPayDomixTotal.setText(payTotalToDomix + " " + currencyCode);
     }
 
     @Override

@@ -45,8 +45,8 @@ public class RequestedPresenterImpl implements RequestedPresenter {
     }
 
     @Override
-    public void responseCoordinatesFromTo(String oriLa, String oriLo, String desLa, String desLo) {
-        view.resultCoordinatesFromTo(oriLa, oriLo, desLa, desLo);
+    public void responseCoordinatesFromTo(String origenCoordinate, String destineCoordinate) {
+        view.resultCoordinatesFromTo(origenCoordinate, destineCoordinate);
     }
 
     @Override

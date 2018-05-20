@@ -166,7 +166,8 @@ public class UserRepositoryImpl implements UserRepository {
         public void run() {
             if (timeNow != null){
                 Order order = new Order(uidCurrentUser, countFinal, country, city, from, to,
-                        latFrom, lonFrom, latTo, lonTo, disbetween, description1, description2, dimenSelected, payMethod,
+                        latFrom + ", " +lonFrom, latTo + ", " + lonTo,
+                        disbetween, description1, description2, dimenSelected, payMethod,
                         vvPaymentCash, credit, dateNow, timeNow, new Date().getTime());
                 if (credit > 0){
                     referenceUser.child(uidCurrentUser).child("my_credit").setValue(updateCreditUser);

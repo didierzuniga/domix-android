@@ -268,23 +268,24 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
     @Override
     public void showResultOrder(Hashtable<Integer, List> dictionary, int countIndx) {
         diccionario = dictionary;
-        country = dictionary.get(countIndex).get(12).toString();
+        countIndex = countIndx;
+        country = dictionary.get(countIndex).get(10).toString();
         queryUserRate(dictionary.get(countIndex).get(0).toString());
         idOrderToSend = Integer.valueOf(dictionary.get(countIndex).get(0).toString());
         String sizeOrder = "";
-        if ((dictionary.get(countIndex).get(10).toString()).equals("0")){
+        if ((dictionary.get(countIndex).get(8).toString()).equals("0")){
             sizeOrder = getString(R.string.text_letter);
-        } else if ((dictionary.get(countIndex).get(10).toString()).equals("1")){
+        } else if ((dictionary.get(countIndex).get(8).toString()).equals("1")){
             sizeOrder = getString(R.string.text_bag);
-        } else if ((dictionary.get(countIndex).get(10).toString()).equals("2")){
+        } else if ((dictionary.get(countIndex).get(8).toString()).equals("2")){
             sizeOrder = getString(R.string.text_trunk);
-        } else if ((dictionary.get(countIndex).get(10).toString()).equals("3")){
+        } else if ((dictionary.get(countIndex).get(8).toString()).equals("3")){
             sizeOrder = getString(R.string.text_grid);
         }
 
         tvAgo.setText(dictionary.get(countIndex).get(1).toString());
         tvFrom.setText(dictionary.get(countIndex).get(2).toString());
-        tvDimensions.setText(sizeOrder);
+        tvDimensions.setText(" " + sizeOrder);
         tvTo.setText(dictionary.get(countIndex).get(3).toString());
         tvDescription1.setText(dictionary.get(countIndex).get(4).toString());
         tvDescription2.setText(dictionary.get(countIndex).get(5).toString());
@@ -303,10 +304,8 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
         editor.putBoolean("SearchDelivery", false);
         editor.commit();
         Intent intent = new Intent(this, PreviewRouteOrder.class);
-        intent.putExtra("latFrom", diccionario.get(countIndex).get(6).toString());
-        intent.putExtra("latTo", diccionario.get(countIndex).get(8).toString());
-        intent.putExtra("lonFrom", diccionario.get(countIndex).get(7).toString());
-        intent.putExtra("lonTo", diccionario.get(countIndex).get(9).toString());
+        intent.putExtra("coordinateFromView", diccionario.get(countIndex).get(6).toString());
+        intent.putExtra("coordinateToView", diccionario.get(countIndex).get(7).toString());
         startActivity(intent);
     }
 
@@ -325,11 +324,11 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
         hideProgressBar();
         editor.putBoolean("SearchDelivery", false);
         app.idOrder = Integer.valueOf(idOrder);
-        editor.putString("latFrom", diccionario.get(countIndex).get(6).toString());
-        editor.putString("latTo", diccionario.get(countIndex).get(8).toString());
-        editor.putString("lonFrom", diccionario.get(countIndex).get(7).toString());
-        editor.putString("lonTo", diccionario.get(countIndex).get(9).toString());
-        editor.commit();
+//        editor.putString("latFrom", diccionario.get(countIndex).get(6).toString());
+//        editor.putString("latTo", diccionario.get(countIndex).get(8).toString());
+//        editor.putString("lonFrom", diccionario.get(countIndex).get(7).toString());
+//        editor.putString("lonTo", diccionario.get(countIndex).get(9).toString());
+//        editor.commit();
         Intent intent = new Intent(this, OrderCatched.class);
         startActivity(intent);
     }

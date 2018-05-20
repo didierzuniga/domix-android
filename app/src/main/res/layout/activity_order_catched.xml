@@ -183,6 +183,15 @@
                     android:visibility="gone"
                     android:textStyle="bold" />
                 <TextView
+                    android:id="@+id/idWouldReceive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="8dp"
+                    android:textSize="18sp"
+                    android:text="@string/text_would_receive"
+                    android:visibility="gone"
+                    android:textStyle="bold"/>
+                <TextView
                     android:id="@+id/idDeliverymanReceives"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

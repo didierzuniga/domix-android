@@ -10,7 +10,7 @@ public interface RequestedView {
     void dialogCancel();
     void resultGoUserActivity();
     void goRateUser();
-    void resultCoordinatesFromTo(String oriLa, String oriLo, String desLa, String desLo);
+    void resultCoordinatesFromTo(String origenCoordinate, String destineCoordinate);
     void updateDomiPosition();
     void responseCoordDomiciliary(double latDomiciliary, double lonDomiciliary);
     void resultNotCatched();

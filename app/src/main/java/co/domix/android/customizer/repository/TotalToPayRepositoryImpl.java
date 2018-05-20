@@ -56,19 +56,23 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
                             for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Order order = snapshot.getValue(Order.class);
-                                if ((order.getD_id()).equals(uid)) {
-                                    if (!order.isX_paid_out()) {
-                                        areThereOrders = true;
-                                        country = order.getX_country();
-                                        listOrders.add(snapshot.getKey()); //ID to save
-                                        fareToPayDomix += (int) ((order.getX_money_to_pay() + order.getX_credit_used()) *
-                                                order.getX_applied_fare());
-                                        if (order.getX_pay_method() == 1 || order.getX_pay_method() == 2){
-                                            pagado += order.getX_money_to_pay() + order.getX_credit_used();
-                                        } else if (order.getX_credit_used() > 0){
-                                            pagado += order.getX_credit_used();
+                                try {
+                                    if ((order.getD_id()).equals(uid)) {
+                                        if (!order.isX_paid_out()) {
+                                            areThereOrders = true;
+                                            country = order.getX_country();
+                                            listOrders.add(snapshot.getKey()); //ID to save
+                                            fareToPayDomix += (int) ((order.getX_money_to_pay() + order.getX_credit_used()) *
+                                                    order.getX_applied_fare());
+                                            if (order.getX_pay_method() == 1 || order.getX_pay_method() == 2){
+                                                pagado += order.getX_money_to_pay() + order.getX_credit_used();
+                                            } else if (order.getX_credit_used() > 0){
+                                                pagado += order.getX_credit_used();
+                                            }
                                         }
                                     }
+                                } catch (Exception e){
+
                                 }
                             }
                             if (areThereOrders) {
@@ -94,11 +98,6 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
                             } else {
                                 presenter.thereAreNotOrders();
                             }
-
-
-
-
-
                         }
 
                         @Override

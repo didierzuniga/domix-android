@@ -49,13 +49,11 @@ public class PreviewRouteOrder extends AppCompatActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        String oriLat = (getIntent().getStringExtra("latFrom"));
-        String desLat = (getIntent().getStringExtra("latTo"));
-        String oriLon = (getIntent().getStringExtra("lonFrom"));
-        String desLon = (getIntent().getStringExtra("lonTo"));
+        String origenCoordinate = (getIntent().getStringExtra("coordinateFromView"));
+        String destineCoordinate = (getIntent().getStringExtra("coordinateToView"));
 
         try {
-            new DirectionFinder(this, oriLat+", "+oriLon, desLat+", "+desLon).execute();
+            new DirectionFinder(this, origenCoordinate, destineCoordinate).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

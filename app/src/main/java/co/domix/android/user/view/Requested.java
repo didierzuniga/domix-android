@@ -65,13 +65,12 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         GoogleApiClient.ConnectionCallbacks, DirectionFinderListener {
 
     private LinearLayout linearRateDomiciliary, linearNameDomiciliary, linearCellphoneDomiciliary, linearParent;
-    private TextView textViewTitle, textViewWaitingDomiciliary, textViewRateDomiciliary,
+    private TextView textViewWaitingDomiciliary, textViewRateDomiciliary,
                      textViewSelectedDomiciliary, textViewDataDomiciliary;
     private ImageView ivVehicle;
     private String idDomiciliary;
     private Button buttonCanceled;
     private boolean locDomi, validateDomiciliaryRealtime = false, initialize = false;
-    private double oriLat, oriLon, desLat, desLon;
     private Marker m2;
     private byte g = 0;
     private GoogleMap mMap;
@@ -279,14 +278,10 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     }
 
     @Override
-    public void resultCoordinatesFromTo(String oriLa, String oriLo, String desLa, String desLo) {
-        oriLat = Double.valueOf(oriLa);
-        oriLon = Double.valueOf(oriLo);
-        desLat = Double.valueOf(desLa);
-        desLon = Double.valueOf(desLo);
+    public void resultCoordinatesFromTo(String origenCoordinate, String destineCoordinate) {
         try {
-            String uno = oriLa + ", " + oriLo;
-            String dos = desLa + ", " + desLo;
+            String uno = origenCoordinate;
+            String dos = destineCoordinate;
             if (initialize == false) {
                 new DirectionFinder(this, uno, dos).execute();
                 initialize = true;

@@ -44,41 +44,41 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
             int payUTotalCommission = payUCommissionCost + payURate;
             int payUIvaOverCommission = (int) (payUTotalCommission * taxe);
             int payUTotalCommissionWithIva = payUTotalCommission + payUIvaOverCommission;
-            payTaxe = String.valueOf(payUTotalCommissionWithIva) + " " + currencyCode;
+            payTaxe = String.valueOf(payUTotalCommissionWithIva);
 
             int saldo = pagado - (fareToPayDomix + payUTotalCommissionWithIva);
             if (saldo >= 0){
                 // Enviar a positive_balance --saldo--
                 // Y mostrar 0 total a pagar
                 balanceToUpdate = saldo;
-                payTotalToDomix = "0.00 " + currencyCode;
-
-                miniPayment = String.valueOf(minPayment) + " " + currencyCode;
+                payTotalToDomix = "0.00 ";
+                miniPayment = String.valueOf(minPayment);
                 enableButtonPay = false;
 
             } else {
                 //Enviar a positive_balance -- 0 --
                 balanceToUpdate = 0;
-                payTotalToDomix = String.valueOf(saldo * -1) + " " + currencyCode;
+                payTotalToDomix = String.valueOf(saldo * -1);
                 if ((saldo * -1) >= minPayment){
                     enableButtonPay = true;
                 } else {
-                    miniPayment = String.valueOf(minPayment) + " " +currencyCode;
+                    miniPayment = String.valueOf(minPayment);
                     enableButtonPay = false;
                 }
             }
         } else {
-            payTaxe = "0.00 " + currencyCode;
-            payTotalToDomix = "0.00 " + currencyCode;
+            payTaxe = "0.00 ";
+            payTotalToDomix = "0.00 ";
             enableButtonPay = false;
         }
-        presenter.responseTotalToPayCash(String.valueOf(fareToPayDomix) + " " + currencyCode,
+        presenter.responseTotalToPayCash(String.valueOf(fareToPayDomix),
                                         payTaxe,
                                         payTotalToDomix,
                                         miniPayment,
                                         enableButtonPay,
                                         balanceToUpdate,
-                                        listOrders);
+                                        listOrders,
+                                        currencyCode);
     }
 
     @Override

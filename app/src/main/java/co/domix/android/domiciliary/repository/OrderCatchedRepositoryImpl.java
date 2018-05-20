@@ -58,16 +58,14 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                 String toAuthor = order.getX_name_to();
                 String description1 = order.getX_description1();
                 String description2 = order.getX_description2();
-                String oriLa = order.x_latitude_from.toString();
-                String oriLo = order.x_longitude_from.toString();
-                String desLa = order.x_latitude_to.toString();
-                String desLo = order.x_longitude_to.toString();
+                String origenCoordinate = order.getX_coordinate_from();
+                String destineCoordinate = order.getX_coordinate_to();
                 int moneyCash = order.getX_money_to_pay();
                 int moneyCredit = order.getX_credit_used();
                 int paymentMethod = order.getX_pay_method();
                 getNameAndPhoneAuthor(uidAuthor, countryAuthor, cityAuthor, fromAuthor, toAuthor,
-                        description1, description2, oriLa, oriLo,
-                        desLa, desLo, moneyCash, moneyCredit, paymentMethod);
+                        description1, description2, origenCoordinate, destineCoordinate, moneyCash,
+                        moneyCredit, paymentMethod);
                 verifyStatusOrder(uid, String.valueOf(idOrder), activity);
 //                referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
             }
@@ -80,10 +78,10 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
     }
 
     @Override
-    public void getNameAndPhoneAuthor(final String uidAuthor, final String countryAuthor, final String cityAuthor, final String fromAuthor,
-                                      final String toAuthor, final String description1, final String description2,
-                                      final String oriLa, final String oriLo, final String desLa,
-                                      final String desLo, final int moneyCash, final int moneyCredit,
+    public void getNameAndPhoneAuthor(final String uidAuthor, final String countryAuthor, final String cityAuthor,
+                                      final String fromAuthor, final String toAuthor, final String description1,
+                                      final String description2, final String origenCoordinate, final String destineCoordinate,
+                                      final int moneyCash, final int moneyCredit,
                                       final int paymentMethod) {
         referenceUser.child(uidAuthor).addValueEventListener(new ValueEventListener() {
             @Override
@@ -97,12 +95,10 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Fare fare = dataSnapshot.getValue(Fare.class);
-//                        presenter.responseUserRequested(fullName, phone, fare.getCurrency_code(), cityAuthor, fromAuthor,
-//                                toAuthor, description1, description2, oriLa,
-//                                oriLo, desLa, desLo, moneyCash);
-                        interactor.responseUserRequested(fullName, phone, fare.getCurrency_code(), cityAuthor, fromAuthor,
-                                toAuthor, description1, description2, oriLa,
-                                oriLo, desLa, desLo, moneyCash, moneyCredit, paymentMethod);
+                        interactor.responseUserRequested(fullName, phone, fare.getCurrency_code(),
+                                                        cityAuthor, fromAuthor, toAuthor, description1,
+                                                        description2, origenCoordinate, destineCoordinate,
+                                                        moneyCash, moneyCredit, paymentMethod);
                         referenceUser.child(uidAuthor).removeEventListener(this);
                     }
 

@@ -12,7 +12,7 @@ public interface RequestedPresenter {
     void dialogCancel(String uid, int idOrder, Requested requested);
     void resultGoUserActivity();
     void goRateUser();
-    void responseCoordinatesFromTo(String oriLa, String oriLo, String desLa, String desLo);
+    void responseCoordinatesFromTo(String origenCoordinate, String destineCoordinate);
     void updateDomiPosition(int idOrder, Requested requested);
     void responseCoordDomiciliary(double latDomiciliary, double lonDomiciliary);
     void resultNotCatched();

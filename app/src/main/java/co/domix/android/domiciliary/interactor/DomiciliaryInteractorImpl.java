@@ -93,9 +93,9 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
 
     @Override
     public void goCompareDistance(int idOrder, String ago, String country, String from, String to,
-                                  int sizeOrder, String description1, String description2, String oriLat,
-                                  String oriLon, String desLat, String desLon, String latDomi, String lonDomi,
-                                  int distanceBetween, int minDistanceRequired) {
+                                  int sizeOrder, String description1, String description2, String origenCoordinate,
+                                  String destineCoordinate, String latDomi, String lonDomi, int distanceBetween,
+                                  int minDistanceRequired) {
         minDistanceBetweenRequired = minDistanceRequired;
         listica = new ArrayList<String>();
         String idOrderStr = String.valueOf(idOrder);
@@ -105,18 +105,16 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
         listica.add(to);
         listica.add(description1);
         listica.add(description2);
-        listica.add(oriLat);
-        listica.add(oriLon);
-        listica.add(desLat);
-        listica.add(desLon);
+        listica.add(origenCoordinate);//6
+        listica.add(destineCoordinate);//7
         listica.add(String.valueOf(sizeOrder));
         listica.add(String.valueOf(distanceBetween));
         listica.add(country);
 
         diccionario.put(countForDictionary, listica);
         try {
-            String uno = oriLat + ", " + oriLon;
-            String dos = latDomi + ", " + lonDomi;
+            String uno = latDomi + ", " + lonDomi;
+            String dos = listica.get(6);
             new DirectionFinder(this, uno, dos).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -176,8 +174,15 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
         boolean matchForAnyOrder = false;
         for (Route route : routes) {
             int newDistance = route.distance.value;
+//            Log.w("jjj", "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+//            Log.w("jjj", "ID Order: "+listica.get(0));
+//            Log.w("jjj", "Distance: "+newDistance);
+//            Log.w("jjj", "ID Order: "+listica.get(2));
+//            Log.w("jjj", "Coordinate To: "+listica.get(7));
+//            Log.w("jjj", "Size order: "+listica.get(8));
+//            Log.w("jjj", "Distance Between: "+listica.get(9));
             if (vehicleSelected == 1){
-                if ((Integer.valueOf(listica.get(11)) + route.distance.value) <= minDistanceBetweenRequired){
+                if ((Integer.valueOf(listica.get(9)) + route.distance.value) <= minDistanceBetweenRequired){
                     matchForAnyOrder = true;
                     if (distMin != 0) {
                         if (distMin > newDistance) {

@@ -31,8 +31,8 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     private DomixApplication app;
     private TextView textViewRequestedBy, textViewPhoneRequestedBy, textViewFrom, textViewTo,
             textViewDescription1, textViewDescription2, textViewMoneyToPay, txtDeliverymanNotReceives,
-            txtDeliverymanReceives;
-    private double oriLat, oriLon, desLat, desLon;
+            txtWouldReceive, txtDeliverymanReceives;
+    private String oriCoordinate, desCoordinate;
     private Button cancelService, finishService, btnViewMap;
     private ImageButton call;
     private ProgressBar progressBar;
@@ -69,6 +69,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         textViewMoneyToPay = (TextView) findViewById(R.id.d_moneyToPay);
         txtDeliverymanNotReceives = (TextView) findViewById(R.id.idDeliverymanNotReceives);
         txtDeliverymanReceives = (TextView) findViewById(R.id.idDeliverymanReceives);
+        txtWouldReceive = (TextView) findViewById(R.id.idWouldReceive);
         textViewMoneyToPay = (TextView) findViewById(R.id.d_moneyToPay);
 
         getUserRequest();
@@ -125,10 +126,10 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     @Override
     public void responseUserRequested(String nameAuthor, String cellphoneAuthor, String countryAuthor, String cityAuthor,
                                       String fromAuthor, String toAuthor, String description1,
-                                      String description2, String oriLa, String oriLo,
-                                      String desLa, String desLo, int totalCostDelivery, boolean cashReceivesDeliveryman,
-                                      int moneyCash) {
+                                      String description2, String origenCoordinate, String destineCoordinate,
+                                      int totalCostDelivery, boolean cashReceivesDeliveryman, int moneyCash) {
         if (cashReceivesDeliveryman){
+            txtWouldReceive.setVisibility(View.VISIBLE);
             txtDeliverymanReceives.setVisibility(View.VISIBLE);
             txtDeliverymanReceives.setText(" " + moneyCash);
         } else {
@@ -139,19 +140,15 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         textViewDescription1.setText(description1);
         textViewDescription2.setText(description2);
         textViewMoneyToPay.setText(String.valueOf(totalCostDelivery)+" "+countryAuthor);
-        oriLat = Double.valueOf(oriLa);
-        oriLon = Double.valueOf(oriLo);
-        desLat = Double.valueOf(desLa);
-        desLon = Double.valueOf(desLo);
+        oriCoordinate = origenCoordinate;
+        desCoordinate = destineCoordinate;
     }
 
     @Override
     public void goPreviewRouteOrder() {
         Intent intent = new Intent(this, PreviewRouteOrder.class);
-        intent.putExtra("latFrom", location.getString("latFrom", ""));
-        intent.putExtra("latTo", location.getString("latTo", ""));
-        intent.putExtra("lonFrom", location.getString("lonFrom", ""));
-        intent.putExtra("lonTo", location.getString("lonTo", ""));
+        intent.putExtra("coordinateFromView", oriCoordinate);
+        intent.putExtra("coordinateToView", desCoordinate);
         startActivity(intent);
     }
 

@@ -58,11 +58,9 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                     boolean completed = order.isX_completed();
                     Double scoredDomi = order.getX_score_deliveryman();
                     if (!completed) {
-                        String oriLa = order.x_latitude_from.toString();
-                        String oriLo = order.x_longitude_from.toString();
-                        String desLa = order.x_latitude_to.toString();
-                        String desLo = order.x_longitude_to.toString();
-                        presenter.responseCoordinatesFromTo(oriLa, oriLo, desLa, desLo);
+                        String origenCoordinate = order.x_coordinate_from.toString();
+                        String destineCoordinate = order.x_coordinate_to.toString();
+                        presenter.responseCoordinatesFromTo(origenCoordinate, destineCoordinate);
                         if (order.isX_catched()) {
                             orderHasBenCompleted = false;
                             idDomiciliaryListen = order.getD_id();
@@ -224,7 +222,7 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                             });
                         } catch (Exception e){}
                     }
-                }, 15000);
+                }, 10000);
             }
         });
     }

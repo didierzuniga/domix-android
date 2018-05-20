@@ -59,13 +59,11 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                         final String country = order.getX_country();
                         final String from = order.getX_name_from();
                         final String to = order.getX_name_to();
-                        final int sizeOrder = order.getX_transport_used();
+                        final int sizeOrder = order.getX_dimension_selected();
                         final String description1 = order.getX_description1();
                         final String description2 = order.getX_description2();
-                        final String oriLa = order.getX_latitude_from();
-                        final String oriLo = order.getX_longitude_from();
-                        final String desLa = order.getX_latitude_to();
-                        final String desLo = order.getX_longitude_to();
+                        final String origenCoordinate = order.getX_coordinate_from();
+                        final String destineCoordinate = order.getX_coordinate_to();
                         final int distanceBetween = order.getX_distance_between_points();
                         referenceParameter.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -73,7 +71,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                                 Parameter parameter = dataSnapshot.getValue(Parameter.class);
                                 minDistanceBetweenRequired = parameter.getMin_distance_between_points();
                                 interactor.goCompareDistance(idOrder, ago, country, from, to, sizeOrder, description1, description2,
-                                        oriLa, oriLo, desLa, desLo, latDomi, lonDomi, distanceBetween, minDistanceBetweenRequired);
+                                        origenCoordinate, destineCoordinate, latDomi, lonDomi, distanceBetween, minDistanceBetweenRequired);
                             }
 
                             @Override

@@ -88,55 +88,82 @@
     <string name="text_my_credit"><b>My credit:</b></string>
     <string name="text_not_receives_cash">You do not receive cash</string>
     <string name="text_would_receive">You must receive</string>
-    <string name="text_terms"><b>Colombia
-            TÉRMINOS Y CONDICIONES DE USO DE “DOMIX”
-            ASPECTOS GENERALES</b>
-            <b>1.  INFORMACIÓN</b>
-            DOMIX ALTERNATIVE LLC. Es una sociedad constituida en el estado de Delaware en los Estados Unidos de América que para los efectos de los presentes términos se denominará EL OPERADOR.
-            <b>2.  NATURALEZA JURÍDICA</b>
-            Los presentes términos y condiciones de uso regulan la relación contractual de carácter comercial que une a los Usuarios que acceden a la plataforma móvil y al OPERADOR, especialmente en la autorización de uso que otorga éste en favor de aquel.
-            <b>3.  DEFINICIONES</b>
-            Usuario: Toda persona natural que se registre en la plataforma móvil.
-            Solicitante: Usuario que haya usado la plataforma móvil para solicitar servicios domiciliarios.
-            Domiciliario: Usuario que haya usado la plataforma móvil para ofrecer y culminar exitosamente servicios domiciliarios.
-            Datos personales: Es toda información que permite identificar o hacer identificable a una persona física.
-            Interacción en la plataforma móvil: Facultad de acceso por parte de Usuarios para solicitar o entregar servicios de domicilio.
-            Mayor de edad: Persona natural mayor de dieciocho (18) años.
-            Mensajes de datos: La información generada, enviada, recibida, almacenada o comunicada por medios electrónicos, ópticos o similares, como pudieran ser, entre otros, el Intercambio Electrónico de Datos (EDI), Internet, el correo electrónico, telegrama o telefax.
-            Operador de la plataforma: Encargado de administrar operativamente y funcionalmente la plataforma representada para los efectos de los presentes términos por DOMIX ALTERNATIVE S.A.S., o por la persona natural o jurídica que ésta designe.
+    <string name="text_terms">Colombia\nTÉRMINOS Y CONDICIONES DE USO DE “DOMIX”\nASPECTOS
+            GENERALES\n<b>1.  INFORMACIÓN</b>\nDOMIX ALTERNATIVE LLC. Es una sociedad constituida
+            en el estado de Delaware en los EstadosUnidos de América que para los efectos de los
+            presentes términos se denominará EL OPERADOR.\n<b>2.  NATURALEZA JURÍDICA</b>\nLos presentes
+            términos y condiciones de uso regulan la relación contractual de carácter comercial que
+            une a los Usuarios que acceden a la plataforma móvil y al OPERADOR, especialmente en la
+            autorización de uso que otorga éste en favor de aquel.\n<b>3.  DEFINICIONES</b>\nUsuario:
+            Toda persona natural que se registre en la plataforma móvil. Solicitante: Usuario que haya
+            usado la plataforma móvil para solicitar servicios domiciliarios. Domiciliario: Usuario
+            que haya usado la plataforma móvil para ofrecer y culminar exitosamente servicios
+            domiciliarios. Datos personales: Es toda información que permite identificar o hacer
+            identificable a una persona física. Interacción en la plataforma móvil: Facultad de acceso
+            por parte de Usuarios para solicitar o entregar servicios de domicilio. Mayor de edad: Persona
+            natural mayor de dieciocho (18) años. Mensajes de datos: La información generada, enviada,
+            recibida, almacenada o comunicada por medios electrónicos, ópticos o similares, como pudieran
+            ser, entre otros, el Intercambio Electrónico de Datos (EDI), Internet, el correo electrónico,
+            telegrama o telefax. Operador de la plataforma: Encargado de administrar operativamente y
+            funcionalmente la plataforma representada para los efectos de los presentes términos por DOMIX ALTERNATIVE LLC., o por la persona natural o jurídica que ésta designe.
             Pasarela de pagos: Servicio que permite la realización de pagos por parte de los Usuarios directamente al OPERADOR a través de medios electrónicos utilizando plataformas tecnológicas (software).
             Plataforma móvil: Aplicativo virtual móvil administrado por el OPERADOR que permite la concurrencia en un mercado de Solicitantes y Domiciliarios, para la celebración de servicios determinados.
             Publicidad: Es toda forma de comunicación realizada por el OPERADOR, con el fin de brindar información sobre servicios, actividades comerciales y comunicar estrategias o campañas publicitarias o de mercadeo, propias o de terceros; realizada como mecanismo de referencia y no como oferta pública.
-            Servicio: Servicios ofrecidos a través de la plataforma móvil como Solicitud de domicilios, Realización de entregas de domicilios y cualquier otro que esté disponible a través de la misma. Términos y condiciones de uso de la plataforma: Constituyen los términos que han de regular el uso que los Usuarios le dan a la plataforma móvil.
-            <b>4.  OBJETO</b>
-            Los presentes términos y condiciones regulan la autorización de uso que otorga el OPERADOR a los Usuarios, para que estos ingresen a la plataforma móvil, soliciten servicios de domicilio o puedan servir como domiciliarios en la entrega de los mismos.
+            Servicio: Servicios ofrecidos a través de la plataforma móvil como Solicitud de domicilios,
+            Realización de entregas de domicilios y cualquier otro que esté disponible a través de
+            la misma. Términos y condiciones de uso de la plataforma: Constituyen los términos que
+            han de regular el uso que los Usuarios le dan a la plataforma móvil.\n<b>4.  OBJETO</b>\nLos
+            presentes términos y condiciones regulan la autorización de uso que otorga el OPERADOR a los Usuarios, para que estos ingresen a la plataforma móvil, soliciten servicios de domicilio o puedan servir como domiciliarios en la entrega de los mismos.
             El OPERADOR a través de la plataforma móvil realiza las siguientes acciones: i) exhibir los servicios requeridos por Solicitantes para que estos sean vistos y atendidos por los Domiciliarios, ii) facilita el encuentro entre el Solicitante y Domiciliario para la realización del vínculo contractual, iii) permite el uso de la plataforma de pagos (PayU) mediante tarjeta de crédito o el pago a través de la empresa encargada del recaudo.
             La celebración de la relación contractual entre el OPERADOR y los Usuarios se da siempre y cuando estos últimos se encuentren en el territorio nacional y en las ciudades donde el OPERADOR haya lanzado la plataforma móvil a producción.
-            A través de la plataforma móvil se expone a los Domiciliarios los servicios requeridos por Solicitantes para satisfacer una necesidad privada, personal o familiar, y en ningún momento para cualquier otro tipo de transacción que no esté en los límites de lo legal en el territorio colombiano.
-            <b>5.  PLATAFORMA TECNOLÓGICA QUE PERMITE SU USO</b>
-            Es una plataforma que permite su uso gratuito a través de la aplicación que se puede descargar en dispositivos móviles por medio de la tienda virtual de Google (Google Play), en adelante y para los efectos de los presentes términos se denominará “La Plataforma”. Los Usuarios podrán utilizar La Plataforma exclusivamente para su uso personal, sin que esto implique el otorgamiento de una licencia del aplicativo de ningún tipo.
-            <b>6.  MODIFICACIÓN</b>
-            El OPERADOR podrá modificar autónomamente y en cualquier momento en aspectos formales, procedimentales o sustanciales los presentes Términos y Condiciones de uso de La Plataforma, los cuales serán actualizados y puestos a disposición de sus Usuarios, siendo la última versión publicada la que regulará las relaciones comerciales que se generen al momento de realizase la transacción. Así mismo, cuenta con plena autonomía para modificar los usos de La Plataforma permitidos a los Usuarios, con el único deber de informarlo por un medio virtual que permita su publicación y comunicación al público.
-            <b>DETALLE DEL SERVICIO</b>
-            <b>7.  SOLICITANTE</b>
-            Toda persona natural que, como destinatario final, use La Plataforma para solicitar servicios de entrega de productos tales como (Víveres, productos de aseo personal y general, bebidas, documentos, mascotas, comidas rápidas, medicamentos, objetos o documentos personales) o servicios como consignación de dinero en efectivo.
+            A través de la plataforma móvil se expone a los Domiciliarios los servicios requeridos por
+            Solicitantes para satisfacer una necesidad privada, personal o familiar, y en ningún momento
+            para cualquier otro tipo de transacción que no esté en los límites de lo legal en el
+            territorio colombiano.\n<b>5.  PLATAFORMA TECNOLÓGICA QUE PERMITE SU USO</b>\nEs una plataforma
+            que permite su uso gratuito a través de la aplicación que se puede descargar en dispositivos
+            móviles por medio de la tienda virtual de Google (Google Play), en adelante y para los
+            efectos de los presentes términos se denominará “La Plataforma”. Los Usuarios podrán utilizar
+            La Plataforma exclusivamente para su uso personal, sin que esto implique el otorgamiento de
+            una licencia del aplicativo de ningún tipo.\n<b>6.  MODIFICACIÓN</b>\nEl OPERADOR podrá
+            modificar autónomamente y en cualquier momento en aspectos formales, procedimentales o
+            sustanciales los presentes Términos y Condiciones de uso de La Plataforma, los cuales
+            serán actualizados y puestos a disposición de sus Usuarios, siendo la última versión publicada
+            la que regulará las relaciones comerciales que se generen al momento de realizase la
+            transacción. Así mismo, cuenta con plena autonomía para modificar los usos de La Plataforma
+            permitidos a los Usuarios, con el único deber de informarlo por un medio virtual que permita
+            su publicación y comunicación al público.\n<b>DETALLE DEL SERVICIO</b>\n<b>7.  SOLICITANTE</b>\nToda
+            persona natural que, como destinatario final, use La Plataforma para solicitar servicios de entrega de productos tales como (Víveres, productos de aseo personal y general, bebidas, documentos, mascotas, comidas rápidas, medicamentos, objetos o documentos personales) o servicios como consignación de dinero en efectivo.
             El uso de La Plataforma lo realiza el Usuario como persona capaz, manifestando que, para la celebración de contratos de prestación de servicios con otros Usuarios, cuenta con plena capacidad legal para ser sujeto de derechos y obligaciones, calidades que refrenda al momento de generar su registro.
-            El Usuario tiene la obligación de proveer un documento de identidad nacional (Cédula de ciudadanía) original, expedido por la Registraduría General del Estado Civil Colombiano, a cargar dos fotos del documento en la aplicación, una por cada lado, e igualmente a proveer un documento de soporte que contenga el mismo número que aparece en su cedula a través de la misma.
-            <b>8.  DOMICILIARIO</b>
-            Personas naturales o jurídicas que, de manera habitual, teniendo capacidad de contratación, acceden a La Plataforma para buscar y realizar entregas de domicilios solicitados por otros Usuarios. Las calidades de los Solicitantes se encuentran establecidas en el numeral xx xx xxxxxxx.
-            <b>9.  CUENTA DE USUARIO</b>
-            Los Usuarios solicitan los servicios de entrega en La Plataforma, teniendo como condición necesaria la creación de una Cuenta de Usuario, donde se solicitarán datos como nombre, fecha de nacimiento, dirección de domicilio, número celular, dirección de correo electrónico; esta información se utiliza para la plena identificación de las personas que pretenden adquirir los servicios, para el cumplimiento del contrato, para la prevención de fraudes, para vincular al Solicitante con el Domiciliario y en general para los fines definidos en el acápite manejo de información.
+            El Usuario tiene la obligación de proveer un documento de identidad nacional (Cédula de
+            ciudadanía) original, expedido por la Registraduría General del Estado Civil Colombiano,
+            a cargar dos fotos del documento en la aplicación, una por cada lado, e igualmente a proveer
+            un documento de soporte que contenga el mismo número que aparece en su cedula a través
+            de la misma.\n<b>8.  DOMICILIARIO</b>\nPersonas naturales o jurídicas que, de manera habitual,
+            teniendo capacidad de contratación, acceden a La Plataforma para buscar y realizar entregas
+            de domicilios solicitados por otros Usuarios. Las calidades de los Solicitantes se encuentran
+            establecidas en el numeral xx xx xxxxxxx.\n<b>9.  CUENTA DE USUARIO</b>\nLos Usuarios solicitan los servicios de entrega en La Plataforma, teniendo como condición necesaria la creación de una Cuenta de Usuario, donde se solicitarán datos como nombre, fecha de nacimiento, dirección de domicilio, número celular, dirección de correo electrónico; esta información se utiliza para la plena identificación de las personas que pretenden adquirir los servicios, para el cumplimiento del contrato, para la prevención de fraudes, para vincular al Solicitante con el Domiciliario y en general para los fines definidos en el acápite manejo de información.
             Los Domiciliarios realizan la entrega de los servicios solicitados por otros Usuarios a través de La Plataforma, teniendo como condición necesaria la creación de una Cuenta de Usuario, donde se solicitarán datos como nombre, fecha de nacimiento, dirección de domicilio, numero celular, dirección de correo electrónico, documentos del automotor (Si este pretende realizar alguna entrega haciendo uso de automóvil, motocicleta, camión, etc.); esta información se utiliza para la plena identificación de las personas que pretenden realizar entregas de domicilios, para el cumplimiento del contrato, para la prevención de fraudes, para vincular al Domiciliario con el Solicitante y en general para los fines definidos en el acápite manejo de información.
             Toda persona natural podrá crear una Cuenta de Usuario usando un correo electrónico personal como credencial, para lo cual La Plataforma comunicará esta opción. Una vez suministrada la información, se valida por parte del OPERADOR el correo electrónico y contraseña para acceder a La Plataforma.
             Los Usuarios podrán además de la información obligatoria requerida al momento de la creación de la Cuenta de Usuario, proveer voluntariamente más datos relacionados con su individualización al momento en que cree su propio Perfil dentro de La Plataforma.
             El uso de las Cuentas de Usuario es personal e intransferible, por lo cual los Usuarios no se encuentran facultados para ceder los datos de validación para el acceso a La Plataforma ni el uso de su Cuenta de Usuario a ningún tipo de terceros. El incumplimiento de lo anterior, acarreará la suspensión y el bloqueo definitivo de la cuenta (incluye correo electrónico y número de identificación personal). En caso de olvido de datos de validación o de usurpación de éstos, es obligación del Usuario para lo primero ir a la opción “Olvidé mi contraseña” en La Plataforma, y para lo segundo informarlo al OPERADOR a través de comunicación enviada al correo electrónico domixalternative@gmail.com. Las Cuentas de Usuario serán administradas por el OPERADOR o por la persona que éste designe, teniendo plena facultad para la conservación o no de la cuenta, cuando la información suministrada por los Usuarios no sea veraz, completa o segura; o cuando se presente incumplimiento de las obligaciones de los Usuarios. En ningún momento el OPERADOR solicitará información que NO resulte necesaria para su vinculación con los demás Usuarios y para la facilitación del pago, por lo tanto las tarjetas débito o crédito, solo se solicitarán al momento de realizar el pago virtual si así lo define el Usuario, éstos datos no serán almacenados por el OPERADOR, serán inscritos directamente en la pasarela de pagos “PayU”, y se utilizarán directamente por los Usuarios en ésta, donde se informará las condiciones de seguridad y privacidad en que se efectúa el mismo.
             Con la creación de la Cuenta de Usuario, los Usuarios están manifestando su voluntad de aceptación expresa e inequívoca de los presentes Términos y Condiciones de uso de La Plataforma.
-            <b>Parágrafo.</b> Autoriza expresamente el Usuario al momento de la aceptación de los presentes Términos, el uso de Cookies por parte del OPERADOR en toda actividad de uso que realice de La Plataforma.
-            <b>10. CAPACIDAD</b>
-            Es claro para el Usuario que la relación contractual que se puede llegar a generar por el uso de La Plataforma será directamente con otros Usuarios, es decir, entre el Solicitante del domicilio y el Domiciliario que preste sus servicios para la entrega o ejecución de dicho domicilio; consistirá en un contrato de prestación de servicios celebrado por medios electrónicos.
-            En virtud de las condiciones de capacidad legal establecidas en el código civil Colombiano y de la validez de la manifestación de voluntad a través de medios electrónicos establecida en la ley 527 de 1999, los Usuarios al momento de la creación de la Cuenta de Usuario, manifiestan expresamente tener capacidad para celebrar el tipo de transacciones que se pueden realizar usando La Plataforma; y con base en el prescrito en la ley 1098 de 2006 de la Republica de Colombia los menores de edad cuentan con capacidad para celebrar éste tipo de transacciones, no obstante el OPERADOR deberá: i) Excluir del sistema de información los datos de menores de edad que hayan utilizado La Plataforma; ii) Dar a conocer a las autoridades de cualquier situación de la que tenga conocimiento que ponga en peligro la integridad de un menor de edad; iii) informar a los menores que se encuentren interesados en adquirir servicios o entregar los mismos a través de La Plataforma usando medios de pago electrónico, que deberán realizar la transacción económica de carácter electrónico a través de sus padres o representantes, previo registro y contratación con éstos.
-            <b>11. DESCRIPCÍON DEL SERVICIO</b>
-            El OPERADOR exhibe a través de La Plataforma servicios de domicilio realizados por Solicitantes, esta comunicación de servicios sirve como referencia a los Domiciliarios para su posterior toma y realización del servicio, usando La Plataforma como medio para ejecutar el domicilio y finalizar su uso con la celebración del contrato de prestación de servicios celebrado por medios electrónicos.
+            <b>Parágrafo.</b> Autoriza expresamente el Usuario al momento de la aceptación de los
+            presentes Términos, el uso de Cookies por parte del OPERADOR en toda actividad de uso que
+            realice de La Plataforma.\n<b>10. CAPACIDAD</b>\nEs claro para el Usuario que la relación contractual que se puede llegar a generar por el uso de La Plataforma será directamente con otros Usuarios, es decir, entre el Solicitante del domicilio y el Domiciliario que preste sus servicios para la entrega o ejecución de dicho domicilio; consistirá en un contrato de prestación de servicios celebrado por medios electrónicos.
+            En virtud de las condiciones de capacidad legal establecidas en el código civil Colombiano
+            y de la validez de la manifestación de voluntad a través de medios electrónicos establecida
+            en la ley 527 de 1999, los Usuarios al momento de la creación de la Cuenta de Usuario,
+            manifiestan expresamente tener capacidad para celebrar el tipo de transacciones que se
+            pueden realizar usando La Plataforma; y con base en el prescrito en la ley 1098 de 2006
+            de la Republica de Colombia los menores de edad cuentan con capacidad para celebrar éste
+            tipo de transacciones, no obstante el OPERADOR deberá: i) Excluir del sistema de información
+            los datos de menores de edad que hayan utilizado La Plataforma; ii) Dar a conocer a las
+            autoridades de cualquier situación de la que tenga conocimiento que ponga en peligro la
+            integridad de un menor de edad; iii) informar a los menores que se encuentren interesados
+            en adquirir servicios o entregar los mismos a través de La Plataforma usando medios de pago
+            electrónico, que deberán realizar la transacción económica de carácter electrónico a través
+            de sus padres o representantes, previo registro y contratación con éstos.\n<b>11. DESCRIPCÍON DEL SERVICIO</b>\nEl
+            OPERADOR exhibe a través de La Plataforma servicios de domicilio realizados por Solicitantes, esta comunicación de servicios sirve como referencia a los Domiciliarios para su posterior toma y realización del servicio, usando La Plataforma como medio para ejecutar el domicilio y finalizar su uso con la celebración del contrato de prestación de servicios celebrado por medios electrónicos.
             Para el proceso de solicitud del domicilio los Solicitantes  deben estar plenamente identificados en su Cuenta de Usuario y seguir el siguiente procedimiento:
             a)  Residir en alguna de las ciudades donde el OPERADOR tenga presencia operativamente.
             b)  Ingresar a La Plataforma en la opción “SOLICITAR” donde aparecerá la interfaz gráfica para el diligenciamiento del pedido.
@@ -150,36 +177,74 @@
             Los servicios prestados por el Domiciliario directamente a través del botón “ENTREGAR”, se encuentran excluidos de esta solicitud toda vez que no existe obligación de emitir factura
             j)  Entrega. Verificados todos los datos correspondientes a la transacción y al ámbito de cobertura de prestación de servicios, el Domiciliario procederá a ejecutar las acciones mencionadas por el Solicitante en La Plataforma hasta la entrega o realización de la actividad necesaria en el punto final acordado, en caso de no poderse realizar la entrega por razones imputables al Solicitante, deberá el Domiciliario dejar constancia de este hecho.
             <b>Parágrafo.</b> El perfeccionamiento del contrato de prestación de servicios celebrado por medios electrónicos se da en el momento en el que el Domiciliario acepta el servicio requerido por el Solicitante; dicha aceptación corresponde al momento en el que el Solicitante presiona el Botón de “SOLICITAR” luego de diligenciar los campos en la interfaz “¡Haz tu pedido!”. Verificados los pasos del proceso de solicitud los Domiciliarios por intermedio del OPERADOR podrán aceptar totalmente o no la oferta realizada por el Solicitante, evento en el cual informará en el resumen sobre los detalles del servicio que se celebran en el contrato.
-            AQUÍ Para el proceso de solicitud del domicilio los Solicitantes  deben estar plenamente identificados en su Cuenta de Usuario y seguir el siguiente procedimiento:
-            <b>12. DEBERES DEL SOLICITANTE</b>
-            Con la aceptación de los presentes términos el Solicitante se obliga a: (1) Suministrar información veraz y fidedigna al momento de crear su Cuenta de Usuario; (2) Abstenerse de transferir a terceros los datos de validación (Correo electrónico y contraseña); (3) Abstenerse de utilizar La Plataforma para realizar actos contrarios a la moral, el orden público y buenas costumbres en contra del OPERADOR, Domiciliario o terceros; (4) Pagar oportunamente al Domiciliario la contraprestación económica definida en el proceso de compra; (5) Informar inmediatamente al OPERADOR en caso de olvido o usurpación de los datos de validación; (6) Abstenerse de realizar conductas atentatorias del funcionamiento de La Plataforma; (7) Abstenerse de suplantar la identidad de otros Usuarios; (8) Abstenerse de descifrar, descompilar o desensamblar cualquier elemento de La Plataforma o de cualquiera de sus partes; (9) En general todas aquellas conductas necesarias para la ejecución del negocio jurídico, como i) la recepción del o los encargos solicitados, ii) verificar al momento de la validación que los productos o servicios solicitados si corresponden a los entregados por parte del Domiciliario.
-            <b>13. DEBERES DEL OPERADOR</b>
-            En virtud de los presentes términos el OPERADOR, se obliga a (1) Informar suficientemente sobre los medios habilitados para que los Usuarios realicen el pago; (2) Informar en el momento indicado y con suficiencia los datos de los Domiciliarios con los cuales los Solicitantes han de celebrar el contrato de prestación de servicios; (3) Enviar al correo electrónico suministrador por el Usuario constancia de la transacción; (4) Poner a disposición de los Usuarios los términos y condiciones de uso de La Plataforma de forma actualizada; (5) Utilizar la información únicamente para los fines establecidos en los presentes términos; (6) Utilizar mecanismos de información y validación durante la transacción que permitan al Usuario aceptar o no cada paso del proceso de pago.
-            <b>14. DESCRIPCIÓN DEL SERVICIO</b>
-            Los servicios ofrecidos por el OPERADOR son servicios de entrega de productos de consumo doméstico como alimentos, bebidas, productos de aseo personal y general, entre otros. El servicio es ofrecido por el OPERADOR a través de la Plataforma móvil cuyas practicas legales de visualización dependen del dispositivo en donde el Usuario observe solicite u observe el servicio. El OPERADOR no tendrá responsabilidad en la disponibilidad de productos que no estén disponibles en los lugares que el Solicitante designa al Domiciliario, en este caso el Domiciliario deberá informar al Solicitante sobre la no disposición del producto solicitado; aunque dentro del proceso de solicitud del servicio el Solicitante determinará qué acción deberá realizar el Domiciliario en caso de no hallar el producto solicitado.
-            Es claro para el Usuario que el OPERADOR no es productor, proveedor, expendedor, agente, distribuidor y en general ningún tipo de comercializador de los productos que los Solicitantes requieran, ya que opera solo como una plataforma tecnológica que permite el encuentro entre Solicitantes y Domiciliarios para la configuración de relaciones de prestación de servicios.
-            <b>15. GARANTÍA</b>
-            Entiende y acepta el Solicitante que la relación de prestación de servicios se genera directamente con los Domiciliarios, por lo tanto las reclamaciones por garantía se deben realizar directamente con el Domiciliario o con los establecimientos donde fueron adquiridos los productos en cuestión.
-            <b>CONSIDERACIONES FINALES</b>
-            <b>16. CONTENIDOS</b>
-            A través de La Plataforma el OPERADOR podrá poner a disposición de los Usuarios información de carácter comercial y publicitario, propio o de terceros de conformidad a las buenas costumbres comerciales. En estos casos el OPERADOR no avala, garantiza o compromete su responsabilidad frente a los servicios y/o productos comercializados por estos terceros, ya que para estos efectos comerciales y publicitarios La Plataforma sirve como canal de comunicación y publicidad, mas no como herramienta de prestación de servicios; en consecuencia, es total responsabilidad de los Usuarios el acceso a los sitios que remite la publicidad, asumiendo la obligación de verificar y conocer los términos de los servicios ofrecidos por los terceros. Toda la información puesta a disposición en La Plataforma como imágenes, publicidad, nombres, marcas, lemas, y demás elementos de propiedad intelectual; son utilizados legítimamente por el OPERADOR sea porque son de su propiedad, porque tienen autorización para ponerlos a disposición o porque en virtud de las decisiones 351 de 1993 y 486 del 2000 de la Comunidad Andina de Naciones, o en virtud de la ley 23 de 1982 se encuentra facultado para hacerlo.
-            <b>17. FUNCIONAMIENTO DE LA PLATAFORMA</b>
-            El OPERADOR administra directamente o por medio de terceras personas La Plataforma, toda la información que se comunica allí corresponde a la información cierta y actualizada. En ningún caso responderá por daños directos o indirectos que sufra el Usuario por la utilización o incapacidad de utilización de La Plataforma.
+            AQUÍ Para el proceso de solicitud del domicilio los Solicitantes  deben estar plenamente
+            identificados en su Cuenta de Usuario y seguir el siguiente procedimiento:\n<b>12. DEBERES DEL SOLICITANTE</b>\nCon
+            la aceptación de los presentes términos el Solicitante se obliga a: (1) Suministrar información
+            veraz y fidedigna al momento de crear su Cuenta de Usuario; (2) Abstenerse de transferir a
+            terceros los datos de validación (Correo electrónico y contraseña); (3) Abstenerse de utilizar
+            La Plataforma para realizar actos contrarios a la moral, el orden público y buenas costumbres
+            en contra del OPERADOR, Domiciliario o terceros; (4) Pagar oportunamente al Domiciliario la
+            contraprestación económica definida en el proceso de compra; (5) Informar inmediatamente al
+            OPERADOR en caso de olvido o usurpación de los datos de validación; (6) Abstenerse de realizar
+            conductas atentatorias del funcionamiento de La Plataforma; (7) Abstenerse de suplantar la
+            identidad de otros Usuarios; (8) Abstenerse de descifrar, descompilar o desensamblar cualquier
+            elemento de La Plataforma o de cualquiera de sus partes; (9) En general todas aquellas conductas
+            necesarias para la ejecución del negocio jurídico, como i) la recepción del o los encargos
+            solicitados, ii) verificar al momento de la validación que los productos o servicios solicitados
+            si corresponden a los entregados por parte del Domiciliario.\n<b>13. DEBERES DEL OPERADOR</b>\nEn
+            virtud de los presentes términos el OPERADOR, se obliga a (1) Informar suficientemente sobre
+            los medios habilitados para que los Usuarios realicen el pago; (2) Informar en el momento
+            indicado y con suficiencia los datos de los Domiciliarios con los cuales los Solicitantes
+            han de celebrar el contrato de prestación de servicios; (3) Enviar al correo electrónico
+            suministrador por el Usuario constancia de la transacción; (4) Poner a disposición de los
+            Usuarios los términos y condiciones de uso de La Plataforma de forma actualizada; (5) Utilizar
+            la información únicamente para los fines establecidos en los presentes términos; (6) Utilizar
+            mecanismos de información y validación durante la transacción que permitan al Usuario aceptar
+            o no cada paso del proceso de pago.\n<b>14. DESCRIPCIÓN DEL SERVICIO</b>\nLos servicios
+            ofrecidos por el OPERADOR son servicios de entrega de productos de consumo doméstico como alimentos, bebidas, productos de aseo personal y general, entre otros. El servicio es ofrecido por el OPERADOR a través de la Plataforma móvil cuyas practicas legales de visualización dependen del dispositivo en donde el Usuario observe solicite u observe el servicio. El OPERADOR no tendrá responsabilidad en la disponibilidad de productos que no estén disponibles en los lugares que el Solicitante designa al Domiciliario, en este caso el Domiciliario deberá informar al Solicitante sobre la no disposición del producto solicitado; aunque dentro del proceso de solicitud del servicio el Solicitante determinará qué acción deberá realizar el Domiciliario en caso de no hallar el producto solicitado.
+            Es claro para el Usuario que el OPERADOR no es productor, proveedor, expendedor, agente,
+            distribuidor y en general ningún tipo de comercializador de los productos que los Solicitantes
+            requieran, ya que opera solo como una plataforma tecnológica que permite el encuentro entre
+            Solicitantes y Domiciliarios para la configuración de relaciones de prestación de
+            servicios.\n<b>15. GARANTÍA</b>\nEntiende y acepta el Solicitante que la relación de prestación
+            de servicios se genera directamente con los Domiciliarios, por lo tanto las reclamaciones
+            por garantía se deben realizar directamente con el Domiciliario o con los establecimientos
+            donde fueron adquiridos los productos en cuestión.\n<b>CONSIDERACIONES FINALES</b>\n<b>16. CONTENIDOS</b>\nA
+            través de La Plataforma el OPERADOR podrá poner a disposición de los Usuarios información
+            de carácter comercial y publicitario, propio o de terceros de conformidad a las buenas costumbres
+            comerciales. En estos casos el OPERADOR no avala, garantiza o compromete su responsabilidad
+            frente a los servicios y/o productos comercializados por estos terceros, ya que para estos
+            efectos comerciales y publicitarios La Plataforma sirve como canal de comunicación y publicidad,
+            mas no como herramienta de prestación de servicios; en consecuencia, es total responsabilidad
+            de los Usuarios el acceso a los sitios que remite la publicidad, asumiendo la obligación
+            de verificar y conocer los términos de los servicios ofrecidos por los terceros. Toda la
+            información puesta a disposición en La Plataforma como imágenes, publicidad, nombres, marcas,
+            lemas, y demás elementos de propiedad intelectual; son utilizados legítimamente por el
+            OPERADOR sea porque son de su propiedad, porque tienen autorización para ponerlos a disposición
+            o porque en virtud de las decisiones 351 de 1993 y 486 del 2000 de la Comunidad Andina de
+            Naciones, o en virtud de la ley 23 de 1982 se encuentra facultado para hacerlo.\n<b>17. FUNCIONAMIENTO DE LA PLATAFORMA</b>\nEl
+            OPERADOR administra directamente o por medio de terceras personas La Plataforma, toda la información que se comunica allí corresponde a la información cierta y actualizada. En ningún caso responderá por daños directos o indirectos que sufra el Usuario por la utilización o incapacidad de utilización de La Plataforma.
             La Plataforma se encuentra disponible las 24 horas del día para su acceso y consulta, para la realización de transacciones la disponibilidad de La Plataforma es de 24 horas al día, dependiendo también de la disponibilidad de la pasarela de pago en este caso de PayU. El OPERADOR realiza los mejores esfuerzos para mantener en operación La Plataforma, pero en ningún caso garantiza disponibilidad y continuidad permanente de La Plataforma.
-            El OPERADOR se reserva el derecho de cancelar las cuentas de Usuarios y/o de prohibir el acceso a La Plataforma a los Usuarios que realicen conductas violatorias de los presentes términos o que incumplan las obligaciones contraídas.
-            <b>18. COMERCIO ELECTRONICO</b>
-            En cumplimiento de las disposiciones colombianas sobre mensajes de datos según la ley 527 de 1999, se comunica que la legislación nacional reconoce validez a los mensajes de datos y por tanto ellos adquieren carácter y entidad probatoria. En consecuencia, entienden los Usuarios, que mediante el cruce de mensajes de datos los intervinientes pueden dar lugar al nacimiento, modificación y extinción de obligaciones, siendo de su resorte exclusivo el contenido, consecuencias, responsabilidades y efectos de la información generada.
-            La transacción comercial que nace por este medio entre Solicitantes y Domiciliarios, es la celebración de un contrato de prestación de servicios por medios electrónicos.
-            <b>19. MANEJO DE INFORMACIÓN</b>
-            La información recolectada por el OPERADOR en las transacciones realizadas, es suministrada por los Usuarios de forma libre y voluntaria, para que esta sea administrada por el OPERADOR o por quien este designe para el cumplimiento de los deberes adquiridos, lo que implica su recolección; almacenamiento en servidores o repositorios del OPERADOR o de terceros; circulación de los mismos dentro de la organización del OPERADOR; comunicación a los Usuarios, información comercial, publicitaria y de mercadeo relacionada con su actividad comercial.
+            El OPERADOR se reserva el derecho de cancelar las cuentas de Usuarios y/o de prohibir el
+            acceso a La Plataforma a los Usuarios que realicen conductas violatorias de los presentes
+            términos o que incumplan las obligaciones contraídas.\n<b>18. COMERCIO ELECTRONICO</b>\nEn
+            cumplimiento de las disposiciones colombianas sobre mensajes de datos según la ley 527 de 1999, se comunica que la legislación nacional reconoce validez a los mensajes de datos y por tanto ellos adquieren carácter y entidad probatoria. En consecuencia, entienden los Usuarios, que mediante el cruce de mensajes de datos los intervinientes pueden dar lugar al nacimiento, modificación y extinción de obligaciones, siendo de su resorte exclusivo el contenido, consecuencias, responsabilidades y efectos de la información generada.
+            La transacción comercial que nace por este medio entre Solicitantes y Domiciliarios, es
+            la celebración de un contrato de prestación de servicios por medios electrónicos.\n<b>19. MANEJO DE INFORMACIÓN</b>\nLa
+            información recolectada por el OPERADOR en las transacciones realizadas, es suministrada por los Usuarios de forma libre y voluntaria, para que esta sea administrada por el OPERADOR o por quien este designe para el cumplimiento de los deberes adquiridos, lo que implica su recolección; almacenamiento en servidores o repositorios del OPERADOR o de terceros; circulación de los mismos dentro de la organización del OPERADOR; comunicación a los Usuarios, información comercial, publicitaria y de mercadeo relacionada con su actividad comercial.
             Así mismo, los datos recolectados serán objeto de análisis para fines de mejorar la estrategia de negocios de La Plataforma, apoyada en herramientas de inteligencia de negocios y minería de datos, que permiten adquirir conocimientos prospectivos para fines de predicción, clasificación y segmentación.
             El Usuario podrá ejercer su derecho de conocer, actualizar, modificar y suprimir los datos personales existentes en las bases de datos asociadas a La Plataforma. Para ello deberá realizar la solicitud de consulta, reclamo o supresión a la dirección electrónica soporte@domix.co detallando las modificaciones a realizar y aportando los documentos que lo soportan.
-            El OPERADOR es responsable del tratamiento de la información personal recolectada a través de La Plataforma, responsabilidad que podrá delegar en un tercero, en calidad de responsable o encargado de la información, asegurando contractualmente adecuado tratamiento de la misma.
-            <b>20. TERMINOS Y CONDICIONES BOTONES</b>
-            Los términos y condiciones específicos para cada botón que se encuentra descrito en este capítulo, deberá interpretarse junto con todo lo demás aquí estipulado, así como con los específicamente desarrollados por Domix para promociones, campañas y otras actividades que se realicen a través de La Plataforma.
-            <b>SOLICITAR</b>
-            1. El Usuario acepta y reconoce que estos términos y condiciones del botón (Solicitar) son aplicables a los casos en que, para la prestación del servicio, las características del mismo, sus condiciones técnicas, económicas y jurídicas han sido negociadas y pactadas de mutuo acuerdo entre las partes del contrato (Solicitante y Domiciliario) y, por lo tanto, son el resultado del acuerdo particular y directo entre las mismas. 2. Para todos los efectos, Domix funge como una simple plataforma virtual, mediante la cual, el Usuario (Solicitante) podrá solicitar un servicio de entrega a un (Domiciliario), el servicio de entrega, el cual se llevará a cabo por el mutuo acuerdo entre las partes. Domix aclara que la relación será directamente entre el Solicitante y el Domiciliario, y se mantendrá al margen de la misma, no siendo responsable ni siquiera solidariamente por cualquier hecho que pueda generarse de la relación entre las dos partes descritas anteriormente. 3. El Usuario acepta y reconoce que cualquier servicio que se solicite a través de La Plataforma lo hará bajo su propio riesgo. Esto quiere decir que, salvo en casos de servicio de entrega donde (i) se averíe o exista un daño en el paquete, o (ii) haya perdida del paquete sin que haya sido por fuerza mayor o caso fortuito, ni el Domiciliario ni Domix, responderán ante el Solicitante bajo ninguna circunstancia, causa o efecto.
-            Cualquier PQR que los Usuarios decidan interponer ante Domix en relación al servicio de Solicitar (Solicitud de servicio de entrega), deberán hacerlo al correo de soporte@domix.co</string>
+            El OPERADOR es responsable del tratamiento de la información personal recolectada a través
+            de La Plataforma, responsabilidad que podrá delegar en un tercero, en calidad de responsable
+            o encargado de la información, asegurando contractualmente adecuado tratamiento de la
+            misma.\n<b>20. TERMINOS Y CONDICIONES BOTONES</b>\nLos términos y condiciones específicos
+            para cada botón que se encuentra descrito en este capítulo, deberá interpretarse junto con
+            todo lo demás aquí estipulado, así como con los específicamente desarrollados por Domix para
+            promociones, campañas y otras actividades que se realicen a través de La Plataforma.\n<b>SOLICITAR</b>\n1. El
+            Usuario acepta y reconoce que estos términos y condiciones del botón (Solicitar) son aplicables a los casos en que, para la prestación del servicio, las características del mismo, sus condiciones técnicas, económicas y jurídicas han sido negociadas y pactadas de mutuo acuerdo entre las partes del contrato (Solicitante y Domiciliario) y, por lo tanto, son el resultado del acuerdo particular y directo entre las mismas. 2. Para todos los efectos, Domix funge como una simple plataforma virtual, mediante la cual, el Usuario (Solicitante) podrá solicitar un servicio de entrega a un (Domiciliario), el servicio de entrega, el cual se llevará a cabo por el mutuo acuerdo entre las partes. Domix aclara que la relación será directamente entre el Solicitante y el Domiciliario, y se mantendrá al margen de la misma, no siendo responsable ni siquiera solidariamente por cualquier hecho que pueda generarse de la relación entre las dos partes descritas anteriormente. 3. El Usuario acepta y reconoce que cualquier servicio que se solicite a través de La Plataforma lo hará bajo su propio riesgo. Esto quiere decir que, salvo en casos de servicio de entrega donde (i) se averíe o exista un daño en el paquete, o (ii) haya perdida del paquete sin que haya sido por fuerza mayor o caso fortuito, ni el Domiciliario ni Domix, responderán ante el Solicitante bajo ninguna circunstancia, causa o efecto.
+            Cualquier PQR que los Usuarios decidan interponer ante Domix en relación al servicio de Solicitar
+            (Solicitud de servicio de entrega), deberán hacerlo al correo de soporte@domix.co
+    </string>
 
     <string name="button_text_login">Signin</string>
     <string name="button_text_createaccount">Join</string>

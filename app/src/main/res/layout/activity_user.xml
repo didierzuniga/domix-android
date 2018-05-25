@@ -71,6 +71,7 @@ tools:context="co.domix.android.user.view.User">
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:padding="5dp"
                 android:background="@drawable/corner_radius_select_destine"
                 android:orientation="vertical">
                 <RelativeLayout
@@ -114,6 +115,7 @@ tools:context="co.domix.android.user.view.User">
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:padding="5dp"
                 android:background="@drawable/corner_radius_select_destine"
                 android:orientation="vertical">
                 <RelativeLayout

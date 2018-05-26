@@ -31,16 +31,12 @@ import co.domix.android.R;
 
 public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
 
-//    GoogleApiClient.OnConnectionFailedListener
-
-    int PLACE_PICKER_REQUEST = 1;
     private String latit, longi;
     private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private FloatingActionButton fabOk;
     private FloatingActionButton fabFail;
     private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,19 +83,6 @@ public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
         double lat = Double.valueOf(shaPref.getString("latitude", ""));
         double lon = Double.valueOf(shaPref.getString("longitude", ""));
         LatLng myPos = new LatLng(lat, lon);
-
-//        Estas lineas para estilos de mapa
-//        try {
-//            boolean success = googleMap.setMapStyle(
-//                    MapStyleOptions.loadRawResourceStyle(
-//                            this, R.raw.style_json));
-//
-//            if (!success) {
-//                Log.e("jjj", "Style parsing failed.");
-//            }
-//        } catch (Resources.NotFoundException e) {
-//            Log.e("jjj", "Can't find style. Error: ", e);
-//        }
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 15));
 

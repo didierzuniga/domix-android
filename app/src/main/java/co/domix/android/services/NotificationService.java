@@ -31,7 +31,7 @@ import co.domix.android.model.Order;
 public class NotificationService extends Service {
 
     private int identifyOrder;
-    private SharedPreferences location;
+    private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference referenceOrder = database.getReference("order");
@@ -44,10 +44,11 @@ public class NotificationService extends Service {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Order order = snapshot.getValue(Order.class);
                     if (!order.isX_catched()) {
-                        if (order.getX_id() > identifyOrder){
+                        if (order.getX_id() > identifyOrder) {
                             identifyOrder = order.getX_id();
-                            if (location.getBoolean("IsServiceActive", false)) {
+                            if (shaPref.getBoolean("IsServiceActive", false)) {
                                 createNotification();
+                                break; // This line is for test
                             } else {
                                 referenceOrder.removeEventListener(this);
                             }
@@ -61,7 +62,6 @@ public class NotificationService extends Service {
 
             }
         });
-
     }
 
 
@@ -100,8 +100,8 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
-        editor = location.edit();
+        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        editor = shaPref.edit();
         editor.putBoolean("IsServiceActive", true);
         editor.commit();
         queryForNewOrder();

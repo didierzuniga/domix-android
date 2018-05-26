@@ -67,14 +67,22 @@ public class Setting extends AppCompatActivity implements SettingView {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    editor.putBoolean("notifications", true);
+                    editor.putBoolean("activeNotification", true);
                     editor.commit();
+                    startService(new Intent(Setting.this, NotificationService.class));
                 } else {
-                    editor.putBoolean("notifications", false);
+                    editor.putBoolean("activeNotification", false);
                     editor.commit();
+                    stopService(new Intent(Setting.this, NotificationService.class));
                 }
             }
         });
+
+        if (shaPref.getBoolean("activeNotification", false) == true){
+            aSwitch.setChecked(true);
+        } else {
+            aSwitch.setChecked(false);
+        }
 
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,9 +214,6 @@ public class Setting extends AppCompatActivity implements SettingView {
     @Override
     protected void onStop() {
         super.onStop();
-        if (shaPref.getBoolean("notifications", false)){
-            startService(new Intent(this, NotificationService.class));
-        }
     }
 
     @Override

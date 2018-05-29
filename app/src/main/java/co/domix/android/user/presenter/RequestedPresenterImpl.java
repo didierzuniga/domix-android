@@ -63,4 +63,9 @@ public class RequestedPresenterImpl implements RequestedPresenter {
     public void resultNotCatched() {
         view.resultNotCatched();
     }
+
+    @Override
+    public void repeatUpdateDomi() {
+        view.updateDomiPosition();
+    }
 }

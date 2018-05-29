@@ -33,7 +33,7 @@ public class RequestedRepositoryImpl implements RequestedRepository {
     private static final String COUNTER_FIELD_PATERN = "counter";
     private String idDomiciliaryListen, idDomiciliaryUpdate;
     private double latDomiciliary, lonDomiciliary;
-    private boolean finallyListener = false, orderHasBenCompleted = false, orderHasBenCatched;
+    private boolean finallyListener = false, orderHasBenCompleted = false, orderHasBenCatched, thereCoordinate;
     private RequestedPresenter presenter;
 
     public RequestedRepositoryImpl(RequestedPresenter presenter) {
@@ -200,29 +200,52 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                     @Override
                     public void run() {
                         try{
-                            referenceCoordenatesDomi.child(idDomiciliary).addValueEventListener(new ValueEventListener() {
+                            referenceCoordenatesDomi.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onDataChange(DataSnapshot dataSnapshotx) {
-                                    if (!orderHasBenCompleted && orderHasBenCatched) {
-                                        Coordinate coordinate = dataSnapshotx.getValue(Coordinate.class);
-                                        String lt = coordinate.getLatitude();
-                                        String ln = coordinate.getLongitude();
-                                        latDomiciliary = Double.valueOf(lt);
-                                        lonDomiciliary = Double.valueOf(ln);
-                                        presenter.responseCoordDomiciliary(latDomiciliary, lonDomiciliary);
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                        if (snapshot.getKey().equals(idDomiciliary)){
+                                            thereCoordinate = true;
+                                            break;
+                                        } else {
+                                            thereCoordinate = false;
+                                        }
+                                    }
+
+                                    if (thereCoordinate){
+                                        referenceCoordenatesDomi.child(idDomiciliary).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshotx) {
+                                                if (!orderHasBenCompleted && orderHasBenCatched) {
+                                                    Coordinate coordinate = dataSnapshotx.getValue(Coordinate.class);
+                                                    String lt = coordinate.getLatitude();
+                                                    String ln = coordinate.getLongitude();
+                                                    latDomiciliary = Double.valueOf(lt);
+                                                    lonDomiciliary = Double.valueOf(ln);
+                                                    presenter.responseCoordDomiciliary(latDomiciliary, lonDomiciliary);
+                                                } else {
+                                                    referenceCoordenatesDomi.child(idDomiciliary).removeEventListener(this);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                // Error DB
+                                            }
+                                        });
                                     } else {
-                                        referenceCoordenatesDomi.child(idDomiciliary).removeEventListener(this);
+                                        presenter.repeatUpdateDomi();
                                     }
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                    // Error DB
+
                                 }
                             });
                         } catch (Exception e){}
                     }
-                }, 10000);
+                }, 3000);
             }
         });
     }

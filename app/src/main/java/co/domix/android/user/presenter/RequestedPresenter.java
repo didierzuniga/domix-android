@@ -16,4 +16,5 @@ public interface RequestedPresenter {
     void updateDomiPosition(int idOrder, Requested requested);
     void responseCoordDomiciliary(double latDomiciliary, double lonDomiciliary);
     void resultNotCatched();
+    void repeatUpdateDomi();
 }

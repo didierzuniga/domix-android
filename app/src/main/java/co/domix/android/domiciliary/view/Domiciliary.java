@@ -151,8 +151,9 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
         btnAcceptDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lnrShowData.setVisibility(View.GONE);
                 showProgressBar();
+                scrollView.setVisibility(View.GONE);
+//                lnrShowData.setVisibility(View.GONE);
                 presenter.sendDataDomiciliary(Domiciliary.this, idOrderToSend, app.uId, vehSelected, country);
             }
         });

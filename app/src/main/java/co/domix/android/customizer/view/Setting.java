@@ -78,7 +78,7 @@ public class Setting extends AppCompatActivity implements SettingView {
             }
         });
 
-        if (shaPref.getBoolean("activeNotification", false) == true){
+        if (shaPref.getBoolean("activeNotification", false)){
             aSwitch.setChecked(true);
         } else {
             aSwitch.setChecked(false);

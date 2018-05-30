@@ -120,6 +120,14 @@
                 android:value="co.domix.android.home.view.Home" />
         </activity>
         <activity android:name=".login.view.Signup" />
+        <activity
+            android:name=".customizer.view.EditProfile"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".customizer.view.Profile">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.customizer.view.Profile" />
+        </activity>
     </application>
 
 </manifest>

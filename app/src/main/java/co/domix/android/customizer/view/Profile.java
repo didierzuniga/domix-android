@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,12 +30,14 @@ import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.customizer.presenter.ProfilePresenter;
 import co.domix.android.customizer.presenter.ProfilePresenterImpl;
+import co.domix.android.utils.ToastsKt;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Profile extends AppCompatActivity implements ProfileView {
 
     private ProgressBar progressBarProfile;
     private ImageView ivProfile;
+    private LinearLayout editFirstName, editLastName;
     private TextView firstname, lastname, email, myCredit, rateAsDomi, rateAsUser;
     private StorageReference storageReference;
     private Button btnUploadPhoto, btnChoosePhoto;
@@ -57,6 +60,8 @@ public class Profile extends AppCompatActivity implements ProfileView {
         storageReference = FirebaseStorage.getInstance().getReference();
 
         progressBarProfile = (ProgressBar) findViewById(R.id.progressBarProfile);
+        editFirstName = (LinearLayout) findViewById(R.id.idEditFirstName);
+        editLastName = (LinearLayout) findViewById(R.id.idEditLastName);
         firstname = (TextView) findViewById(R.id.idFirstnameProfile);
         email = (TextView) findViewById(R.id.idEmailProfile);
         myCredit = (TextView) findViewById(R.id.idMyCredit);
@@ -109,6 +114,26 @@ public class Profile extends AppCompatActivity implements ProfileView {
                         btnUploadPhoto.setVisibility(View.GONE);
                     }
                 });
+            }
+        });
+
+        editFirstName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Profile.this, EditProfile.class);
+                intent.putExtra("field", 1);
+                intent.putExtra("data", firstname.getText().toString());
+                startActivity(intent);
+            }
+        });
+
+        editLastName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Profile.this, EditProfile.class);
+                intent.putExtra("field", 2);
+                intent.putExtra("data", lastname.getText().toString());
+                startActivity(intent);
             }
         });
     }

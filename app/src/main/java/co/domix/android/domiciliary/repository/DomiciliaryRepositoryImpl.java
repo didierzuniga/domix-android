@@ -113,8 +113,8 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Order order = dataSnapshot.getValue(Order.class);
-                        catchedOrderAvailable = order.isX_catched();
-                        if (!catchedOrderAvailable) {
+//                        catchedOrderAvailable = order.isX_catched();
+                        if (!order.isX_catched()) {
                             DecimalFormat df = new DecimalFormat();
                             df.setMaximumFractionDigits(2);
                             referenceOrder.child(i).child("d_id").setValue(uid);

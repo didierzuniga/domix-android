@@ -1,21 +1,27 @@
 package co.domix.android.customizer.view;
 
+import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
+import co.domix.android.customizer.presenter.EditProfilePresenter;
+import co.domix.android.customizer.presenter.EditProfilePresenterImpl;
 
-public class EditProfile extends AppCompatActivity {
+public class EditProfile extends AppCompatActivity implements EditProfileView {
 
     private TextInputEditText data;
     private TextView txtFirstName, txtLastName;
+    private ProgressBar progressBar;
     private Button btnSave;
+    private EditProfilePresenter presenter;
     private DomixApplication app;
 
     @Override
@@ -27,8 +33,10 @@ public class EditProfile extends AppCompatActivity {
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        presenter = new EditProfilePresenterImpl(this);
         app = (DomixApplication) getApplicationContext();
 
+        progressBar = (ProgressBar) findViewById(R.id.progressBarEdit);
         data = (TextInputEditText) findViewById(R.id.editFirst);
         txtFirstName = (TextView) findViewById(R.id.idTextFirstName);
         txtLastName = (TextView) findViewById(R.id.idTextLastName);
@@ -45,12 +53,37 @@ public class EditProfile extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Send
-                String id = app.uId;
-                int field = getIntent().getIntExtra("field", 0);
-                String dt = data.getText().toString();
+                showProgressBar();
+                presenter.changePersonalData(app.uId,
+                                             getIntent().getIntExtra("field", 0),
+                                             data.getText().toString());
 
             }
         });
+    }
+
+    @Override
+    public void dataChangeSuccess() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgressBar();
+                        onBackPressed();
+                    }
+                }, 2000);}});
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -69,7 +70,6 @@ public class Profile extends AppCompatActivity implements ProfileView {
         rateAsDomi = (TextView) findViewById(R.id.idRateAsDomi);
         rateAsUser = (TextView) findViewById(R.id.idRateAsUser);
         showProgressBar();
-        queryVerifyGlide();
 
         ivProfile = (ImageView) findViewById(R.id.imageProfile);
         btnChoosePhoto = (Button) findViewById(R.id.choosePhoto);
@@ -157,9 +157,9 @@ public class Profile extends AppCompatActivity implements ProfileView {
         firstname.setText(firstName);
         lastname.setText(lastName);
         email.setText(mail);
-        myCredit.append(" " + credit);
-        rateAsDomi.append(" " + scoreAsDomi);
-        rateAsUser.append(" " + scoreAsUser);
+        myCredit.setText(String.valueOf(credit));
+        rateAsDomi.setText(scoreAsDomi);
+        rateAsUser.setText(scoreAsUser);
         verifyGlid = verifyGlide;
         if (verifyGlid){
             executeGlide();
@@ -201,5 +201,11 @@ public class Profile extends AppCompatActivity implements ProfileView {
     @Override
     public void hideProgressBar() {
         progressBarProfile.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        queryVerifyGlide();
     }
 }

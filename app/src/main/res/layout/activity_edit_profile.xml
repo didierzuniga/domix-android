@@ -51,6 +51,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <ProgressBar
+            android:id="@+id/progressBarEdit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/btnSaveData"
             android:layout_width="wrap_content"

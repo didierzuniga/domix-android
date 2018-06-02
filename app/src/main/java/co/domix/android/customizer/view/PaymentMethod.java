@@ -8,44 +8,69 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RadioGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
-import co.domix.android.customizer.presenter.HistoryPresenter;
-import co.domix.android.customizer.presenter.HistoryPresenterImpl;
 import co.domix.android.home.view.Home;
 import co.domix.android.login.view.Login;
 
-public class History extends AppCompatActivity implements HistoryView, NavigationView.OnNavigationItemSelectedListener {
+public class PaymentMethod extends AppCompatActivity implements PaymentMethodView, NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth firebaseAuth;
-    private RecyclerView rv;
-    private HistoryPresenter presenter;
+    private Button buttonNext;
+    private RadioGroup radioGroup;
     private DomixApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_payment_method);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.title_activity_user_history);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setTitle(R.string.text_make_payment);
 
         app = (DomixApplication) getApplicationContext();
-        presenter = new HistoryPresenterImpl(this);
+        buttonNext = (Button) findViewById(R.id.goNext);
+        buttonNext.setEnabled(false);
 
-        rv = (RecyclerView) findViewById(R.id.recyclerOrderHistory);
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        radioGroup = (RadioGroup) findViewById(R.id.rdGroup);
 
-        listOrder(rv);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId) {
+                    case R.id.methEfecty:
+                        app.payMethod = 1;
+                        buttonNext.setEnabled(true);
+                        break;
+                    case R.id.methPse:
+                        app.payMethod = 2;
+                        buttonNext.setEnabled(true);
+                        break;
+                    case R.id.methCreditcard:
+                        app.payMethod = 3;
+                        buttonNext.setEnabled(true);
+                        break;
+                }
+            }
+        });
 
+        buttonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PaymentMethod.this, AmountToPay.class);
+                startActivity(intent);
+                //Ir a AmountToPay
+            }
+        });
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -54,11 +79,6 @@ public class History extends AppCompatActivity implements HistoryView, Navigatio
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.colorPrimaryLight)); //Change menu hamburguer color
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    @Override
-    public void listOrder(RecyclerView rv) {
-        presenter.listOrder(this, rv, app.uId);
     }
 
     @Override

@@ -9,8 +9,8 @@
     tools:openDrawer="start">
 
     <include
-        android:id="@+id/content_history"
-        layout="@layout/content_history"
+        android:id="@+id/content_amount_to_pay"
+        layout="@layout/content_amount_to_pay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

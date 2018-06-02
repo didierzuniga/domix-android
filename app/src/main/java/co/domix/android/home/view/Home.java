@@ -32,7 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.customizer.view.History;
-import co.domix.android.customizer.view.Pay;
+import co.domix.android.customizer.view.PaymentMethod;
 import co.domix.android.customizer.view.Profile;
 import co.domix.android.customizer.view.Setting;
 import co.domix.android.domiciliary.view.Domiciliary;
@@ -129,7 +129,9 @@ public class Home extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_profile) {
+        if (id == R.id.nav_home) {
+            onStart();
+        } else if (id == R.id.nav_profile) {
             goProfile();
         } else if (id == R.id.nav_history) {
             goHistory();
@@ -178,7 +180,7 @@ public class Home extends AppCompatActivity
 
     @Override
     public void goPayment() {
-        Intent intent = new Intent(this, Pay.class);
+        Intent intent = new Intent(this, PaymentMethod.class);
         startActivity(intent);
     }
 

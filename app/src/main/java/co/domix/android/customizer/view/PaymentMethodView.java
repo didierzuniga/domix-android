@@ -1,13 +1,10 @@
 package co.domix.android.customizer.view;
 
-import android.support.v7.widget.RecyclerView;
-
 /**
- * Created by unicorn on 1/30/2018.
+ * Created by unicorn on 6/1/2018.
  */
 
-public interface HistoryView {
-    void listOrder(RecyclerView rv);
+public interface PaymentMethodView {
     void goHome();
     void goProfile();
     void goHistory();

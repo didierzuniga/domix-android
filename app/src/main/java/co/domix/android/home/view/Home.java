@@ -49,12 +49,13 @@ import co.domix.android.user.view.User;
 import co.domix.android.utils.ToastsKt;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeView, ActivityCompat.OnRequestPermissionsResultCallback {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeView, ActivityCompat.OnRequestPermissionsResultCallback,
+        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks{
 
 
     private FirebaseAuth firebaseAuth;
-//    private GoogleApiClient apiClient;
-//    private LocationManager locationManager;
+    private GoogleApiClient apiClient;
+    private LocationManager locationManager;
     private LinearLayout linearRoot, linearNotInternet;
     private ProgressBar progressBar;
     private AlertDialog alert = null;
@@ -110,11 +111,11 @@ public class Home extends AppCompatActivity
             }
         });
 
-//        apiClient = new GoogleApiClient.Builder(this)
-//                .enableAutoManage(this, this)
-//                .addConnectionCallbacks(this)
-//                .addApi(LocationServices.API)
-//                .build();
+        apiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .build();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -204,7 +205,7 @@ public class Home extends AppCompatActivity
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
         } else {
-            startService(new Intent(this, LocationService.class));
+//            startService(new Intent(this, LocationService.class));
         }
     }
 
@@ -214,8 +215,11 @@ public class Home extends AppCompatActivity
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startService(new Intent(this, LocationService.class));
-
+                    //Permiso concedido
+                    @SuppressWarnings("MissingPermission")
+                    Location lastLocation =
+                            LocationServices.FusedLocationApi.getLastLocation(apiClient);
+                    updateUI(lastLocation);
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -297,75 +301,60 @@ public class Home extends AppCompatActivity
         super.onDestroy();
     }
 
-//    @Override
-//    public void onConnected(@Nullable Bundle bundle) {
-//        if (ActivityCompat.checkSelfPermission(this,
-//                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this,
-//                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-//                    101);
-//        } else {
-//            Location lastLocation =
-//                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
-//            updateUI(lastLocation);
-//        }
-//    }
-//
-//    @Override
-//    public void onConnectionSuspended(int i) {
-//
-//    }
-//
-//    @Override
-//    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-//
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        if (requestCode == 101) {
-//            if (grantResults.length == 1
-//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                //Permiso concedido
-//                @SuppressWarnings("MissingPermission")
-//                Location lastLocation =
-//                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
-//                updateUI(lastLocation);
-//            } else {
-//                //Permiso denegado:
-//                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
-//            }
-//        }
-//    }
-//
-//    private void updateUI(Location loc) {
-//        if (loc != null) {
-//            SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
-//            SharedPreferences.Editor editor = location.edit();
-//            editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
-//            editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
-//            editor.commit();
-//        } else {
-//            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//                // Unknown Latitude and Longitude
-//                // Available GPS but not recognize coordenates
-//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                builder.setMessage("Desactivado curiosamente el GPS")
-//                        .setCancelable(false)
-//                        .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-//                            }
-//                        }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Home.super.finish();
-//                    }
-//                });
-//                alert = builder.create();
-//                alert.show();
-//            }
-//        }
-//    }
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    101);
+        } else {
+            Location lastLocation =
+                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
+            updateUI(lastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private void updateUI(Location loc) {
+        if (loc != null) {
+            SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+            SharedPreferences.Editor editor = location.edit();
+            Log.w("jjj", "Lat-> "+loc.getLatitude());
+            Log.w("jjj", "Lon-> "+loc.getLongitude());
+            editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
+            editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
+            editor.commit();
+        } else {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                // Unknown Latitude and Longitude
+                // Available GPS but not recognize coordenates
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Desactivado curiosamente el GPS")
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            }
+                        }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Home.super.finish();
+                    }
+                });
+                alert = builder.create();
+                alert.show();
+            }
+        }
+    }
 }

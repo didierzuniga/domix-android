@@ -13,6 +13,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -36,6 +38,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.services.LocationService;
@@ -43,8 +49,10 @@ import co.domix.android.user.presenter.UserPresenter;
 import co.domix.android.user.presenter.UserPresenterImpl;
 import co.domix.android.utils.ToastsKt;
 
-public class User extends AppCompatActivity implements UserView {
+public class User extends AppCompatActivity implements UserView, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
+    private GoogleApiClient apiClient;
+    private LocationManager locationManager;
     private ScrollView scrollView;
     private RadioGroup radioGroup;
     private LinearLayout linearNotInternet, lnrSwiCredit, lnrPaymentMethod;
@@ -221,6 +229,12 @@ public class User extends AppCompatActivity implements UserView {
                 presenter.verifyLocationAndInternet(User.this);
             }
         });
+
+        apiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .build();
     }
 
     @Override
@@ -230,7 +244,7 @@ public class User extends AppCompatActivity implements UserView {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
         } else {
-            startService(new Intent(this, LocationService.class));
+//            startService(new Intent(this, LocationService.class));
         }
     }
 
@@ -240,7 +254,11 @@ public class User extends AppCompatActivity implements UserView {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startService(new Intent(this, LocationService.class));
+                    //Permiso concedido
+                    @SuppressWarnings("MissingPermission")
+                    Location lastLocation =
+                            LocationServices.FusedLocationApi.getLastLocation(apiClient);
+                    updateUI(lastLocation);
 
                 } else {
                     // permission denied, boo! Disable the
@@ -488,5 +506,62 @@ public class User extends AppCompatActivity implements UserView {
         editor.remove("latTo");
         editor.remove("lonTo");
         editor.commit();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    101);
+        } else {
+            Location lastLocation =
+                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
+            updateUI(lastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    private void updateUI(Location loc) {
+        if (loc != null) {
+            SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+            SharedPreferences.Editor editor = location.edit();
+            Log.w("jjj", "Lat-> "+loc.getLatitude());
+            Log.w("jjj", "Lon-> "+loc.getLongitude());
+            editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
+            editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
+            editor.commit();
+        } else {
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                // Unknown Latitude and Longitude
+                // Available GPS but not recognize coordenates
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Desactivado curiosamente el GPS")
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            }
+                        }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        User.super.finish();
+                    }
+                });
+                alert = builder.create();
+                alert.show();
+            }
+        }
     }
 }

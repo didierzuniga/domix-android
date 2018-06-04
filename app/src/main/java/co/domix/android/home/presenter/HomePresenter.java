@@ -8,7 +8,6 @@ import co.domix.android.home.view.Home;
 
 public interface HomePresenter {
     void verifyLocationAndInternet(Home home);
-    void startGetLocation();
     void alertNoGps();
     void showNotInternet();
     void showYesInternet();

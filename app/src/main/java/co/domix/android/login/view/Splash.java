@@ -65,29 +65,6 @@ public class Splash extends AppCompatActivity implements SplashView, ActivityCom
         progressBar.setVisibility(View.GONE);
     }
 
-    @Override
-    public void startGetLocation() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-//            ActivityCompat.requestPermissions(Splash.this,
-//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                    1);
-//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-//            {
-//                ToastsKt.toastShort(Splash.this, "No podemos ofrecerte el servicio");
-//                return;
-//            } else {
-//                locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//                loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//                editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
-//                editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
-//                editor.commit();
-//            }
-        } else {
-            startService(new Intent(this, LocationService.class));
-        }
-    }
-
-    @Override
     public void queryStatePosition(String uid) {
         presenter.queryStatePosition(uid, this);
     }
@@ -182,10 +159,35 @@ public class Splash extends AppCompatActivity implements SplashView, ActivityCom
         });
     }
 
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Permiso concedido
+                    presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    ToastsKt.toastLong(Splash.this, "¡Ops!, sin tu permiso nos sería imposible brindarte el servicio");
+                    finish();
+                }
+                return;
+            }
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-        presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(Splash.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+        } else {
+            presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
+        }
     }
 
     @Override

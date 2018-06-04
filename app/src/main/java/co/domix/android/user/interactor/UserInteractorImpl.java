@@ -65,7 +65,6 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             if (!app.isOnline()) {
                 presenter.showNotInternet();
             } else {
-                presenter.startGetLocation();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

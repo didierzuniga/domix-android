@@ -44,7 +44,6 @@ public class HomeInteractorImpl implements HomeInteractor {
             if (!app.isOnline()) {
                 presenter.showNotInternet();
             } else {
-                presenter.startGetLocation();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

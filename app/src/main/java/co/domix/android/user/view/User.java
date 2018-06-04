@@ -49,7 +49,8 @@ import co.domix.android.user.presenter.UserPresenter;
 import co.domix.android.user.presenter.UserPresenterImpl;
 import co.domix.android.utils.ToastsKt;
 
-public class User extends AppCompatActivity implements UserView, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class User extends AppCompatActivity implements UserView, GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks {
 
     private GoogleApiClient apiClient;
     private LocationManager locationManager;
@@ -235,17 +236,6 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
                 .addConnectionCallbacks(this)
                 .addApi(LocationServices.API)
                 .build();
-    }
-
-    @Override
-    public void startGetLocation() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            ActivityCompat.requestPermissions(User.this,
-//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                    1);
-//        } else {
-//            startService(new Intent(this, LocationService.class));
-//        }
     }
 
     @Override
@@ -531,8 +521,8 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
         if (loc != null) {
             SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
             SharedPreferences.Editor editor = location.edit();
-            Log.w("jjj", "User - GoogleAPI - Lat-> "+loc.getLatitude());
-            Log.w("jjj", "User - GoogleAPI - Lon-> "+loc.getLongitude());
+            Log.w("jjj", "User - Lat-> "+loc.getLatitude());
+            Log.w("jjj", "User - Lon-> "+loc.getLongitude());
             editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
             editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
             editor.commit();

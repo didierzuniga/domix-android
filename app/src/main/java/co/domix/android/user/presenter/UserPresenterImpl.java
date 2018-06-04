@@ -25,11 +25,6 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
-    public void startGetLocation() {
-        view.startGetLocation();
-    }
-
-    @Override
     public void alertNoGps() {
         view.alertNoGps();
     }

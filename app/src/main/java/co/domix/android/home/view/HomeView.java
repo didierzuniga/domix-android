@@ -11,7 +11,6 @@ public interface HomeView {
     void goHistory();
     void goSetting();
     void goPayment();
-    void startGetLocation();
     void showProgressBar();
     void hideProgressBar();
     void alertNoGps();

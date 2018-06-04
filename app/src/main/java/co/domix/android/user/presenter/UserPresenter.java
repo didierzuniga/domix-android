@@ -8,7 +8,6 @@ import co.domix.android.user.view.User;
 
 public interface UserPresenter {
     void verifyLocationAndInternet(User user);
-    void startGetLocation();
     void alertNoGps();
     void requestForFullnameAndPhone(String uid);
     void requestGeolocationAndDistance(String uid, String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, User user);

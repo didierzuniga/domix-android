@@ -11,7 +11,6 @@ import co.domix.android.login.view.Splash;
 public interface SplashPresenter {
     void queryStatePosition(String uid, Splash splash);
     void verifyNetworkAndInternet(Splash splash, boolean isOnline, FirebaseUser firebaseUser, String uid);
-    void startGetLocation();
     void goOrderCatched(int idOrder);
     void goOrderRequested(int idOrder);
     void goUserScore(int idOrder);

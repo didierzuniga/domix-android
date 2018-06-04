@@ -1,4 +1,4 @@
-package co.domix.android.domiciliary.service;
+package co.domix.android.services;
 
 import android.Manifest;
 import android.app.Activity;
@@ -33,7 +33,7 @@ import co.domix.android.utils.ToastsKt;
  * Created by unicorn on 2/4/2018.
  */
 
-public class CoordinateService extends Service implements LocationListener, GpsStatus.Listener {
+public class CoordinateServiceDeliveryman extends Service implements LocationListener, GpsStatus.Listener {
 
     private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
@@ -78,8 +78,8 @@ public class CoordinateService extends Service implements LocationListener, GpsS
     @Override
     public void onLocationChanged(Location location) {
         if (location != null){
-            Log.w("jjj", "Lat-> "+location.getLatitude());
-            Log.w("jjj", "Lon-> "+location.getLongitude());
+            Log.w("jjj", "Service - onLocationChanged - Lat-> "+location.getLatitude());
+            Log.w("jjj", "Service - onLocationChanged - Lon-> "+location.getLongitude());
             editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(location.getLatitude()));
             editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(location.getLongitude()));
             editor.commit();

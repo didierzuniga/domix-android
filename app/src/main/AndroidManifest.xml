@@ -25,8 +25,10 @@
             android:value="@string/GOOGLE_MAPS_KEY_DEBUG" />
 
         <service android:name=".services.NotificationService" />
-        <service android:name=".domiciliary.service.CoordinateService" />
+        <service android:name=".services.CoordinateServiceDeliveryman" />
         <service android:name=".services.LocationService" />
+        <service android:name=".services.IncomingDeliveryman" />
+        <service android:name=".services.CoordinateServiceDeliverymanGoogleAPI" />
 
         <activity
             android:name=".login.view.Splash"
@@ -123,10 +125,6 @@
         <activity android:name=".customizer.view.PaymentMethod" />
         <activity android:name=".customizer.view.AmountToPay" />
 
-        <service
-            android:name=".services.IncomingDeliveryman"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>

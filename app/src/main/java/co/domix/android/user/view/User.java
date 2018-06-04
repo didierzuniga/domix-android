@@ -239,35 +239,13 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
 
     @Override
     public void startGetLocation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(User.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
-        } else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            ActivityCompat.requestPermissions(User.this,
+//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                    1);
+//        } else {
 //            startService(new Intent(this, LocationService.class));
-        }
-    }
-
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //Permiso concedido
-                    @SuppressWarnings("MissingPermission")
-                    Location lastLocation =
-                            LocationServices.FusedLocationApi.getLastLocation(apiClient);
-                    updateUI(lastLocation);
-
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    ToastsKt.toastShort(User.this, "No podemos ofrecerte el servicio");
-                }
-                return;
-            }
-        }
+//        }
     }
 
     @Override
@@ -532,17 +510,34 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 101) {
+            if (grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Permiso concedido
+                @SuppressWarnings("MissingPermission")
+                Location lastLocation =
+                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
+                updateUI(lastLocation);
+            } else {
+                //Permiso denegado:
+                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
+            }
+        }
+    }
+
     private void updateUI(Location loc) {
         if (loc != null) {
             SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
             SharedPreferences.Editor editor = location.edit();
-            Log.w("jjj", "Lat-> "+loc.getLatitude());
-            Log.w("jjj", "Lon-> "+loc.getLongitude());
+            Log.w("jjj", "User - GoogleAPI - Lat-> "+loc.getLatitude());
+            Log.w("jjj", "User - GoogleAPI - Lon-> "+loc.getLongitude());
             editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
             editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
             editor.commit();
         } else {
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 // Unknown Latitude and Longitude
                 // Available GPS but not recognize coordenates
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

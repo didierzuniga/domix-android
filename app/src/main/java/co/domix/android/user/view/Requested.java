@@ -53,6 +53,7 @@ import co.domix.android.R;
 import co.domix.android.directionModule.DirectionFinder;
 import co.domix.android.directionModule.DirectionFinderListener;
 import co.domix.android.directionModule.Route;
+import co.domix.android.services.IncomingDeliveryman;
 import co.domix.android.user.presenter.RequestedPresenter;
 import co.domix.android.user.presenter.RequestedPresenterImpl;
 
@@ -179,6 +180,8 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
         } else {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
+            Log.w("jjj", "Requested - GoogleAPI - Lat-> "+lastLocation.getLatitude());
+            Log.w("jjj", "Requested - GoogleAPI - Lon-> "+lastLocation.getLongitude());
         }
     }
 
@@ -309,8 +312,6 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         textViewDataDomiciliary.setText("");
         textViewWaitingDomiciliary.setVisibility(View.VISIBLE);
         linearParent.setVisibility(View.GONE);
-//        linearNameDomiciliary.setVisibility(View.GONE);
-//        linearCellphoneDomiciliary.setVisibility(View.GONE);
         if (validateDomiciliaryRealtime) {
             validateDomiciliaryRealtime = false;
             m2.remove();
@@ -321,7 +322,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     @Override
     public void domiLocated(double latDomiciliary, double lonDomiciliary) {
-// Aqui obtengo Lat,Lon del domiciliario en FirebaseDatabase
+        // Aqui obtengo Lat,Lon del domiciliario en FirebaseDatabase
         LatLng yourPo = new LatLng(latDomiciliary, lonDomiciliary);
         MarkerOptions b = new MarkerOptions().icon(BitmapDescriptorFactory
                 .fromResource(R.drawable.ic_domiciliary));
@@ -425,6 +426,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         super.onResume();
         listenForUpdate();
     }
+
 
     @Override
     protected void onStop() {

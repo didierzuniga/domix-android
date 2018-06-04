@@ -20,7 +20,7 @@ import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenter;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenterImpl;
-import co.domix.android.domiciliary.service.CoordinateService;
+import co.domix.android.services.CoordinateServiceDeliveryman;
 
 /**
  * Created by unicorn on 11/13/2017.
@@ -51,7 +51,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         app = (DomixApplication) getApplicationContext();
-        startService(new Intent(this, CoordinateService.class));
+        startService(new Intent(this, CoordinateServiceDeliveryman.class));
 
         presenter = new OrderCatchedPresenterImpl(this);
         location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
@@ -191,7 +191,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     @Override
     public void responseBackDomiciliaryActivity() {
-        stopService(new Intent(this, CoordinateService.class));
+        stopService(new Intent(this, CoordinateServiceDeliveryman.class));
         Intent intent = new Intent(this, Domiciliary.class);
         startActivity(intent);
         super.finish();
@@ -200,7 +200,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     @Override
     public void goRateDomiciliary() {
         hideProgressBar();
-        stopService(new Intent(this, CoordinateService.class));
+        stopService(new Intent(this, CoordinateServiceDeliveryman.class));
         Intent intent = new Intent(this, DomiciliaryScore.class);
         startActivity(intent);
         finish();

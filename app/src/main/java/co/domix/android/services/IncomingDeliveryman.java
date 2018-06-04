@@ -37,12 +37,15 @@ public class IncomingDeliveryman extends Service {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Order order = dataSnapshot.getValue(Order.class);
                 if (isServiceActive) {
-                    if (order.isX_catched()){
-                        createNotification();
+                    try {
+                        if (order.isX_catched()){
+                            createNotification();
+                            referenceOrd.child(String.valueOf(app.idOrder)).removeEventListener(this);
+                            stopSelf();
+                        }
+                    } catch (Exception e){
+
                     }
-                } else {
-                    Log.w("jjj", "Remove listener from service");
-                    referenceOrd.child(String.valueOf(app.idOrder)).removeEventListener(this);
                 }
             }
 
@@ -61,6 +64,9 @@ public class IncomingDeliveryman extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        app = (DomixApplication) getApplicationContext();
+        isServiceActive = true;
+        queryForIncomingDeliveryman();
         return START_STICKY;
     }
 
@@ -86,15 +92,11 @@ public class IncomingDeliveryman extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        app = (DomixApplication) getApplicationContext();
-        isServiceActive = true;
-        queryForIncomingDeliveryman();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         isServiceActive = false;
-        queryForIncomingDeliveryman();
     }
 }

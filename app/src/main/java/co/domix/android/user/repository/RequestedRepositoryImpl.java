@@ -54,24 +54,27 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                 if (finallyListener){
                     referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
                 } else {
-                    Order order = dataSnapshot.getValue(Order.class);
-                    boolean completed = order.isX_completed();
-                    Double scoredDomi = order.getX_score_deliveryman();
-                    if (!completed) {
-                        String origenCoordinate = order.x_coordinate_from.toString();
-                        String destineCoordinate = order.x_coordinate_to.toString();
-                        presenter.responseCoordinatesFromTo(origenCoordinate, destineCoordinate);
-                        if (order.isX_catched()) {
-                            orderHasBenCompleted = false;
-                            idDomiciliaryListen = order.getD_id();
-                            getDataDomiciliary(idDomiciliaryListen);
-                        } else {
-                            orderHasBenCompleted = true;
-                            presenter.resultNotCatched();
+                    try {
+                        Order order = dataSnapshot.getValue(Order.class);
+                        boolean completed = order.isX_completed();
+                        Double scoredDomi = order.getX_score_deliveryman();
+                        if (!completed) {
+                            String origenCoordinate = order.x_coordinate_from.toString();
+                            String destineCoordinate = order.x_coordinate_to.toString();
+                            presenter.responseCoordinatesFromTo(origenCoordinate, destineCoordinate);
+                            if (order.isX_catched()) {
+                                orderHasBenCompleted = false;
+                                idDomiciliaryListen = order.getD_id();
+                                getDataDomiciliary(idDomiciliaryListen);
+                            } else {
+                                orderHasBenCompleted = true;
+                                presenter.resultNotCatched();
+                            }
+                        } else if (completed == true && scoredDomi == null) {
+                            presenter.goRateUser();
+                            referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
                         }
-                    } else if (completed == true && scoredDomi == null) {
-                        presenter.goRateUser();
-                        referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
+                    } catch (Exception e){
                     }
                 }
 //                Aqui no coloco Remove para que escuche domiciliario entrante
@@ -167,17 +170,21 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                 } else {
                     Order order = dataSnapshot.getValue(Order.class);
                     orderHasBenCatched = false;
-                    boolean completed = order.isX_completed();
-                    if (!completed) {
-                        if (order.isX_catched()) {
-                            orderHasBenCatched = true;
-                            idDomiciliaryUpdate = order.getD_id();
-                            requestCoordinates(order.getD_id(), activity);
+                    try {
+                        boolean completed = order.isX_completed();
+                        if (!completed) {
+                            if (order.isX_catched()) {
+                                orderHasBenCatched = true;
+                                idDomiciliaryUpdate = order.getD_id();
+                                requestCoordinates(order.getD_id(), activity);
+                            }
+                        } else {
+                            orderHasBenCompleted = true;
+                            referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
+                            removeCoordDomiciliary(idDomiciliaryUpdate);
                         }
-                    } else {
-                        orderHasBenCompleted = true;
-                        referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
-                        removeCoordDomiciliary(idDomiciliaryUpdate);
+                    } catch (Exception e){
+
                     }
                 }
             }

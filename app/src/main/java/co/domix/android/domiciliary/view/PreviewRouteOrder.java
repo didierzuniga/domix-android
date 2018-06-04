@@ -1,6 +1,5 @@
 package co.domix.android.domiciliary.view;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import co.domix.android.R;
 import co.domix.android.directionModule.DirectionFinder;
 import co.domix.android.directionModule.DirectionFinderListener;
 import co.domix.android.directionModule.Route;
-import co.domix.android.domiciliary.service.CoordinateService;
 
 /**
  * Created by unicorn on 11/13/2017.

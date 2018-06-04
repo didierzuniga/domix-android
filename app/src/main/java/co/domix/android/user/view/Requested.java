@@ -66,7 +66,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     private LinearLayout linearRateDomiciliary, linearNameDomiciliary, linearCellphoneDomiciliary, linearParent;
     private TextView textViewWaitingDomiciliary, textViewRateDomiciliary,
-                     textViewSelectedDomiciliary, textViewDataDomiciliary;
+            textViewSelectedDomiciliary, textViewDataDomiciliary;
     private ImageView ivVehicle;
     private String idDomiciliary;
     private Button buttonCanceled;

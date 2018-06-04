@@ -47,7 +47,7 @@ public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
 
         fabOk = (FloatingActionButton) findViewById(R.id.fabOk);
@@ -80,8 +80,8 @@ public class PickMap extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        double lat = Double.valueOf(shaPref.getString("latitude", ""));
-        double lon = Double.valueOf(shaPref.getString("longitude", ""));
+        double lat = Double.valueOf(shaPref.getString(getString(R.string.const_sharedPref_key_lat_device), ""));
+        double lon = Double.valueOf(shaPref.getString(getString(R.string.const_sharedPref_key_lon_device), ""));
         LatLng myPos = new LatLng(lat, lon);
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 15));

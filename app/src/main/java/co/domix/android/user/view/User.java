@@ -45,8 +45,6 @@ import co.domix.android.utils.ToastsKt;
 
 public class User extends AppCompatActivity implements UserView {
 
-
-
     private ScrollView scrollView;
     private RadioGroup radioGroup;
     private LinearLayout linearNotInternet, lnrSwiCredit, lnrPaymentMethod;
@@ -88,7 +86,7 @@ public class User extends AppCompatActivity implements UserView {
         linearNotInternet = (LinearLayout) findViewById(R.id.notInternetUser);
         progressBarRequest = (ProgressBar) findViewById(R.id.progressBarRequest);
 
-        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
 
         spiDimensions = (Spinner) findViewById(R.id.spinnerDimensions);
@@ -231,26 +229,26 @@ public class User extends AppCompatActivity implements UserView {
             ActivityCompat.requestPermissions(User.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ToastsKt.toastShort(User.this, "No podemos ofrecerte el servicio");
-                return;
-            } else {
-                try{
-                    LocationManager locManager;
-                    Location loc;
-                    locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    editor.putString("latitude", String.valueOf(loc.getLatitude()));
-                    editor.putString("longitude",String.valueOf(loc.getLongitude()));
-                    editor.commit();
-                } catch (Exception e){
-                    Log.w("jjj", "Exception-> "+e);
-                }
-
-            }
         } else {
             startService(new Intent(this, LocationService.class));
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startService(new Intent(this, LocationService.class));
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    ToastsKt.toastShort(User.this, "No podemos ofrecerte el servicio");
+                }
+                return;
+            }
         }
     }
 
@@ -409,7 +407,7 @@ public class User extends AppCompatActivity implements UserView {
         codeCountry = countryO;
         if (myCredit > 0){
             lnrSwiCredit.setVisibility(View.VISIBLE);
-            switchCompat.setHint("Usar crédito " + myCredit + " " + countryO);
+            switchCompat.setHint(getString(R.string.text_use_credit) + myCredit + " " + countryO);
         }
         countryOrigen = countryOrigenn;
         cityOrigen = cityOrigenn;

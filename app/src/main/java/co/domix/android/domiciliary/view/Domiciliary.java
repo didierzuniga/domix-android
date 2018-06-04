@@ -91,16 +91,16 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
         btnAcceptDelivery = (Button) findViewById(R.id.btnAcceptRequest);
         btnDismissDelivery = (Button) findViewById(R.id.btnDismissRequest);
 
-        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
-        editor.putBoolean("SearchDelivery", false);
-        editor.putBoolean("IsServiceActive", false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
+//        editor.putBoolean("IsServiceActive", false);
         editor.commit();
 
-        if (shaPref.getBoolean("backFromServiceNotification", false)) {
+        if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_backfromServiceNotification), false)) {
             switchAB.setChecked(false);
             switchAB.setChecked(true);
-            editor.putBoolean("backFromServiceNotification", false);
+            editor.putBoolean(getString(R.string.const_sharedPref_key_backfromServiceNotification), false);
             editor.commit();
         }
 
@@ -125,7 +125,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
                         ToastsKt.toastShort(Domiciliary.this, getString(R.string.toast_must_choise_vehicle));
                         switchAB.setChecked(false);
                     } else {
-                        editor.putBoolean("SearchDelivery", true);
+                        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), true);
                         editor.commit();
                         lnrSpiVehicle.setVisibility(View.GONE);
                         waitinDeliveries.setVisibility(View.VISIBLE);
@@ -135,7 +135,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
                     waitinDeliveries.setVisibility(View.GONE);
                     lnrShowData.setVisibility(View.GONE);
                     lnrSpiVehicle.setVisibility(View.VISIBLE);
-                    editor.putBoolean("SearchDelivery", false);
+                    editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
                     editor.commit();
                 }
             }
@@ -181,7 +181,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        editor.putBoolean("SearchDelivery", false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
         editor.commit();
     }
 
@@ -201,8 +201,8 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
                     Location loc;
                     locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    editor.putString("latitude", String.valueOf(loc.getLatitude()));
-                    editor.putString("longitude",String.valueOf(loc.getLongitude()));
+                    editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
+                    editor.putString(getString(R.string.const_sharedPref_key_lon_device),String.valueOf(loc.getLongitude()));
                     editor.commit();
                 } catch (Exception e){
                     Log.w("jjj", "Exception-> "+e);
@@ -261,8 +261,8 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     public void searchDeliveries() {
-        presenter.searchDeliveries(shaPref.getString("latitude", ""),
-                                                      shaPref.getString("longitude", ""),
+        presenter.searchDeliveries(shaPref.getString(getString(R.string.const_sharedPref_key_lat_device), ""),
+                                                      shaPref.getString(getString(R.string.const_sharedPref_key_lon_device), ""),
                                                       vehSelected);
     }
 
@@ -302,7 +302,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     public void goPreviewRouteOrder() {
-        editor.putBoolean("SearchDelivery", false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
         editor.commit();
         Intent intent = new Intent(this, PreviewRouteOrder.class);
         intent.putExtra("coordinateFromView", diccionario.get(countIndex).get(6).toString());
@@ -323,7 +323,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
     @Override
     public void responseGoOrderCatched(String idOrder) {
         hideProgressBar();
-        editor.putBoolean("SearchDelivery", false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
         app.idOrder = Integer.valueOf(idOrder);
 //        editor.putString("latFrom", diccionario.get(countIndex).get(6).toString());
 //        editor.putString("latTo", diccionario.get(countIndex).get(8).toString());
@@ -413,7 +413,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
 
     @Override
     public void responseForFullnameAndPhone(boolean result) {
-        if (shaPref.getBoolean("SearchDelivery", false)) {
+        if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false)) {
             fieldsWasFill = result;
             if (!fieldsWasFill) {
                 openDialogSendContactData();

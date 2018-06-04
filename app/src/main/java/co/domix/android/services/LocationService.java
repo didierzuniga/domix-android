@@ -16,6 +16,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import co.domix.android.R;
+
 /**
  * Created by unicorn on 4/29/2018.
  */
@@ -29,7 +31,8 @@ public class LocationService extends Service implements LocationListener, GpsSta
     @Override
     public void onCreate() {
         super.onCreate();
-        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        Log.w("jjj", "Creado el service desde M+");
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -40,7 +43,7 @@ public class LocationService extends Service implements LocationListener, GpsSta
         }
         if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
+                    LocationManager.NETWORK_PROVIDER,
                     500,
                     0,
                     this);
@@ -62,8 +65,10 @@ public class LocationService extends Service implements LocationListener, GpsSta
     @Override
     public void onLocationChanged(Location location) {
         if (location != null){
-            editor.putString("latitude", String.valueOf(location.getLatitude()));
-            editor.putString("longitude", String.valueOf(location.getLongitude()));
+            Log.w("jjj", "Lat-> "+location.getLatitude());
+            Log.w("jjj", "Lon-> "+location.getLongitude());
+            editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(location.getLatitude()));
+            editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(location.getLongitude()));
             editor.commit();
             stopSelf();
         }

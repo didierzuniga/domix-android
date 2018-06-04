@@ -35,7 +35,7 @@ public class SplashInteractorImpl implements SplashInteractor {
     @Override
     public void queryStatePosition(String uid, Activity activity) {
         repository.queryStatePosition(uid, activity);
-        location = activity.getSharedPreferences("domx_prefs", Context.MODE_PRIVATE);
+        location = activity.getSharedPreferences(activity.getString(R.string.const_sharedpreference_file_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = location.edit();
         editor.putString("latFrom", "");
         editor.putString("lonFrom", "");

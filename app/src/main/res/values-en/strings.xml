@@ -2,6 +2,18 @@
 <resources>
     <string name="app_name">Domix</string>
 
+    <string name="const_sharedpreference_file_name">domx_prefs</string>
+    <string name="const_sharedPref_key_activeNotification">activeNotification</string>
+    <string name="const_sharedPref_key_backfromServiceNotification">backFromServiceNotification</string>
+    <string name="const_sharedPref_key_lat_device">latitude</string>
+    <string name="const_sharedPref_key_lon_device">longitude</string>
+    <string name="const_sharedPref_key_searchDelivery">searchDelivery</string>
+
+    <string name="notification_incoming_order_title">New service!</string>
+    <string name="notification_incoming_order_text">There is a new service available</string>
+    <string name="notification_incoming_deliveryman_title">We found a deliveryman!</string>
+    <string name="notification_incoming_deliveryman_text">A deliveryman has taken your order</string>
+
     <string name="hint_first_name">Firstname</string>
     <string name="hint_last_name">Lastname</string>
     <string name="hint_phone">Cellphone</string>
@@ -90,6 +102,7 @@
     <string name="text_not_receives_cash">You do not receive cash</string>
     <string name="text_would_receive">You must receive</string>
     <string name="text_empty_field">Empty</string>
+    <string name="text_use_credit">Use credit</string>
     <string name="text_terms">Colombia\nTÉRMINOS Y CONDICIONES DE USO DE “DOMIX”\nASPECTOS
             GENERALES\n<b>1.  INFORMACIÓN</b>\nDOMIX ALTERNATIVE LLC. Es una sociedad constituida
             en el estado de Delaware en los EstadosUnidos de América que para los efectos de los

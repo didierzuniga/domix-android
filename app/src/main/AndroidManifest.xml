@@ -121,7 +121,12 @@
                 android:value="co.domix.android.customizer.view.Profile" />
         </activity>
         <activity android:name=".customizer.view.PaymentMethod" />
-        <activity android:name=".customizer.view.AmountToPay"></activity>
+        <activity android:name=".customizer.view.AmountToPay" />
+
+        <service
+            android:name=".services.IncomingDeliveryman"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

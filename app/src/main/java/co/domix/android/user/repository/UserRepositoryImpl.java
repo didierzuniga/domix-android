@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import co.domix.android.R;
 import co.domix.android.api.RetrofitDatetimeAdapter;
 import co.domix.android.api.RetrofitDatetimeService;
 import co.domix.android.model.Time;
@@ -94,7 +95,7 @@ public class UserRepositoryImpl implements UserRepository {
                         final String descriptionTwo, final byte dimenSelect, final byte payMeth, int paymentCash,
                         int creditUsed, int updateCredit, final Activity activity) {
         SharedPreferences location = activity
-                .getSharedPreferences("domx_prefs", Context.MODE_PRIVATE);
+                .getSharedPreferences(activity.getString(R.string.const_sharedpreference_file_name), Context.MODE_PRIVATE);
         uidCurrentUser = uid;
         country = countryCode;
         city = cityCode;

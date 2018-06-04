@@ -10,8 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,42 +19,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import co.domix.android.DomixApplication;
 import co.domix.android.R;
-import co.domix.android.domiciliary.view.Domiciliary;
 import co.domix.android.model.Order;
+import co.domix.android.user.view.Requested;
 
-/**
- * Created by unicorn on 2/11/2018.
- */
+public class IncomingDeliveryman extends Service {
 
-public class NotificationService extends Service {
-
-    private int identifyOrder;
     private boolean isServiceActive;
-    private SharedPreferences shaPref;
-    private SharedPreferences.Editor editor;
+    private DomixApplication app;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference referenceOrder = database.getReference("order");
+    private DatabaseReference referenceOrd = database.getReference("order");
 
-    public void queryForNewOrder(){
-        identifyOrder = 100;
-        referenceOrder.addValueEventListener(new ValueEventListener() {
+    public void queryForIncomingDeliveryman(){
+        referenceOrd.child(String.valueOf(app.idOrder)).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Order order = snapshot.getValue(Order.class);
-                    if (!order.isX_catched()) {
-                        if (order.getX_id() > identifyOrder) {
-                            identifyOrder = order.getX_id();
-//                            if (shaPref.getBoolean("IsServiceActive", false)) {
-                            if (isServiceActive) {
-                                createNotification();
-                                break; // This line is for test
-                            } else {
-                                referenceOrder.removeEventListener(this);
-                            }
-                        }
+                Order order = dataSnapshot.getValue(Order.class);
+                if (isServiceActive) {
+                    if (order.isX_catched()){
+                        createNotification();
                     }
+                } else {
+                    Log.w("jjj", "Remove listener from service");
+                    referenceOrd.child(String.valueOf(app.idOrder)).removeEventListener(this);
                 }
             }
 
@@ -65,8 +53,6 @@ public class NotificationService extends Service {
         });
     }
 
-
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -83,10 +69,10 @@ public class NotificationService extends Service {
                 .setSmallIcon(R.drawable.logo_white)
                 .setLargeIcon((((BitmapDrawable)getResources()
                         .getDrawable(R.drawable.ic_isotipo_domix)).getBitmap()))
-                .setContentTitle(getString(R.string.notification_incoming_order_title))
-                .setContentText(getString(R.string.notification_incoming_order_text));
+                .setContentTitle(getString(R.string.notification_incoming_deliveryman_title))
+                .setContentText(getString(R.string.notification_incoming_deliveryman_text));
 
-        Intent intent = new Intent(this, Domiciliary.class);
+        Intent intent = new Intent(this, Requested.class);
         PendingIntent contIntent = PendingIntent.getActivity(this, 0, intent, 0);
         builder.setContentIntent(contIntent);
 
@@ -100,20 +86,15 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
-        editor = shaPref.edit();
-//        editor.putBoolean("IsServiceActive", true);
+        app = (DomixApplication) getApplicationContext();
         isServiceActive = true;
-        editor.commit();
-        queryForNewOrder();
+        queryForIncomingDeliveryman();
     }
 
     @Override
     public void onDestroy() {
-//        editor.putBoolean("IsServiceActive", false);
-        isServiceActive = false;
-        editor.putBoolean(getString(R.string.const_sharedPref_key_backfromServiceNotification), true);
-        editor.commit();
         super.onDestroy();
+        isServiceActive = false;
+        queryForIncomingDeliveryman();
     }
 }

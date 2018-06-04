@@ -54,7 +54,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         startService(new Intent(this, CoordinateService.class));
 
         presenter = new OrderCatchedPresenterImpl(this);
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = location.edit();
 
         progressBar = (ProgressBar) findViewById(R.id.progressCatched);

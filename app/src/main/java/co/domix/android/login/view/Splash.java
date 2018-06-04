@@ -78,8 +78,8 @@ public class Splash extends AppCompatActivity implements SplashView, ActivityCom
 //            } else {
 //                locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 //                loc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//                editor.putString("latitude", String.valueOf(loc.getLatitude()));
-//                editor.putString("longitude", String.valueOf(loc.getLongitude()));
+//                editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
+//                editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
 //                editor.commit();
 //            }
         } else {

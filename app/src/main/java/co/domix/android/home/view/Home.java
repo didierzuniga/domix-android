@@ -12,6 +12,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -27,6 +29,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 
 import co.domix.android.DomixApplication;
@@ -48,6 +53,8 @@ public class Home extends AppCompatActivity
 
 
     private FirebaseAuth firebaseAuth;
+//    private GoogleApiClient apiClient;
+//    private LocationManager locationManager;
     private LinearLayout linearRoot, linearNotInternet;
     private ProgressBar progressBar;
     private AlertDialog alert = null;
@@ -65,7 +72,7 @@ public class Home extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_home));
 
-        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
 
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Shrikhand-Regular.ttf");
@@ -102,6 +109,12 @@ public class Home extends AppCompatActivity
                 presenter.verifyLocationAndInternet(Home.this);
             }
         });
+
+//        apiClient = new GoogleApiClient.Builder(this)
+//                .enableAutoManage(this, this)
+//                .addConnectionCallbacks(this)
+//                .addApi(LocationServices.API)
+//                .build();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -190,25 +203,26 @@ public class Home extends AppCompatActivity
             ActivityCompat.requestPermissions(Home.this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ToastsKt.toastShort(Home.this, "No podemos ofrecerte el servicio");
-                return;
-            } else {
-                try{
-                    LocationManager locManager;
-                    Location loc;
-                    locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    editor.putString("latitude", String.valueOf(loc.getLatitude()));
-                    editor.putString("longitude",String.valueOf(loc.getLongitude()));
-                    editor.commit();
-                } catch (Exception e){
-                    Log.w("jjj", "Exception-> "+e);
-                }
-            }
         } else {
             startService(new Intent(this, LocationService.class));
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startService(new Intent(this, LocationService.class));
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    ToastsKt.toastShort(Home.this, "No podemos ofrecerte el servicio");
+                }
+                return;
+            }
         }
     }
 
@@ -282,4 +296,76 @@ public class Home extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
     }
+
+//    @Override
+//    public void onConnected(@Nullable Bundle bundle) {
+//        if (ActivityCompat.checkSelfPermission(this,
+//                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+//                    101);
+//        } else {
+//            Location lastLocation =
+//                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
+//            updateUI(lastLocation);
+//        }
+//    }
+//
+//    @Override
+//    public void onConnectionSuspended(int i) {
+//
+//    }
+//
+//    @Override
+//    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+//
+//    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        if (requestCode == 101) {
+//            if (grantResults.length == 1
+//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                //Permiso concedido
+//                @SuppressWarnings("MissingPermission")
+//                Location lastLocation =
+//                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
+//                updateUI(lastLocation);
+//            } else {
+//                //Permiso denegado:
+//                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
+//            }
+//        }
+//    }
+//
+//    private void updateUI(Location loc) {
+//        if (loc != null) {
+//            SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+//            SharedPreferences.Editor editor = location.edit();
+//            editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
+//            editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
+//            editor.commit();
+//        } else {
+//            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//                // Unknown Latitude and Longitude
+//                // Available GPS but not recognize coordenates
+//                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                builder.setMessage("Desactivado curiosamente el GPS")
+//                        .setCancelable(false)
+//                        .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+//                            }
+//                        }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Home.super.finish();
+//                    }
+//                });
+//                alert = builder.create();
+//                alert.show();
+//            }
+//        }
+//    }
 }

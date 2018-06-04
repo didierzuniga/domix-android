@@ -38,7 +38,7 @@ public class Signup extends AppCompatActivity implements SignupView {
         firebaseAuth = FirebaseAuth.getInstance();
         app = (DomixApplication) getApplicationContext();
 
-        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
 
         progressBar = (ProgressBar) findViewById(R.id.prgBarSignup);
@@ -102,8 +102,8 @@ public class Signup extends AppCompatActivity implements SignupView {
     @Override
     public void signup(String email, String password, String confirmPassword) {
         showProgressBar();
-        presenter.signup(email, password, confirmPassword, shaPref.getString("latitude", ""),
-                        shaPref.getString("longitude", ""), this, firebaseAuth);
+        presenter.signup(email, password, confirmPassword, shaPref.getString(getString(R.string.const_sharedPref_key_lat_device), ""),
+                        shaPref.getString(getString(R.string.const_sharedPref_key_lon_device), ""), this, firebaseAuth);
     }
 
     @Override

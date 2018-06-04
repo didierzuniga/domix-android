@@ -63,7 +63,7 @@ public class Setting extends AppCompatActivity implements SettingView, Navigatio
 
         app = (DomixApplication) getApplicationContext();
         presenter = new SettingPresenterImpl(this);
-        shaPref = getSharedPreferences("domx_prefs", MODE_PRIVATE);
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
 
         progressBar = (ProgressBar) findViewById(R.id.progressBarSetting);
@@ -74,18 +74,18 @@ public class Setting extends AppCompatActivity implements SettingView, Navigatio
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    editor.putBoolean("activeNotification", true);
+                    editor.putBoolean(getString(R.string.const_sharedPref_key_activeNotification), true);
                     editor.commit();
                     startService(new Intent(Setting.this, NotificationService.class));
                 } else {
-                    editor.putBoolean("activeNotification", false);
+                    editor.putBoolean(getString(R.string.const_sharedPref_key_activeNotification), false);
                     editor.commit();
                     stopService(new Intent(Setting.this, NotificationService.class));
                 }
             }
         });
 
-        if (shaPref.getBoolean("activeNotification", false)){
+        if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_activeNotification), false)){
             aSwitch.setChecked(true);
         } else {
             aSwitch.setChecked(false);

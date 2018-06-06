@@ -1,13 +1,17 @@
 package co.domix.android.domiciliary.view;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -21,6 +25,7 @@ import co.domix.android.R;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenter;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenterImpl;
 import co.domix.android.services.CoordinateServiceDeliveryman;
+import co.domix.android.services.CoordinateServiceDeliverymanGoogleAPI;
 
 /**
  * Created by unicorn on 11/13/2017.
@@ -51,7 +56,12 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         app = (DomixApplication) getApplicationContext();
-        startService(new Intent(this, CoordinateServiceDeliveryman.class));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+        } else {
+            startService(new Intent(this, CoordinateServiceDeliveryman.class));
+        }
 
         presenter = new OrderCatchedPresenterImpl(this);
         location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
@@ -191,7 +201,11 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     @Override
     public void responseBackDomiciliaryActivity() {
-        stopService(new Intent(this, CoordinateServiceDeliveryman.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+        } else {
+            stopService(new Intent(this, CoordinateServiceDeliveryman.class));
+        }
         Intent intent = new Intent(this, Domiciliary.class);
         startActivity(intent);
         super.finish();
@@ -200,7 +214,11 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     @Override
     public void goRateDomiciliary() {
         hideProgressBar();
-        stopService(new Intent(this, CoordinateServiceDeliveryman.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+        } else {
+            stopService(new Intent(this, CoordinateServiceDeliveryman.class));
+        }
         Intent intent = new Intent(this, DomiciliaryScore.class);
         startActivity(intent);
         finish();

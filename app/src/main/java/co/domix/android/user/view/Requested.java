@@ -228,7 +228,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     @Override
     public void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle) {
         idDomiciliary = id;
-        if (!rate.equals("0.00")){
+        if (!rate.equals("0.00") || !rate.equals("0,00")){
             textViewRateDomiciliary.setText(rate);
         } else {
             textViewRateDomiciliary.setText(getString(R.string.text_new));

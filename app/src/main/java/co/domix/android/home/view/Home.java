@@ -314,32 +314,36 @@ public class Home extends AppCompatActivity
         if (loc != null) {
             SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
             SharedPreferences.Editor editor = location.edit();
-            Log.w("jjj", "Home - Lat-> "+loc.getLatitude());
-            Log.w("jjj", "Home - Lon-> "+loc.getLongitude());
+            Log.w("jjj", "Home Latitu-> "+loc.getLatitude());
             editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
             editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
             editor.commit();
         } else {
-            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                // Unknown Latitude and Longitude
-                // Available GPS but not recognize coordenates
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Desactivado curiosamente el GPS")
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                            }
-                        }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Home.super.finish();
-                    }
-                });
-                alert = builder.create();
-                alert.show();
+            try {
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    // Unknown Latitude and Longitude
+                    // Available GPS but not recognize coordenates
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Desactivado curiosamente el GPS")
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                }
+                            }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Home.super.finish();
+                        }
+                    });
+                    alert = builder.create();
+                    alert.show();
+                }
+            } catch (Exception e){
+                ToastsKt.toastShort(this, "Ocurrió un error con tu GPS");
             }
+
         }
     }
 }

@@ -31,7 +31,6 @@ public class LocationService extends Service implements LocationListener, GpsSta
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.w("jjj", "Creado el service desde M+");
         shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -65,8 +64,6 @@ public class LocationService extends Service implements LocationListener, GpsSta
     @Override
     public void onLocationChanged(Location location) {
         if (location != null){
-            Log.w("jjj", "Lat-> "+location.getLatitude());
-            Log.w("jjj", "Lon-> "+location.getLongitude());
             editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(location.getLatitude()));
             editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(location.getLongitude()));
             editor.commit();

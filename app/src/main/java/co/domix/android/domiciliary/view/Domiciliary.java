@@ -13,6 +13,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -33,6 +35,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
 import java.util.Hashtable;
 import java.util.List;
 
@@ -47,8 +53,11 @@ import co.domix.android.utils.ToastsKt;
  * Created by unicorn on 11/12/2017.
  */
 
-public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
+public class Domiciliary extends AppCompatActivity implements DomiciliaryView, GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks {
 
+    private GoogleApiClient apiClient;
+    private LocationManager locationManager;
     private String country; //la, lo
     private int countIndex, idOrderToSend;
     private boolean fieldsWasFill;
@@ -176,6 +185,12 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
                 presenter.verifyLocationAndInternet(Domiciliary.this);
             }
         });
+
+        apiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .build();
     }
 
     @Override
@@ -183,35 +198,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
         super.onBackPressed();
         editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
         editor.commit();
-    }
-
-    @Override
-    public void startGetLocation() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(Domiciliary.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ToastsKt.toastShort(Domiciliary.this, "No podemos ofrecerte el servicio");
-                return;
-            } else {
-                try{
-                    LocationManager locManager;
-                    Location loc;
-                    locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    loc = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
-                    editor.putString(getString(R.string.const_sharedPref_key_lon_device),String.valueOf(loc.getLongitude()));
-                    editor.commit();
-                } catch (Exception e){
-                    Log.w("jjj", "Exception-> "+e);
-                }
-
-            }
-        } else {
-            startService(new Intent(this, LocationService.class));
-        }
     }
 
     @Override
@@ -424,6 +410,84 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
     }
 
     @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    101);
+        } else {
+            Location lastLocation =
+                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
+            updateUI(lastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 101) {
+            if (grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Permiso concedido
+                @SuppressWarnings("MissingPermission")
+                Location lastLocation =
+                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
+                updateUI(lastLocation);
+            } else {
+                //Permiso denegado:
+                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
+            }
+        }
+    }
+
+    private void updateUI(Location loc) {
+        if (loc != null) {
+            SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+            SharedPreferences.Editor editor = location.edit();
+            Log.w("jjj", "Domiciliary Latitu-> "+loc.getLatitude());
+            editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
+            editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
+            editor.commit();
+        } else {
+            try {
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    // Unknown Latitude and Longitude
+                    // Available GPS but not recognize coordenates
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Desactivado curiosamente el GPS")
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                }
+                            }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Domiciliary.super.finish();
+                        }
+                    });
+                    alert = builder.create();
+                    alert.show();
+                }
+            } catch (Exception e){
+                ToastsKt.toastShort(this, "Ocurrió un error con tu GPS");
+            }
+
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         presenter.verifyLocationAndInternet(this);
@@ -441,8 +505,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView {
     @Override
     protected void onResume() {
         super.onResume();
-//        la = "";
-//        lo = "";
     }
 
     @Override

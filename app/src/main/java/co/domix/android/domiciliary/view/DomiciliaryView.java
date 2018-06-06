@@ -8,7 +8,6 @@ import java.util.List;
  */
 
 public interface DomiciliaryView {
-    void startGetLocation();
     void alertNoGps();
     void showYesInternet();
     void showNotInternet();

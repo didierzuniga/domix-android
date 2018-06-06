@@ -178,7 +178,6 @@ public class UserRepositoryImpl implements UserRepository {
                 presenter.responseSuccessRequest(couForResponse);
             }
         }
-
     }
 
     @Override

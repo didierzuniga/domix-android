@@ -119,10 +119,10 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                             df.setMaximumFractionDigits(2);
                             referenceOrder.child(i).child("d_id").setValue(uid);
                             presenter.responseGoOrderCatched(i);
-                            referenceOrder.child(i).child("x_applied_fare").setValue(Float.valueOf(df.format(appliedFare)));
+                            referenceOrder.child(i).child("x_applied_fare").setValue(appliedFare);
                             referenceOrder.child(i).child("x_catched").setValue(true);
                             referenceOrder.child(i).child("x_transport_used").setValue(transportUsed);
-                            referenceUser.child(uid).child("used_vehicle").setValue(transportUsed); // For User model
+                            referenceUser.child(uid).child("transport_used").setValue(transportUsed); // For User model
                         } else {
                             presenter.responseOrderHasBeenTaken();
                         }

@@ -302,7 +302,6 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     @Override
     public void responseCoordDomiciliary(double latDomiciliary, double lonDomiciliary) {
         domiLocated(latDomiciliary, lonDomiciliary);
-        //updateDomiPosition();
     }
 
     @Override
@@ -371,7 +370,6 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
-//        progressDialog.dismiss();
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();

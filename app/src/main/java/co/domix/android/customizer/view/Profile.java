@@ -67,6 +67,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
         presenter = new ProfilePresenterImpl(this);
         app = (DomixApplication) getApplicationContext();
 
+        Log.w("jjj", "create");
         storageReference = FirebaseStorage.getInstance().getReference();
 
         progressBarProfile = (ProgressBar) findViewById(R.id.progressBarProfile);
@@ -79,6 +80,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
         rateAsDomi = (TextView) findViewById(R.id.idRateAsDomi);
         rateAsUser = (TextView) findViewById(R.id.idRateAsUser);
         showProgressBar();
+        queryVerifyGlide();
 
         ivProfile = (ImageView) findViewById(R.id.imageProfile);
         btnChoosePhoto = (Button) findViewById(R.id.choosePhoto);
@@ -88,7 +90,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
                 Intent i = new Intent();
                 i.setType("image/*");
                 i.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(i,""), 1);
+                startActivityForResult(Intent.createChooser(i, ""), 1);
                 verifyGlid = false;
             }
         });
@@ -98,7 +100,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
             @Override
             public void onClick(View v) {
                 showProgressBar();
-                StorageReference refImageProfile = storageReference.child("image_profile/"+app.uId+"/img1.png");
+                StorageReference refImageProfile = storageReference.child("image_profile/" + app.uId + "/img1.png");
                 ivProfile.setDrawingCacheEnabled(true);
                 ivProfile.buildDrawingCache();
 
@@ -159,14 +161,17 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
-            Uri imageUri = data.getData();
-            if (imageUri != null){
-                ivProfile.setImageURI(imageUri);
-                btnChoosePhoto.setVisibility(View.GONE);
-                btnUploadPhoto.setVisibility(View.VISIBLE);
+        if (resultCode != 0){
+            if (requestCode == 1){
+                Uri imageUri = data.getData();
+                if (imageUri != null){
+                    ivProfile.setImageURI(imageUri);
+                    btnChoosePhoto.setVisibility(View.GONE);
+                    btnUploadPhoto.setVisibility(View.VISIBLE);
+                }
             }
         }
+
     }
 
     @Override
@@ -179,7 +184,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
         rateAsDomi.setText(scoreAsDomi);
         rateAsUser.setText(scoreAsUser);
         verifyGlid = verifyGlide;
-        if (verifyGlid){
+        if (verifyGlid) {
             executeGlide();
         } else {
             hideProgressBar();
@@ -203,7 +208,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
         Glide.with(this)
                 .using(new FirebaseImageLoader())
                 .load(storageReference.child("image_profile/" + app.uId + "/img1.png"))
-                .skipMemoryCache(false)
+                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .override(500, 500)
                 .centerCrop()
@@ -224,7 +229,6 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
     @Override
     protected void onStart() {
         super.onStart();
-        queryVerifyGlide();
     }
 
     @Override
@@ -282,6 +286,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
     public void goPayment() {
         Intent intent = new Intent(this, PaymentMethod.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -290,5 +295,10 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
         Intent intent = new Intent(this, Login.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

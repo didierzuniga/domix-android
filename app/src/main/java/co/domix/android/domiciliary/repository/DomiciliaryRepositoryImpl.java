@@ -30,7 +30,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
     private int countChild = 0, minDistanceBetweenRequired;
     private String i;
-    private boolean catchedOrderAvailable;
+    private boolean catchedOrderAvailable, orderStill;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");
     DatabaseReference referenceOrder = database.getReference("order");
@@ -97,6 +97,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
     @Override
     public void sendDataDomiciliary(final Activity activity, final int idOrderToSend, final String uid,
                                     final int transportUsed, String country) {
+        orderStill = false;
         referenceFare.child(country).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -109,30 +110,49 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                 }
 
                 i = String.valueOf(idOrderToSend);
-                referenceOrder.child(i).addListenerForSingleValueEvent(new ValueEventListener() {
+                referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Order order = dataSnapshot.getValue(Order.class);
-//                        catchedOrderAvailable = order.isX_catched();
-                        if (!order.isX_catched()) {
-                            DecimalFormat df = new DecimalFormat();
-                            df.setMaximumFractionDigits(2);
-                            referenceOrder.child(i).child("d_id").setValue(uid);
-                            presenter.responseGoOrderCatched(i);
-                            referenceOrder.child(i).child("x_applied_fare").setValue(appliedFare);
-                            referenceOrder.child(i).child("x_catched").setValue(true);
-                            referenceOrder.child(i).child("x_transport_used").setValue(transportUsed);
-                            referenceUser.child(uid).child("transport_used").setValue(transportUsed); // For User model
-                        } else {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            if ((snapshot.getKey()).equals(i)){
+                                orderStill = true;
+                                referenceOrder.child(i).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Order order = dataSnapshot.getValue(Order.class);
+//                                      catchedOrderAvailable = order.isX_catched();
+                                        if (!order.isX_catched()) {
+                                            DecimalFormat df = new DecimalFormat();
+                                            df.setMaximumFractionDigits(2);
+                                            referenceOrder.child(i).child("d_id").setValue(uid);
+                                            presenter.responseGoOrderCatched(i);
+                                            referenceOrder.child(i).child("x_applied_fare").setValue(appliedFare);
+                                            referenceOrder.child(i).child("x_catched").setValue(true);
+                                            referenceOrder.child(i).child("x_transport_used").setValue(transportUsed);
+                                            referenceUser.child(uid).child("transport_used").setValue(transportUsed); // For User model
+                                        } else {
+                                            presenter.responseOrderHasBeenTaken();
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        // Error en sendDataDomiciliary
+                                    }
+                                });
+                                break;
+                            }
+                        }
+                        if (!orderStill){
                             presenter.responseOrderHasBeenTaken();
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        // Error en sendDataDomiciliary
+
                     }
                 });
+
             }
 
             @Override

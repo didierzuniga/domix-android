@@ -60,7 +60,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
         } else {
-            startService(new Intent(this, CoordinateServiceDeliveryman.class));
+            startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
         }
 
         presenter = new OrderCatchedPresenterImpl(this);
@@ -181,7 +181,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
                     public void onClick(DialogInterface dialog, int which) {
                         scrollview.setVisibility(View.GONE);
                         showProgressBar();
-                        presenter.dialogFinish(String.valueOf(app.idOrder));
+                        presenter.dialogFinish(String.valueOf(app.idOrder), app.uId);
                     }
                 }
         )
@@ -204,7 +204,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
         } else {
-            stopService(new Intent(this, CoordinateServiceDeliveryman.class));
+            stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
         }
         Intent intent = new Intent(this, Domiciliary.class);
         startActivity(intent);
@@ -217,7 +217,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
         } else {
-            stopService(new Intent(this, CoordinateServiceDeliveryman.class));
+            stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
         }
         Intent intent = new Intent(this, DomiciliaryScore.class);
         startActivity(intent);

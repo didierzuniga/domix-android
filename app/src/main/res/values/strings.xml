@@ -52,8 +52,8 @@
     <string name="text_qualify_deliveryman">Califica al domiciliario</string>
     <string name="text_user_name_request">Solicitó:</string>
     <string name="text_user_phone_request">Teléfono:</string>
-    <string name="text_how_much_user_star">Dale la cantidad de estrellas que merece el usuario en este servicio</string>
-    <string name="text_how_much_deliveryman_star">Dale la cantidad de estrellas que merece el domiciliario en este servicio</string>
+    <string name="text_how_much_user_star">Califica al usuario</string>
+    <string name="text_how_much_deliveryman_star">Califica al domiciliario por este servicio</string>
     <string name="text_logout">Cerrar sesión</string>
     <string name="text_item_settings">Configuración</string>
     <string name="text_history_drawer">Historial</string>
@@ -369,8 +369,5 @@
         <item>Motocicleta</item>
         <item>Carro</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

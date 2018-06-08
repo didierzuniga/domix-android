@@ -44,7 +44,7 @@
     <string name="text_city">City:</string>
     <string name="text_requested">Requested by:</string>
     <string name="text_domiciliary_attend_you">Domiciliary that will attend you</string>
-    <string name="text_comming_soon">Waiting for a domiciliary...</string>
+    <string name="text_comming_soon">Waiting for a deliveryman...</string>
     <string name="text_name_domiciliary">Domiciliary</string>
     <string name="text_number_phone_domiciliary">Cellphone</string>
     <string name="text_marker_from">From here</string>
@@ -53,8 +53,8 @@
     <string name="text_qualify_deliveryman">Rate the deliveryman</string>
     <string name="text_user_name_request">Requested by:</string>
     <string name="text_user_phone_request">Phone number:</string>
-    <string name="text_how_much_user_star">Give the number of stars that the user deserves in this service</string>
-    <string name="text_how_much_deliveryman_star">Give the number of stars that deserves the deliveryman in this service</string>
+    <string name="text_how_much_user_star">Rate the user</string>
+    <string name="text_how_much_deliveryman_star">Rate the deliveryman for this service</string>
     <string name="text_logout">Log Out</string>
     <string name="text_item_settings">Setting</string>
     <string name="text_history_drawer">History</string>
@@ -357,8 +357,8 @@
     <string name="spinner_dimensions">Dimensions</string>
     <string-array name="options_dimensions">
         <item>Letter (Letter or Legal)</item>
-        <item>Bag (40x38x38 cms)</item>
         <item>Trunk (30x30x30 cms)</item>
+        <item>Bag (40x38x38 cms)</item>
         <item>Grid</item>
     </string-array>
 

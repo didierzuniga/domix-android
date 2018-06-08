@@ -41,8 +41,8 @@ public class OrderCatchedPresenterImpl implements OrderCatchedPresenter {
     }
 
     @Override
-    public void dialogFinish(String idOrder) {
-        interactor.dialogFinish(idOrder);
+    public void dialogFinish(String idOrder, String uid) {
+        interactor.dialogFinish(idOrder, uid);
     }
 
     @Override

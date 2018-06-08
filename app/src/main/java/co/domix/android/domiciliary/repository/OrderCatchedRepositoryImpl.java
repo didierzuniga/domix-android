@@ -14,6 +14,9 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.domiciliary.interactor.OrderCatchedInteractor;
@@ -22,6 +25,7 @@ import co.domix.android.model.Counter;
 import co.domix.android.model.Fare;
 import co.domix.android.model.Order;
 import co.domix.android.model.User;
+import co.domix.android.model.Wallet;
 
 /**
  * Created by unicorn on 11/13/2017.
@@ -29,7 +33,9 @@ import co.domix.android.model.User;
 
 public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
-    private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false;
+    private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false, thereWallet;
+    private String date;
+    private int fareToPayDomix, paidOut;
     private OrderCatchedPresenter presenter;
     private OrderCatchedInteractor interactor;
 
@@ -37,6 +43,7 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
     DatabaseReference referenceUser = database.getReference("user");
     DatabaseReference referenceFare = database.getReference("fare");
     DatabaseReference referenceOrder = database.getReference("order");
+    DatabaseReference referenceWallet = database.getReference("wallet");
     DatabaseReference referenceCoord = database.getReference("coordinate");
     DatabaseReference referenceCounter = database.getReference("counter");
 
@@ -130,9 +137,71 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
     }
 
     @Override
-    public void dialogFinish(String idOrder) {
+    public void dialogFinish(final String idOrder, final String uid) {
+        thereWallet = false;
         finishedByDeliveryman = true;
+        referenceOrder.child(idOrder).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Order order = dataSnapshot.getValue(Order.class);
+                date = order.getX_date();
+                fareToPayDomix += (int) ((order.getX_money_to_pay() + order.getX_credit_used()) *
+                        order.getX_applied_fare());
+                if (order.getX_pay_method() == 1 || order.getX_pay_method() == 2){
+                    paidOut += order.getX_money_to_pay() + order.getX_credit_used();
+                } else if (order.getX_credit_used() > 0){
+                    paidOut += order.getX_credit_used();
+                }
+
+                referenceWallet.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            if ((snapshot.getKey()).equals(uid)){
+                                thereWallet = true;
+                                referenceWallet.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Wallet wallet = dataSnapshot.getValue(Wallet.class);
+                                        List<String> li = wallet.getOrder_id();
+                                        li.add(idOrder);
+                                        referenceWallet.child(uid).child("order_id").setValue(li);
+                                        referenceWallet.child(uid).child("to_domix").setValue(fareToPayDomix + wallet.getTo_domix());
+                                        referenceWallet.child(uid).child("charged").setValue(paidOut + wallet.getCharged());
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                                break;
+                            }
+                        }
+                        if (!thereWallet){
+                            List<String> li = new ArrayList<String>();
+                            li.add(idOrder);
+                            referenceWallet.child(uid).child("order_id").setValue(li);
+                            referenceWallet.child(uid).child("to_domix").setValue(fareToPayDomix);
+                            referenceWallet.child(uid).child("charged").setValue(paidOut);
+                            referenceWallet.child(uid).child("date").setValue(date);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         referenceOrder.child(idOrder).child("x_completed").setValue(true);
+
         //Remove coordinates???
         modifyCounterRealtimeAndDone();
     }

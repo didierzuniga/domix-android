@@ -142,7 +142,8 @@ public class CoordinateServiceDeliverymanGoogleAPI extends Service implements Go
         if (loc != null) {
             SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
             SharedPreferences.Editor editor = location.edit();
-            Log.w("jjj", "Service GoogleAPI Latitu-> "+loc.getLatitude());
+            Log.w("jjj", "Service - onLocationChanged - Lat-> "+loc.getLatitude());
+            Log.w("jjj", "Service - onLocationChanged - Lon-> "+loc.getLongitude());
             editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
             editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
             editor.commit();

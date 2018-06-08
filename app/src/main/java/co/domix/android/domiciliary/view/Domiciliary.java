@@ -198,6 +198,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
         super.onBackPressed();
         editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
         editor.commit();
+        finish();
     }
 
     @Override
@@ -311,13 +312,9 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
         hideProgressBar();
         editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
         app.idOrder = Integer.valueOf(idOrder);
-//        editor.putString("latFrom", diccionario.get(countIndex).get(6).toString());
-//        editor.putString("latTo", diccionario.get(countIndex).get(8).toString());
-//        editor.putString("lonFrom", diccionario.get(countIndex).get(7).toString());
-//        editor.putString("lonTo", diccionario.get(countIndex).get(9).toString());
-//        editor.commit();
         Intent intent = new Intent(this, OrderCatched.class);
         startActivity(intent);
+        finish();
     }
 
     @Override

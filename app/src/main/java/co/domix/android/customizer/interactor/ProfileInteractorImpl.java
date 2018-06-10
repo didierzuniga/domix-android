@@ -32,10 +32,11 @@ public class ProfileInteractorImpl implements ProfileInteractor {
     }
 
     @Override
-    public void responseDataUser(boolean verifyGlide, String firstname, String lastname, String email, String scoreAsDomi,
-                                 String scoreAsUser, int credit) {
+    public void responseDataUser(boolean verifyGlide, String firstname, String lastname, String email, float scoreAsDomi,
+                                 float scoreAsUser, int credit) {
         if (firstname != null && lastname != null){
-            presenter.responseDataUser(verifyGlide, firstname, lastname, email, scoreAsDomi, scoreAsUser, credit);
+            presenter.responseDataUser(verifyGlide, firstname, lastname, email, String.valueOf(scoreAsDomi),
+                                        String.valueOf(scoreAsUser), credit);
         } else {
             presenter.responseDataUser(verifyGlide, null, null, email,
                                         "0.00", "0.00", credit);

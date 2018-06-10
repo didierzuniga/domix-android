@@ -13,7 +13,9 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,6 +41,7 @@ import retrofit2.Retrofit;
 public class UserRepositoryImpl implements UserRepository {
 
     public Double fare;
+    private boolean countryAvailable = false;
     private Timer timer;
     private int couForResponse, countFinal, vvPaymentCash, credit, updateCreditUser, disbetween;
     private Double scoreAuthor, scoreDomiciliary;
@@ -201,6 +204,25 @@ public class UserRepositoryImpl implements UserRepository {
 
                     }
                 });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void countriesAvailable() {
+        final List<String> listCountries = new ArrayList<String>();
+        referenceFare.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    listCountries.add(snapshot.getKey());
+                }
+                interactor.responseForCountriesAvailable(listCountries);
             }
 
             @Override

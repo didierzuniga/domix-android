@@ -13,4 +13,5 @@ public interface UserRepository {
                  int disBetweenPoints, String description1, String description2, byte dimenSelected, byte payMethod,
                  int paymentCash, int creditUsed, int updateCredit, Activity activity);
     void requestFareAndMyCredit(String codeCountry, String uid);
+    void countriesAvailable();
 }

@@ -34,7 +34,7 @@ import co.domix.android.model.Wallet;
 public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
     private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false, thereWallet;
-    private String date;
+    private String date, country;
     private int fareToPayDomix, paidOut;
     private OrderCatchedPresenter presenter;
     private OrderCatchedInteractor interactor;
@@ -145,6 +145,7 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Order order = dataSnapshot.getValue(Order.class);
                 date = order.getX_date();
+                country = order.getX_country();
                 fareToPayDomix += (int) ((order.getX_money_to_pay() + order.getX_credit_used()) *
                         order.getX_applied_fare());
                 if (order.getX_pay_method() == 1 || order.getX_pay_method() == 2){
@@ -185,6 +186,7 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                             referenceWallet.child(uid).child("to_domix").setValue(fareToPayDomix);
                             referenceWallet.child(uid).child("charged").setValue(paidOut);
                             referenceWallet.child(uid).child("date").setValue(date);
+                            referenceWallet.child(uid).child("country_code").setValue(country);
                         }
                     }
 

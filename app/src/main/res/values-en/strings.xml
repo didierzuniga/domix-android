@@ -293,8 +293,6 @@
     <string name="toast_account_not_created">An error has occurred, please try again</string>
     <string name="toast_signin_invalid_password">Invalid password!</string>
     <string name="toast_signin_user_not_registered">Unregistered email!</string>
-
-
     <string name="toast_indicate_starting_point">Indicate a starting point</string>
     <string name="toast_specify_destination_point">Specify a destination point</string>
     <string name="toast_enter_description1">Field of starting point is missing</string>
@@ -321,6 +319,7 @@
     <string name="toast_must_choise_vehicle">You must select the means of transport</string>
     <string name="toast_not_near_delivery">There are no addresses near your location</string>
     <string name="toast_choose_payment_method">Select a payment method</string>
+    <string name="toast_country_not_available">One of the locations is in a country not allowed</string>
 
     <string name="title_home">Home</string>
     <string name="title_requested">Your request</string>

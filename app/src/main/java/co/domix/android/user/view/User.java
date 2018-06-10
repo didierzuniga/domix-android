@@ -216,9 +216,6 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
                         ToastsKt.toastShort(User.this, getString(R.string.toast_choose_payment_method));
                     }
                 }
-
-
-
             }
         });
 
@@ -338,6 +335,11 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
     }
 
     @Override
+    public void countryNotAvailable() {
+        ToastsKt.toastLong(this, getString(R.string.toast_country_not_available));
+    }
+
+    @Override
     public void resultErrorRequest() {
         scrollView.setVisibility(View.VISIBLE);
         hideProgressBar();
@@ -383,7 +385,7 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
     public void responseEmptyFields(String toastMessage) {
         hideProgressBar();
         scrollView.setVisibility(View.VISIBLE);
-        Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
+        ToastsKt.toastShort(this, toastMessage);
     }
 
     @Override
@@ -437,6 +439,7 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
     @Override
     protected void onStart() {
         super.onStart();
+        presenter.countriesAvailable();
         presenter.verifyLocationAndInternet(this);
         txtFrom = (TextView) findViewById(R.id.idFrom);
         txtTo = (TextView) findViewById(R.id.idTo);

@@ -10,6 +10,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import co.domix.android.customizer.interactor.ProfileInteractor;
 import co.domix.android.customizer.presenter.ProfilePresenter;
 import co.domix.android.model.User;
@@ -33,14 +37,22 @@ public class ProfileRepositoryImpl implements ProfileRepository {
 
     @Override
     public void queryImageSeted(String uid) {
+        final NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        formatter.setMaximumFractionDigits(2);
+        formatter.setMinimumFractionDigits(2);
+        formatter.setRoundingMode(RoundingMode.HALF_UP);
+
         referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 boolean verifyGlide = user.isImage_profile();
+
+                Float scoreAsDeliveryman = new Float(formatter.format(user.getScore_as_deliveryman()));
+                Float scoreAsUser = new Float(formatter.format(user.getScore_as_user()));
+
                 interactor.responseDataUser(verifyGlide, user.getFirst_name(), user.getLast_name(),
-                                            user.getEmail(), String.format("%.2f", user.getScore_as_deliveryman()),
-                                            String.format("%.2f", user.getScore_as_user()), user.getMy_credit());
+                                            user.getEmail(), scoreAsDeliveryman, scoreAsUser, user.getMy_credit());
             }
 
             @Override

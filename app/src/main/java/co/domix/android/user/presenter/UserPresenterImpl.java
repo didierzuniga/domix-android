@@ -100,6 +100,16 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
+    public void countryNotAvailable() {
+        view.countryNotAvailable();
+    }
+
+    @Override
+    public void countriesAvailable() {
+        interactor.countriesAvailable();
+    }
+
+    @Override
     public void showNotInternet() {
         view.showNotInternet();
     }

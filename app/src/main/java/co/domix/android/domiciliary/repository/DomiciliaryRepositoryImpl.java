@@ -12,7 +12,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import co.domix.android.R;
 import co.domix.android.domiciliary.interactor.DomiciliaryInteractor;
@@ -28,7 +31,7 @@ import co.domix.android.model.User;
 
 public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
-    private int countChild = 0, minDistanceBetweenRequired;
+    private int countChild = 0, minDistanceBetweenRequiredForCyclist, minDistanceBetweenRequiredForOther;
     private String i;
     private boolean catchedOrderAvailable, orderStill;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -69,9 +72,11 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 Parameter parameter = dataSnapshot.getValue(Parameter.class);
-                                minDistanceBetweenRequired = parameter.getMin_distance_between_points();
+                                minDistanceBetweenRequiredForCyclist = parameter.getMin_dis_between_points_for_cyclist();
+                                minDistanceBetweenRequiredForOther = parameter.getMin_dis_between_points_for_other();
                                 interactor.goCompareDistance(idOrder, ago, country, from, to, sizeOrder, description1, description2,
-                                        origenCoordinate, destineCoordinate, latDomi, lonDomi, distanceBetween, minDistanceBetweenRequired);
+                                        origenCoordinate, destineCoordinate, latDomi, lonDomi, distanceBetween,
+                                        minDistanceBetweenRequiredForCyclist, minDistanceBetweenRequiredForOther);
                             }
 
                             @Override
@@ -193,6 +198,10 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
     @Override
     public void queryUserRate(String idOrder) {
+        final NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        formatter.setMaximumFractionDigits(2);
+        formatter.setMinimumFractionDigits(2);
+        formatter.setRoundingMode(RoundingMode.HALF_UP);
         referenceOrder.child(idOrder).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -202,8 +211,8 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        String userRate = String.format("%.2f", user.getScore_as_user());
-                        presenter.responseQueryRate(userRate);
+                        Float userRate = new Float(formatter.format(user.getScore_as_user()));
+                        presenter.responseQueryRate(String.valueOf(userRate));
                     }
 
                     @Override

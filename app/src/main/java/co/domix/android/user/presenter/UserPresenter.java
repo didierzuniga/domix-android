@@ -25,6 +25,8 @@ public interface UserPresenter {
     void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen,
                       int distanceBetweenPoints, int myCredit);
     void resultErrorRequest();
+    void countryNotAvailable();
+    void countriesAvailable();
     void showNotInternet();
     void showYesInternet();
     void showProgressBar();

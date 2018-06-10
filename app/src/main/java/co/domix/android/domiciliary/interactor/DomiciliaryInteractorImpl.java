@@ -30,7 +30,8 @@ import co.domix.android.domiciliary.repository.DomiciliaryRepositoryImpl;
 public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, DirectionFinderListener {
 
     private LocationManager locationManager;
-    private int countForDictionary, distMin, countIndex, countIndexTemp, countChilds, vehicleSelected, minDistanceBetweenRequired;
+    private int countForDictionary, distMin, countIndex, countIndexTemp, countChilds, vehicleSelected,
+                minDistanceForCyclist, minDistanceForOther;
     private List<String> listica;
     private Hashtable<Integer, List> diccionario;
     private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
@@ -94,8 +95,9 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     public void goCompareDistance(int idOrder, String ago, String country, String from, String to,
                                   int sizeOrder, String description1, String description2, String origenCoordinate,
                                   String destineCoordinate, String latDomi, String lonDomi, int distanceBetween,
-                                  int minDistanceRequired) {
-        minDistanceBetweenRequired = minDistanceRequired;
+                                  int minDistanceBetweenRequiredForCyclist, int minDistanceBetweenRequiredForOther) {
+        minDistanceForCyclist = minDistanceBetweenRequiredForCyclist;
+        minDistanceForOther = minDistanceBetweenRequiredForOther;
         listica = new ArrayList<String>();
         String idOrderStr = String.valueOf(idOrder);
         listica.add(idOrderStr);
@@ -181,7 +183,7 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
 //            Log.w("jjj", "Size order: "+listica.get(8));
 //            Log.w("jjj", "Distance Between: "+listica.get(9));
             if (vehicleSelected == 1){
-                if ((Integer.valueOf(listica.get(9)) + route.distance.value) <= minDistanceBetweenRequired){
+                if ((Integer.valueOf(listica.get(9)) + route.distance.value) <= minDistanceForCyclist){
                     matchForAnyOrder = true;
                     if (distMin != 0) {
                         if (distMin > newDistance) {
@@ -193,14 +195,16 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
                     }
                 }
             } else {
-                matchForAnyOrder = true;
-                if (distMin != 0) {
-                    if (distMin > newDistance) {
+                if ((Integer.valueOf(listica.get(9)) + route.distance.value) <= minDistanceForOther){
+                    matchForAnyOrder = true;
+                    if (distMin != 0) {
+                        if (distMin > newDistance) {
+                            distMin = newDistance;
+                            countIndex = countIndexTemp;
+                        }
+                    } else {
                         distMin = newDistance;
-                        countIndex = countIndexTemp;
                     }
-                } else {
-                    distMin = newDistance;
                 }
             }
             countIndexTemp++;

@@ -16,6 +16,10 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import co.domix.android.R;
 import co.domix.android.model.Coordinate;
 import co.domix.android.model.Counter;
@@ -259,6 +263,10 @@ public class RequestedRepositoryImpl implements RequestedRepository {
 
     @Override
     public void getDataDomiciliary(final String uidDomiciliary) {
+        final NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        formatter.setMaximumFractionDigits(1);
+        formatter.setMinimumFractionDigits(1);
+        formatter.setRoundingMode(RoundingMode.HALF_UP);
         try{
             referenceUser.child(uidDomiciliary).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -266,9 +274,9 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                     User user = dataSnapshot.getValue(User.class);
                     String fullName = user.getFirst_name()+" "+user.getLast_name();
                     String cellPhone = user.getPhone();
-                    String rate = String.format("%.2f", user.getScore_as_deliveryman());
+                    Float rate = new Float(formatter.format(user.getScore_as_deliveryman()));
                     int usedVehicle = user.getTransport_used();
-                    presenter.responseDomiciliaryCatched(uidDomiciliary, rate, fullName,
+                    presenter.responseDomiciliaryCatched(uidDomiciliary, String.valueOf(rate), fullName,
                             cellPhone, usedVehicle);
                 }
 

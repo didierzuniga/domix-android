@@ -19,6 +19,7 @@ public interface UserView {
                       int distanceBetweenPoints, int myCredit);
     void responseSuccessRequest(int getCountFull);
 
+    void countryNotAvailable();
     void showNotInternet();
     void showYesInternet();
     void showProgressBar();

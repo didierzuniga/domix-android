@@ -21,6 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -43,6 +46,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -56,6 +61,7 @@ import co.domix.android.directionModule.Route;
 import co.domix.android.services.IncomingDeliveryman;
 import co.domix.android.user.presenter.RequestedPresenter;
 import co.domix.android.user.presenter.RequestedPresenterImpl;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by unicorn on 11/12/2017.
@@ -65,10 +71,11 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks, DirectionFinderListener {
 
-    private LinearLayout linearRateDomiciliary, linearNameDomiciliary, linearCellphoneDomiciliary, linearParent;
+    private LinearLayout linearParent;
     private TextView textViewWaitingDomiciliary, textViewRateDomiciliary,
             textViewSelectedDomiciliary, textViewDataDomiciliary;
     private ImageView ivVehicle;
+    private CircleImageView ivDeliveryman;
     private String idDomiciliary;
     private Button buttonCanceled;
     private boolean locDomi, validateDomiciliaryRealtime = false, initialize = false;
@@ -79,6 +86,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     private LocationRequest locRequest;
     private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
+    private StorageReference storageReference;
     private DomixApplication app;
     private RequestedPresenter presenter;
 
@@ -91,20 +99,18 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         presenter = new RequestedPresenterImpl(this);
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         app = (DomixApplication) getApplicationContext();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
-        linearRateDomiciliary = (LinearLayout) findViewById(R.id.rate_domiciliary);
-        linearNameDomiciliary = (LinearLayout) findViewById(R.id.name_domiciliary);
-        linearCellphoneDomiciliary = (LinearLayout) findViewById(R.id.cellphone_domiciliary);
         linearParent = (LinearLayout) findViewById(R.id.linearParent);
         textViewWaitingDomiciliary = (TextView) findViewById(R.id.waiting_domiciliary);
         textViewRateDomiciliary = (TextView) findViewById(R.id.rateDomiciliary);
         ivVehicle = (ImageView) findViewById(R.id.ivVehicleUsed);
+        ivDeliveryman = (CircleImageView) findViewById(R.id.imageProfileDeliveryman);
         textViewSelectedDomiciliary = (TextView) findViewById(R.id.selectedDomiciliary);
         textViewDataDomiciliary = (TextView) findViewById(R.id.dataDomiciliary);
         buttonCanceled = (Button) findViewById(R.id.buttonCanceledRequest);
@@ -180,8 +186,6 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
         } else {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-            Log.w("jjj", "Requested - GoogleAPI - Lat-> "+lastLocation.getLatitude());
-            Log.w("jjj", "Requested - GoogleAPI - Lon-> "+lastLocation.getLongitude());
         }
     }
 
@@ -228,6 +232,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     @Override
     public void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle) {
         idDomiciliary = id;
+        executeGlide();
         if (!rate.equals("0.00") || !rate.equals("0,00")){
             textViewRateDomiciliary.setText(rate);
         } else {
@@ -258,6 +263,17 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
                 }, 2000);
             }
         });
+    }
+
+    public void executeGlide() {
+        Glide.with(this)
+                .using(new FirebaseImageLoader())
+                .load(storageReference.child("image_profile/" + idDomiciliary + "/img1.png"))
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .override(500, 500)
+                .centerCrop()
+                .into(ivDeliveryman);
     }
 
     @Override

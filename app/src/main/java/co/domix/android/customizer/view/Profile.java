@@ -66,8 +66,6 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
 
         presenter = new ProfilePresenterImpl(this);
         app = (DomixApplication) getApplicationContext();
-
-        Log.w("jjj", "create");
         storageReference = FirebaseStorage.getInstance().getReference();
 
         progressBarProfile = (ProgressBar) findViewById(R.id.progressBarProfile);

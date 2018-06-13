@@ -3,6 +3,7 @@ package co.domix.android.login.interactor;
 import android.app.Activity;
 import android.location.Address;
 import android.location.Geocoder;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -33,7 +34,7 @@ public class SignupInteractorImpl implements SignupInteractor {
                        Activity activity, FirebaseAuth firebaseAuth) {
         String codeCountry = "";
         try {
-            geocodeMatches = new Geocoder(activity).getFromLocation(Float.valueOf(latitude), Float.valueOf(longitude), 1);
+            geocodeMatches = new Geocoder(activity).getFromLocation(Double.valueOf(latitude), Double.valueOf(longitude), 1);
         } catch (IOException e) {
             e.printStackTrace();
         }

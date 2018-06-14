@@ -6,7 +6,7 @@ package co.domix.android.customizer.presenter;
 
 public interface ProfilePresenter {
     void queryImageSeted(String uid);
-    void responseDataUser(boolean verifyGlide, String firstname, String lastname, String email, String scoreAsDomi,
-                          String scoreAsUser, int credit);
+    void responseDataUser(boolean verifyGlide, String firstname, String lastname, String dni, String phone,
+                          String email, String scoreAsDomi, String scoreAsUser, String credit);
     void trueImageSeted(String uid);
 }

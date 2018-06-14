@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import co.domix.android.customizer.interactor.ProfileInteractor;
 import co.domix.android.customizer.presenter.ProfilePresenter;
+import co.domix.android.model.Fare;
 import co.domix.android.model.User;
 
 /**
@@ -34,6 +35,7 @@ public class ProfileRepositoryImpl implements ProfileRepository {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");
+    DatabaseReference referenceFare = database.getReference("fare");
 
     @Override
     public void queryImageSeted(String uid) {
@@ -45,14 +47,28 @@ public class ProfileRepositoryImpl implements ProfileRepository {
         referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                boolean verifyGlide = user.isImage_profile();
+                final User user = dataSnapshot.getValue(User.class);
+                final boolean verifyGlide = user.isImage_profile();
+                final Float scoreAsDeliveryman = new Float(formatter.format(user.getScore_as_deliveryman()));
+                final Float scoreAsUser = new Float(formatter.format(user.getScore_as_user()));
 
-                Float scoreAsDeliveryman = new Float(formatter.format(user.getScore_as_deliveryman()));
-                Float scoreAsUser = new Float(formatter.format(user.getScore_as_user()));
+                referenceFare.child(user.getCountry_code()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Fare fare = dataSnapshot.getValue(Fare.class);
 
-                interactor.responseDataUser(verifyGlide, user.getFirst_name(), user.getLast_name(),
-                                            user.getEmail(), scoreAsDeliveryman, scoreAsUser, user.getMy_credit());
+                        interactor.responseDataUser(verifyGlide, user.getFirst_name(), user.getLast_name(),
+                                user.getDni(), user.getPhone(), user.getEmail(), scoreAsDeliveryman,
+                                scoreAsUser, user.getMy_credit(), fare.getCurrency_code());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
 
             @Override

@@ -42,6 +42,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.text.DecimalFormat;
+
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.services.LocationService;
@@ -66,13 +68,15 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
     private TextInputEditText firstName, lastName, phone;
     private String countryOrigen, cityOrigen, codeCountry;
     private byte payMethod;
-    private int totalCostToDB, priceInCash, disBetweenPoints, mCredit, costDelDesCredit, updateCreditUserToDB, creditUsedToDB;
+    private int fieldsWasFill, totalCostToDB, priceInCash, disBetweenPoints, mCredit, costDelDesCredit,
+            updateCreditUserToDB, creditUsedToDB;
     private ProgressBar progressBarRequest;
     private AlertDialog alert = null;
     private android.app.AlertDialog alertDialog;
-    private boolean fieldsWasFill, radioGroupActive;
+    private boolean radioGroupActive;
     private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
+    private DecimalFormat formatMiles = new DecimalFormat("###,###.##");
     private DomixApplication app;
     private UserPresenter presenter;
 
@@ -169,7 +173,7 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
                         lnrPaymentMethod.setVisibility(View.GONE);
                         payMethod = 2;
                     } else {
-                        paymentCash.setText(" " + costDelDesCredit + " " + codeCountry);
+                        paymentCash.setText(" " + formatMiles.format(costDelDesCredit) + " " + codeCountry);
                         totalCostToDB = costDelDesCredit;
                         updateCreditUserToDB = 0;
                         creditUsedToDB = mCredit;
@@ -180,7 +184,7 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
                     radioGroup.clearCheck();
                     radioGroupActive = false;
                     totalCostToDB = priceInCash;
-                    paymentCash.setText(" " + priceInCash + " " + codeCountry);
+                    paymentCash.setText(" " + formatMiles.format(priceInCash) + " " + codeCountry);
                 }
             }
         });
@@ -236,8 +240,8 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
     }
 
     @Override
-    public void responseForFullnameAndPhone(boolean result) {
-        fieldsWasFill = result;
+    public void responseForFullnameAndPhone(int imageProfile) {
+        fieldsWasFill = imageProfile;
     }
 
     @Override
@@ -348,7 +352,7 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
 
     @Override
     public void contactDataSent() {
-        fieldsWasFill = true;
+        fieldsWasFill = 0;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -402,7 +406,7 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
         priceInCash = priceInCashh;
         totalCostToDB = priceInCashh;
         disBetweenPoints = distanceBetweenPoints;
-        paymentCash.setText(" " + priceInCash + " " + codeCountry);
+        paymentCash.setText(" " + formatMiles.format(priceInCash) + " " + codeCountry);
     }
 
     @Override

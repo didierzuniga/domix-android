@@ -171,7 +171,7 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     }
 
     @Override
-    public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
+    public void request(int fieldsWasFill, String uid, String email, String country, String city,
                         String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
                         byte payMethod, int paymentCash, int creditUsed, int updateCredit, Activity activity) {
         if (from.equals("")) {
@@ -185,11 +185,13 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
         } else if (paymentCash == 0 && creditUsed == 0) {
             presenter.responseEmptyFields(activity.getString(R.string.toast_country_not_available));
         } else {
-            if (fieldsWasFill) {
+            if (fieldsWasFill == 0) {
                 repository.request(uid, email, country, city, from, to, disBetweenPoints, description1, description2,
                                     dimenSelected, payMethod, paymentCash, creditUsed, updateCredit, activity);
-            } else {
+            } else if (fieldsWasFill == 1){
                 presenter.openDialogSendContactData();
+            } else if (fieldsWasFill == 2){
+                // Request Image
             }
         }
     }

@@ -5,7 +5,7 @@ package co.domix.android.user.view;
  */
 
 public interface UserView {
-    void responseForFullnameAndPhone(boolean result);
+    void responseForFullnameAndPhone(int imageProfile);
     void alertNoGps();
     void openDialogSendContactData();
     void sendContactData(String firstName, String lastName, String phone);

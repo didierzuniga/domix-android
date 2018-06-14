@@ -2,6 +2,7 @@ package co.domix.android.customizer.interactor;
 
 import android.util.Log;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import co.domix.android.customizer.presenter.TotalToPayPresenter;
@@ -33,6 +34,7 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
     public void responseTotalToPay(String currencyCode, int fareToPayDomix, int pagado, double taxe,
                                    int minPayment, double payUCommission, int payURate, String country,
                                    List<String> listOrders) {
+        DecimalFormat formatMiles = new DecimalFormat("###,###.##");
         String payTaxe;
         String payTotalToDomix;
         int balanceToUpdate = -1;
@@ -44,7 +46,8 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
             int payUTotalCommission = payUCommissionCost + payURate;
             int payUIvaOverCommission = (int) (payUTotalCommission * taxe);
             int payUTotalCommissionWithIva = payUTotalCommission + payUIvaOverCommission;
-            payTaxe = String.valueOf(payUTotalCommissionWithIva);
+            payTaxe = formatMiles.format(payUTotalCommissionWithIva);
+//            payTaxe = String.valueOf(payUTotalCommissionWithIva);
 
             int saldo = pagado - (fareToPayDomix + payUTotalCommissionWithIva);
             if (saldo >= 0){
@@ -58,7 +61,8 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
             } else {
                 //Enviar a positive_balance -- 0 --
                 balanceToUpdate = 0;
-                payTotalToDomix = String.valueOf(saldo * -1);
+                payTotalToDomix = formatMiles.format(saldo * -1);
+//                payTotalToDomix = String.valueOf(saldo * -1);
                 if ((saldo * -1) >= minPayment){
                     enableButtonPay = true;
                 } else {
@@ -71,7 +75,7 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
             payTotalToDomix = "0.00 ";
             enableButtonPay = false;
         }
-        presenter.responseTotalToPayCash(String.valueOf(fareToPayDomix),
+        presenter.responseTotalToPayCash(formatMiles.format(fareToPayDomix),
                                         payTaxe,
                                         payTotalToDomix,
                                         miniPayment,

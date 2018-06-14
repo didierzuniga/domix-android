@@ -29,6 +29,10 @@ public class EditProfileRepositoryImpl implements EditProfileRepository {
             referenceUser.child(uid).child("first_name").setValue(data);
         } else if (field == 2){
             referenceUser.child(uid).child("last_name").setValue(data);
+        } else if (field == 3){
+            referenceUser.child(uid).child("phone").setValue(data);
+        } else if (field == 4){
+            referenceUser.child(uid).child("dni").setValue(data);
         }
         presenter.dataChangeSuccess();
     }

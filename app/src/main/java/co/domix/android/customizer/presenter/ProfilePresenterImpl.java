@@ -23,9 +23,9 @@ public class ProfilePresenterImpl implements ProfilePresenter {
     }
 
     @Override
-    public void responseDataUser(boolean verifyGlide, String firstname, String lastname, String email, String scoreAsDomi,
-                                 String scoreAsUser, int credit) {
-        view.responseDataUser(verifyGlide, firstname, lastname, email, scoreAsDomi, scoreAsUser, credit);
+    public void responseDataUser(boolean verifyGlide, String firstname, String lastname, String dni,
+                                 String phone, String email, String scoreAsDomi, String scoreAsUser, String credit) {
+        view.responseDataUser(verifyGlide, firstname, lastname, dni, phone, email, scoreAsDomi, scoreAsUser, credit);
     }
 
     @Override

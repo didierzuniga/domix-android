@@ -28,6 +28,7 @@
     <string name="hint_select_initial_point">Select starting point</string>
     <string name="hint_select_final_point">Select endpoint</string>
     <string name="hint_option_for_deliveryman">Option for deliveryman</string>
+    <string name="hint_dni">Identification document</string>
 
     <string name="text_dont_have_account">Don´t have account?</string>
     <string name="text_create_here"><u>Create here</u></string>

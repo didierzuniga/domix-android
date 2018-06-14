@@ -41,8 +41,8 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
-    public void responseForFullnameAndPhone(boolean result) {
-        view.responseForFullnameAndPhone(result);
+    public void responseForFullnameAndPhone(int imageProfile) {
+        view.responseForFullnameAndPhone(imageProfile);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
-    public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
+    public void request(int fieldsWasFill, String uid, String email, String country, String city,
                         String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
                         byte payMethod, int paymentCash, int creditUsed, int updateCredit, User user) {
         interactor.request(fieldsWasFill, uid, email, country, city, from, to, disBetweenPoints, description1, description2,

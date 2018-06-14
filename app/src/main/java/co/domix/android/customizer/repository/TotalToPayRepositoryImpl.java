@@ -90,77 +90,6 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
             }
         });
-//        referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                final User user = dataSnapshot.getValue(User.class);
-//                if (user.getCounter_score_as_deliveryman() > 0){
-//                    referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                            final List<String> listOrders = new ArrayList<String>();
-//
-//                            for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                                Order order = snapshot.getValue(Order.class);
-//                                try {
-//                                    if ((order.getD_id()).equals(uid)) {
-//                                        if (!order.isX_paid_out()) {
-//                                            areThereOrders = true;
-//                                            country = order.getX_country();
-//                                            listOrders.add(snapshot.getKey()); //ID to save
-//                                            fareToPayDomix += (int) ((order.getX_money_to_pay() + order.getX_credit_used()) *
-//                                                    order.getX_applied_fare());
-//                                            if (order.getX_pay_method() == 1 || order.getX_pay_method() == 2){
-//                                                pagado += order.getX_money_to_pay() + order.getX_credit_used();
-//                                            } else if (order.getX_credit_used() > 0){
-//                                                pagado += order.getX_credit_used();
-//                                            }
-//                                        }
-//                                    }
-//                                } catch (Exception e){
-//
-//                                }
-//                            }
-//                            if (areThereOrders) {
-//                                referenceFare.child(country).addListenerForSingleValueEvent(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                                        Fare fare = dataSnapshot.getValue(Fare.class);
-//                                        currencyCode = fare.getCurrency_code();
-//                                        nationalTaxe = fare.getNational_tax();
-//                                        payUCommission = fare.getPayu_commission();
-//                                        payUFullRate = fare.getPayu_full_rate();
-//                                        minPayment = fare.getMin_payment();
-//                                        interactor.responseTotalToPay(currencyCode, fareToPayDomix,
-//                                                (pagado + user.getPositive_balance()), nationalTaxe,
-//                                                minPayment, payUCommission, payUFullRate, country, listOrders);
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(DatabaseError databaseError) {
-//
-//                                    }
-//                                });
-//                            } else {
-//                                presenter.thereAreNotOrders();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//                } else {
-//                    presenter.thereAreNotOrders();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
     @Override
@@ -168,7 +97,6 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
         for (int i = 0; i < list.size(); i++) {
             referenceOrder.child(String.valueOf(list.get(i))).child("x_paid_out").setValue(true);
         }
-
         referenceUser.child(userId).child("positive_balance").setValue(balance);
     }
 }

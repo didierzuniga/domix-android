@@ -46,9 +46,9 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
 
     private FirebaseAuth firebaseAuth;
     private ProgressBar progressBarProfile;
-    private ImageView ivProfile;
-    private LinearLayout editFirstName, editLastName;
-    private TextView firstname, lastname, email, myCredit, rateAsDomi, rateAsUser;
+    private CircleImageView ivProfile;
+    private LinearLayout editFirstName, editLastName, editCellphone, editDni;
+    private TextView firstname, lastname, cellphone, dni, email, myCredit, rateAsDomi, rateAsUser;
     private StorageReference storageReference;
     private Button btnUploadPhoto, btnChoosePhoto;
     private DomixApplication app;
@@ -71,16 +71,20 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
         progressBarProfile = (ProgressBar) findViewById(R.id.progressBarProfile);
         editFirstName = (LinearLayout) findViewById(R.id.idEditFirstName);
         editLastName = (LinearLayout) findViewById(R.id.idEditLastName);
+        editCellphone = (LinearLayout) findViewById(R.id.idEditCellphone);
+        editDni = (LinearLayout) findViewById(R.id.idEditDni);
+
         firstname = (TextView) findViewById(R.id.idFirstnameProfile);
+        lastname = (TextView) findViewById(R.id.idLastnameProfile);
+        cellphone = (TextView) findViewById(R.id.idCellphoneProfile);
+        dni = (TextView) findViewById(R.id.idDniProfile);
         email = (TextView) findViewById(R.id.idEmailProfile);
         myCredit = (TextView) findViewById(R.id.idMyCredit);
-        lastname = (TextView) findViewById(R.id.idLastnameProfile);
         rateAsDomi = (TextView) findViewById(R.id.idRateAsDomi);
         rateAsUser = (TextView) findViewById(R.id.idRateAsUser);
         showProgressBar();
-        queryVerifyGlide();
 
-        ivProfile = (ImageView) findViewById(R.id.imageProfile);
+        ivProfile = (CircleImageView) findViewById(R.id.imageProfile);
         btnChoosePhoto = (Button) findViewById(R.id.choosePhoto);
         btnChoosePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,7 +123,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
                         hideProgressBar();
                         putTrueImage();
                         Toast.makeText(Profile.this, getResources().getString(R.string.toast_success_upload), Toast.LENGTH_SHORT).show();
-                        btnChoosePhoto.setVisibility(View.VISIBLE);
+//                        btnChoosePhoto.setVisibility(View.VISIBLE);
                         btnUploadPhoto.setVisibility(View.GONE);
                     }
                 });
@@ -130,7 +134,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Profile.this, EditProfile.class);
-                intent.putExtra("field", 1);
+                intent.putExtra("field", 1); // To change firstname
                 intent.putExtra("data", firstname.getText().toString());
                 startActivity(intent);
             }
@@ -140,8 +144,28 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Profile.this, EditProfile.class);
-                intent.putExtra("field", 2);
+                intent.putExtra("field", 2); // To change lastname
                 intent.putExtra("data", lastname.getText().toString());
+                startActivity(intent);
+            }
+        });
+
+        editCellphone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Profile.this, EditProfile.class);
+                intent.putExtra("field", 3); // To change cellphone
+                intent.putExtra("data", cellphone.getText().toString());
+                startActivity(intent);
+            }
+        });
+
+        editDni.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Profile.this, EditProfile.class);
+                intent.putExtra("field", 4); // To change dni
+                intent.putExtra("data", dni.getText().toString());
                 startActivity(intent);
             }
         });
@@ -164,21 +188,29 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
                 Uri imageUri = data.getData();
                 if (imageUri != null){
                     ivProfile.setImageURI(imageUri);
-                    btnChoosePhoto.setVisibility(View.GONE);
                     btnUploadPhoto.setVisibility(View.VISIBLE);
                 }
             }
         }
-
     }
 
     @Override
-    public void responseDataUser(boolean verifyGlide, String firstName, String lastName, String mail, String scoreAsDomi,
-                                 String scoreAsUser, int credit) {
-        firstname.setText(firstName);
-        lastname.setText(lastName);
+    public void responseDataUser(boolean verifyGlide, String firstName, String lastName, String dnidentification,
+                                 String phone, String mail, String scoreAsDomi, String scoreAsUser, String credit) {
+        if (firstName != null){
+            firstname.setText(firstName);
+        }
+        if (lastName != null){
+            lastname.setText(lastName);
+        }
+        if (phone != null){
+            cellphone.setText(phone);
+        }
+        if (dnidentification != null){
+            dni.setText(dnidentification);
+        }
         email.setText(mail);
-        myCredit.setText(String.valueOf(credit));
+        myCredit.setText(credit);
         rateAsDomi.setText(scoreAsDomi);
         rateAsUser.setText(scoreAsUser);
         verifyGlid = verifyGlide;
@@ -227,6 +259,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
     @Override
     protected void onStart() {
         super.onStart();
+        queryVerifyGlide();
     }
 
     @Override

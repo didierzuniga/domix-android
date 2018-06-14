@@ -27,6 +27,7 @@
     <string name="hint_select_initial_point">Seleccionar punto inicial</string>
     <string name="hint_select_final_point">Seleccionar punto final</string>
     <string name="hint_option_for_deliveryman">Opción para domiciliario</string>
+    <string name="hint_dni">Documento de identificación</string>
 
     <string name="text_dont_have_account">¿No tienes una cuenta?</string>
     <string name="text_create_here"><u>Crea una aquí</u></string>

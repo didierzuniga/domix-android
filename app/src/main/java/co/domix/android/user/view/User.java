@@ -46,6 +46,7 @@ import java.text.DecimalFormat;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
+import co.domix.android.customizer.view.Profile;
 import co.domix.android.services.LocationService;
 import co.domix.android.user.presenter.UserPresenter;
 import co.domix.android.user.presenter.UserPresenterImpl;
@@ -68,12 +69,11 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
     private TextInputEditText firstName, lastName, phone;
     private String countryOrigen, cityOrigen, codeCountry;
     private byte payMethod;
-    private int fieldsWasFill, totalCostToDB, priceInCash, disBetweenPoints, mCredit, costDelDesCredit,
+    private int totalCostToDB, priceInCash, disBetweenPoints, mCredit, costDelDesCredit,
             updateCreditUserToDB, creditUsedToDB;
     private ProgressBar progressBarRequest;
     private AlertDialog alert = null;
-    private android.app.AlertDialog alertDialog;
-    private boolean radioGroupActive;
+    private boolean radioGroupActive, fieldsWasFill;
     private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private DecimalFormat formatMiles = new DecimalFormat("###,###.##");
@@ -90,6 +90,8 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
         getSupportActionBar().setTitle(R.string.text_make_your_order);
         presenter = new UserPresenterImpl(this);
         app = (DomixApplication) getApplicationContext();
+
+        presenter.queryPersonalDataFill(app.uId);
 
         scrollView = (ScrollView) findViewById(R.id.rootScroll);
         lnrSwiCredit = (LinearLayout) findViewById(R.id.lnrSwiCredit);
@@ -114,8 +116,6 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
 
             }
         });
-
-        presenter.requestForFullnameAndPhone(app.uId);
 
         radioGroup = (RadioGroup) findViewById(R.id.rdGroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -240,8 +240,29 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
     }
 
     @Override
-    public void responseForFullnameAndPhone(int imageProfile) {
-        fieldsWasFill = imageProfile;
+    public void responseQueryPersonalDataFill(boolean fillData) {
+        fieldsWasFill = fillData;
+        if (!fillData){
+            new AlertDialog.Builder(this)
+                    .setPositiveButton(getString(R.string.message_yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(User.this, Profile.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.message_no), null)
+                    .setMessage(getString(R.string.text_message_fill_in_data))
+                    .show();
+        }
+    }
+
+    @Override
+    public void messageDataNotFill(boolean showAlert) {
+        scrollView.setVisibility(View.VISIBLE);
+        hideProgressBar();
+        responseQueryPersonalDataFill(showAlert);
     }
 
     @Override
@@ -262,60 +283,6 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
         });
         alert = builder.create();
         alert.show();
-    }
-
-    @Override
-    public void openDialogSendContactData() {
-        scrollView.setVisibility(View.VISIBLE);
-        hideProgressBar();
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View view = layoutInflater.inflate(R.layout.dialog_send_user_contact, null);
-        alertDialog = new android.app.AlertDialog.Builder(this).create();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        btnSendFullnameAndPhone = view.findViewById(R.id.btnSendContactData);
-        btnBack = view.findViewById(R.id.btnBack);
-        firstName = view.findViewById(R.id.firstName);
-        lastName = view.findViewById(R.id.lastName);
-        phone = view.findViewById(R.id.phone);
-
-        firstName.setInputType(
-                InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_FLAG_CAP_WORDS
-        );
-        lastName.setInputType(
-                InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_FLAG_CAP_WORDS
-        );
-
-        btnSendFullnameAndPhone.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String getFirst_name = firstName.getText().toString();
-                String getLast_name = lastName.getText().toString();
-                String getPhone = phone.getText().toString();
-                if (getFirst_name.equals("") || getLast_name.equals("") || getPhone.equals("")) {
-                    Toast.makeText(User.this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
-                } else {
-                    sendContactData(getFirst_name, getLast_name, getPhone);
-                    alertDialog.dismiss();
-                }
-            }
-        });
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog.setView(view);
-        alertDialog.show();
-    }
-
-    @Override
-    public void sendContactData(String firstName, String lastName, String phone) {
-        scrollView.setVisibility(View.GONE);
-        showProgressBar();
-        presenter.sendContactData(app.uId, firstName, lastName, phone, this);
     }
 
     @Override
@@ -348,25 +315,6 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
         scrollView.setVisibility(View.VISIBLE);
         hideProgressBar();
         Toast.makeText(this, R.string.toast_error_request, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void contactDataSent() {
-        fieldsWasFill = 0;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        presenter.requestForFullnameAndPhone(app.uId);
-                        hideProgressBar();
-                        buttonRequestOrder.callOnClick();
-                    }
-                }, 3000);
-            }
-        });
     }
 
     @Override

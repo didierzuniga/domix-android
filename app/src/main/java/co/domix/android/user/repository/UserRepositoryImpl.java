@@ -63,21 +63,19 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void requestForFullnameAndPhone(String uid) {
+    public void queryPersonalDataFill(String uid) {
         referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (user.getFirst_name() == null ||
                         user.getLast_name() == null ||
-                        user.getPhone() == null) {
-                    presenter.responseForFullnameAndPhone(1); // 1 = No names
-                }  else {
-                    if (!user.isImage_profile()){
-                        presenter.responseForFullnameAndPhone(2); // 2 = No image profile
-                    } else {
-                        presenter.responseForFullnameAndPhone(0); // 0 = Alright
-                    }
+                        user.getDni() == null ||
+                        user.getPhone() == null ||
+                        user.isImage_profile() == false){
+                    presenter.responseQueryPersonalDataFill(false);
+                } else {
+                    presenter.responseQueryPersonalDataFill(true);
                 }
             }
 
@@ -86,14 +84,6 @@ public class UserRepositoryImpl implements UserRepository {
 
             }
         });
-    }
-
-    @Override
-    public void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity) {
-        referenceUser.child(uid).child("first_name").setValue(firstName);
-        referenceUser.child(uid).child("last_name").setValue(lastName);
-        referenceUser.child(uid).child("phone").setValue(phone);
-        presenter.contactDataSent();
     }
 
     @Override

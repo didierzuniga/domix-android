@@ -135,13 +135,8 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     }
 
     @Override
-    public void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity) {
-        repository.sendContactData(uid, firstName, lastName, phone);
-    }
-
-    @Override
-    public void queryForFullnameAndPhone(String uid) {
-        repository.queryForFullnameAndPhone(uid);
+    public void queryPersonalDataFill(String uid) {
+        repository.queryPersonalDataFill(uid);
     }
 
     @Override

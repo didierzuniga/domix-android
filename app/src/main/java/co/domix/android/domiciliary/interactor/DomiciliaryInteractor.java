@@ -15,7 +15,6 @@ public interface DomiciliaryInteractor {
                            int minDistanceBetweenRequiredForCyclist, int minDistanceBetweenRequiredForOther);
     void countChild(int countChild);
     void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed, String country);
-    void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity);
-    void queryForFullnameAndPhone(String uid);
+    void queryPersonalDataFill(String uid);
     void queryUserRate(String idOrder);
 }

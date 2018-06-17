@@ -20,6 +20,21 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
+    public void queryPersonalDataFill(String uid) {
+        interactor.queryPersonalDataFill(uid);
+    }
+
+    @Override
+    public void responseQueryPersonalDataFill(boolean fillData) {
+        view.responseQueryPersonalDataFill(fillData);
+    }
+
+    @Override
+    public void messageDataNotFill(boolean showAlert) {
+        view.messageDataNotFill(showAlert);
+    }
+
+    @Override
     public void verifyLocationAndInternet(User user) {
         interactor.verifyLocationAndInternet(user);
     }
@@ -30,38 +45,13 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
-    public void requestForFullnameAndPhone(String uid) {
-        interactor.requestForFullnameAndPhone(uid);
-    }
-
-    @Override
     public void requestGeolocationAndDistance(String uid, String latFrom, String lonFrom, String latTo,
                                               String lonTo, int whatAddress, User user) {
         interactor.requestGeolocationAndDistance(uid, latFrom, lonFrom, latTo, lonTo, whatAddress, user);
     }
 
     @Override
-    public void responseForFullnameAndPhone(int imageProfile) {
-        view.responseForFullnameAndPhone(imageProfile);
-    }
-
-    @Override
-    public void sendContactData(String uid, String firstName, String lastName, String phone, User user) {
-        interactor.sendContactData(uid, firstName, lastName, phone, user);
-    }
-
-    @Override
-    public void contactDataSent() {
-        view.contactDataSent();
-    }
-
-    @Override
-    public void openDialogSendContactData() {
-        view.openDialogSendContactData();
-    }
-
-    @Override
-    public void request(int fieldsWasFill, String uid, String email, String country, String city,
+    public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                         String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
                         byte payMethod, int paymentCash, int creditUsed, int updateCredit, User user) {
         interactor.request(fieldsWasFill, uid, email, country, city, from, to, disBetweenPoints, description1, description2,

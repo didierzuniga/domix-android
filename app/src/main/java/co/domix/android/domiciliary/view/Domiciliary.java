@@ -44,6 +44,7 @@ import java.util.List;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
+import co.domix.android.customizer.view.Profile;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenterImpl;
 import co.domix.android.services.LocationService;
@@ -138,7 +139,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
                         editor.commit();
                         lnrSpiVehicle.setVisibility(View.GONE);
                         waitinDeliveries.setVisibility(View.VISIBLE);
-                        queryForFullnameAndPhone();
+                        queryPersonalDataFill();
                     }
                 } else {
                     waitinDeliveries.setVisibility(View.GONE);
@@ -318,64 +319,8 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
     }
 
     @Override
-    public void queryForFullnameAndPhone() {
-        presenter.queryForFullnameAndPhone(app.uId);
-    }
-
-    @Override
-    public void openDialogSendContactData() {
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View view = layoutInflater.inflate(R.layout.dialog_send_user_contact, null);
-        alertDialog = new android.app.AlertDialog.Builder(this).create();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        btnSendFullnameAndPhone = view.findViewById(R.id.btnSendContactData);
-        btnBack = view.findViewById(R.id.btnBack);
-        firstName = view.findViewById(R.id.firstName);
-        lastName = view.findViewById(R.id.lastName);
-        phone = view.findViewById(R.id.phone);
-
-        firstName.setInputType(
-                InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_FLAG_CAP_WORDS
-        );
-        lastName.setInputType(
-                InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_FLAG_CAP_WORDS
-        );
-
-        btnSendFullnameAndPhone.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String getFirst_name = firstName.getText().toString();
-                String getLast_name = lastName.getText().toString();
-                String getPhone = phone.getText().toString();
-                if (getFirst_name.equals("") || getLast_name.equals("") || getPhone.equals("")) {
-                    Toast.makeText(Domiciliary.this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
-                } else {
-                    alertDialog.dismiss();
-                    sendContactData(getFirst_name, getLast_name, getPhone);
-                }
-            }
-        });
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog.setView(view);
-        alertDialog.show();
-    }
-
-    @Override
-    public void sendContactData(String firstName, String lastName, String phone) {
-        presenter.sendContactData(app.uId, firstName, lastName, phone, this);
-    }
-
-    @Override
-    public void contactDataSent() {
-        onStart();
-        Toast.makeText(this, R.string.toast_sent_contact_data, Toast.LENGTH_SHORT).show();
+    public void queryPersonalDataFill() {
+        presenter.queryPersonalDataFill(app.uId);
     }
 
     @Override
@@ -395,11 +340,26 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
     }
 
     @Override
-    public void responseForFullnameAndPhone(boolean result) {
+    public void responseQueryPersonalDataFill(boolean fillData) {
         if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false)) {
-            fieldsWasFill = result;
-            if (!fieldsWasFill) {
-                openDialogSendContactData();
+            if (!fillData) {
+                editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
+                editor.commit();
+                lnrSpiVehicle.setVisibility(View.VISIBLE);
+                waitinDeliveries.setVisibility(View.GONE);
+                switchAB.setChecked(false);
+                new AlertDialog.Builder(this)
+                        .setPositiveButton(getString(R.string.message_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Domiciliary.this, Profile.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.message_no), null)
+                        .setMessage(getString(R.string.text_message_fill_in_data))
+                        .show();
             } else {
                 searchDeliveries();
             }

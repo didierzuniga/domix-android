@@ -5,12 +5,10 @@ package co.domix.android.user.view;
  */
 
 public interface UserView {
-    void responseForFullnameAndPhone(int imageProfile);
+    void responseQueryPersonalDataFill(boolean fillData);
+    void messageDataNotFill(boolean showAlert);
     void alertNoGps();
-    void openDialogSendContactData();
-    void sendContactData(String firstName, String lastName, String phone);
     void resultErrorRequest();
-    void contactDataSent();
     void goPickMap();
     void responseFromName(String from);
     void responseToName(String to);

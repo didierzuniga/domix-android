@@ -103,6 +103,14 @@
     <string name="text_would_receive">Debes recibir</string>
     <string name="text_empty_field">Vacío</string>
     <string name="text_use_credit">Usar crédito</string>
+    <string name="text_message_fill_in_data">Alguno de estos datos podrían no estar diligenciados:\n\n
+            ● Nombres y/o apellidos\n
+            ● Documento de identificaión\n
+            ● Número de celular\n
+            ● Agregar foto de perfíl\n\n
+            Esto nos ayuda a ofrecer un servicio más seguro\n\n
+            ¿Deseas terminar de suministrar la información?
+            </string>
     <string name="text_terms">Colombia\nTÉRMINOS Y CONDICIONES DE USO DE “DOMIX”\nASPECTOS
             GENERALES\n<b>1.  INFORMACIÓN</b>\nDOMIX ALTERNATIVE LLC. Es una sociedad constituida
             en el estado de Delaware en los EstadosUnidos de América que para los efectos de los

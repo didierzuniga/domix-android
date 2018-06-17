@@ -26,10 +26,8 @@ public interface DomiciliaryPresenter {
     void showResultNotOrder();
     void responseOrderHasBeenTaken();
     void responseGoOrderCatched(String idOrder);
-    void queryForFullnameAndPhone(String uid);
-    void sendContactData(String uid, String firstName, String lastName, String phone, Domiciliary domiciliary);
-    void contactDataSent();
+    void queryPersonalDataFill(String uid);
     void queryUserRate(String idOrder);
     void responseQueryRate(String rate);
-    void responseForFullnameAndPhone(boolean result);
+    void responseQueryPersonalDataFill(boolean fillData);
 }

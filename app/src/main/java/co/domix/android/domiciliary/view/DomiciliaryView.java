@@ -19,11 +19,8 @@ public interface DomiciliaryView {
     void goPreviewRouteOrder();
     void responseOrderHasBeenTaken();
     void responseGoOrderCatched(String idOrder);
-    void queryForFullnameAndPhone();
-    void openDialogSendContactData();
-    void sendContactData(String firstName, String lastName, String phone);
-    void contactDataSent();
+    void queryPersonalDataFill();
     void queryUserRate(String idOrder);
     void responseQueryRate(String rate);
-    void responseForFullnameAndPhone(boolean result);
+    void responseQueryPersonalDataFill(boolean fillData);
 }

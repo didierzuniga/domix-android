@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,6 +48,7 @@ public class CoordinateServiceDeliverymanGoogleAPI extends Service implements Go
     private LocationManager locationManager;
     private LocationRequest locRequest;
     private Timer timer;
+    private CountDownTimer countDown;
     private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private DomixApplication app;
@@ -57,6 +60,21 @@ public class CoordinateServiceDeliverymanGoogleAPI extends Service implements Go
         app = (DomixApplication) getApplicationContext();
         shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
+
+//        countDown = new CountDownTimer(5 * 1000, 100) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), true);
+//                editor.commit();
+//            }
+//        };
+//        countDown.start();
+
 
         timer = new Timer();
         timer.schedule(new updateCoordinates(), 1000, 5000);
@@ -140,10 +158,6 @@ public class CoordinateServiceDeliverymanGoogleAPI extends Service implements Go
 
     private void updateUI(Location loc) {
         if (loc != null) {
-            SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
-            SharedPreferences.Editor editor = location.edit();
-            Log.w("jjj", "Service - onLocationChanged - Lat-> "+loc.getLatitude());
-            Log.w("jjj", "Service - onLocationChanged - Lon-> "+loc.getLongitude());
             editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
             editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
             editor.commit();

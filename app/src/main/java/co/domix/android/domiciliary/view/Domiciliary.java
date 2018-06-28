@@ -411,7 +411,6 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
         if (loc != null) {
             SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
             SharedPreferences.Editor editor = location.edit();
-            Log.w("jjj", "Domiciliary Latitu-> "+loc.getLatitude());
             editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
             editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
             editor.commit();

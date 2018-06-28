@@ -213,6 +213,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:visibility="gone"
                     android:theme="@style/RaiseButtonGreen"
                     android:text="@string/button_close_service" />
                 <Button

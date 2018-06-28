@@ -1,13 +1,18 @@
 package co.domix.android.domiciliary.view;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,12 +25,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenter;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenterImpl;
 import co.domix.android.services.CoordinateServiceDeliveryman;
 import co.domix.android.services.CoordinateServiceDeliverymanGoogleAPI;
+import co.domix.android.services.CounterButtonImHere;
+import co.domix.android.utils.ToastsKt;
 
 /**
  * Created by unicorn on 11/13/2017.
@@ -42,7 +52,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     private ImageButton call;
     private ProgressBar progressBar;
     private ScrollView scrollview;
-    private SharedPreferences location;
+    private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private OrderCatchedPresenter presenter;
 
@@ -57,15 +67,10 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
         app = (DomixApplication) getApplicationContext();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
-        } else {
-            startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
-        }
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+        editor = shaPref.edit();
 
         presenter = new OrderCatchedPresenterImpl(this);
-        location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
-        editor = location.edit();
 
         progressBar = (ProgressBar) findViewById(R.id.progressCatched);
         scrollview = (ScrollView) findViewById(R.id.scrollCatched);
@@ -111,6 +116,33 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
                 dialogFinish();
             }
         });
+
+        if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false)){
+            finishService.setVisibility(View.VISIBLE);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+            // IF: Para no volver a invocar el Service cuando ya pasaron los 5 min y se destrue la actividad por el usuario
+            if (!shaPref.getBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false)){
+                startService(new Intent(this, CounterButtonImHere.class));
+            }
+        } else {
+            startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+            // IF: Para no volver a invocar el Service cuando ya pasaron los 5 min y se destrue la actividad por el usuario
+            if (!shaPref.getBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false)){
+                startService(new Intent(this, CounterButtonImHere.class));
+            }
+        }
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        finishService.setVisibility(View.VISIBLE);
+                    }
+                }, new IntentFilter(CounterButtonImHere.ACTION_COUNTER_BUTTON)
+        );
     }
 
     @Override
@@ -201,6 +233,8 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     @Override
     public void responseBackDomiciliaryActivity() {
+        editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false);
+        editor.commit();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
         } else {
@@ -208,11 +242,13 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         }
         Intent intent = new Intent(this, Domiciliary.class);
         startActivity(intent);
-        super.finish();
+        finish();
     }
 
     @Override
     public void goRateDomiciliary() {
+        editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false);
+        editor.commit();
         hideProgressBar();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
@@ -222,5 +258,17 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         Intent intent = new Intent(this, DomiciliaryScore.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
     }
 }

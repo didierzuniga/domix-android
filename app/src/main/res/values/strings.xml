@@ -7,6 +7,7 @@
     <string name="const_sharedPref_key_lat_device">latitude</string>
     <string name="const_sharedPref_key_lon_device">longitude</string>
     <string name="const_sharedPref_key_searchDelivery">searchDelivery</string>
+    <string name="const_sharedPref_key_button_i_am_here">buttonImHere</string>
 
     <string name="notification_incoming_order_title">¡Nuevo servicio!</string>
     <string name="notification_incoming_order_text">Hay un nuevo servicio disponible</string>
@@ -278,7 +279,7 @@
     <string name="button_take_service">Tomar servicio</string>
     <string name="button_cancel_delivery">Cancelar solicitud</string>
     <string name="button_cancel_service">Cancelar servicio</string>
-    <string name="button_close_service">Finalizar servicio</string>
+    <string name="button_close_service">¡Ya estoy afuera!</string>
     <string name="button_send_contact_data">Listo</string>
     <string name="button_accept_delivery">Aceptar</string>
     <string name="button_dismiss_delivery">Rechazar</string>

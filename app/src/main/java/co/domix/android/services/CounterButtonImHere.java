@@ -23,7 +23,22 @@ public class CounterButtonImHere extends Service {
         super.onCreate();
         shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
-        countDown = new CountDownTimer(5 * 60 * 1000, 100) {
+
+    }
+
+    private void finishTime(boolean timeout) {
+        editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), timeout);
+        editor.commit();
+        Intent intent = new Intent(ACTION_COUNTER_BUTTON);
+        intent.putExtra(COUNTER, timeout);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        stopSelf();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+        countDown = new CountDownTimer(2 * 60 * 1000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -35,20 +50,7 @@ public class CounterButtonImHere extends Service {
             }
         };
         countDown.start();
-    }
 
-    private void finishTime(boolean timeout) {
-        editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), timeout);
-        editor.commit();
-        Intent intent = new Intent(ACTION_COUNTER_BUTTON);
-        intent.putExtra(COUNTER, timeout);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        onDestroy();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
 
@@ -59,6 +61,5 @@ public class CounterButtonImHere extends Service {
 
     public void onDestroy(){
         super.onDestroy();
-        stopSelf();
     }
 }

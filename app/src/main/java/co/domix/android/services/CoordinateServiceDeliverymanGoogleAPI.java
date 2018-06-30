@@ -61,21 +61,6 @@ public class CoordinateServiceDeliverymanGoogleAPI extends Service implements Go
         shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
         editor = shaPref.edit();
 
-//        countDown = new CountDownTimer(5 * 1000, 100) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//                editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), true);
-//                editor.commit();
-//            }
-//        };
-//        countDown.start();
-
-
         timer = new Timer();
         timer.schedule(new updateCoordinates(), 1000, 5000);
     }

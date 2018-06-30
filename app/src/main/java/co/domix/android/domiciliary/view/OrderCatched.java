@@ -123,16 +123,10 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
-            // IF: Para no volver a invocar el Service cuando ya pasaron los 5 min y se destrue la actividad por el usuario
-            if (!shaPref.getBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false)){
-                startService(new Intent(this, CounterButtonImHere.class));
-            }
+            startService(new Intent(this, CounterButtonImHere.class));
         } else {
             startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
-            // IF: Para no volver a invocar el Service cuando ya pasaron los 5 min y se destrue la actividad por el usuario
-            if (!shaPref.getBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false)){
-                startService(new Intent(this, CounterButtonImHere.class));
-            }
+            startService(new Intent(this, CounterButtonImHere.class));
         }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
@@ -234,6 +228,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     @Override
     public void responseBackDomiciliaryActivity() {
         editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), false);
         editor.commit();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
@@ -248,6 +243,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     @Override
     public void goRateDomiciliary() {
         editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), false);
         editor.commit();
         hideProgressBar();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -268,7 +264,5 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
 }

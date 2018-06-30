@@ -9,6 +9,7 @@
     <string name="const_sharedPref_key_lon_device">longitude</string>
     <string name="const_sharedPref_key_searchDelivery">searchDelivery</string>
     <string name="const_sharedPref_key_button_i_am_here">buttonImHere</string>
+    <string name="const_sharedPref_key_created_service_count_im_here">serviceCreatedImHere</string>
 
     <string name="notification_incoming_order_title">New service!</string>
     <string name="notification_incoming_order_text">There is a new service available</string>

@@ -38,7 +38,7 @@ public class ProfileRepositoryImpl implements ProfileRepository {
     DatabaseReference referenceFare = database.getReference("fare");
 
     @Override
-    public void queryImageSeted(String uid) {
+    public void queryImageSeted(String uid, final boolean searchImage) {
         final NumberFormat formatter = NumberFormat.getInstance(Locale.US);
         formatter.setMaximumFractionDigits(2);
         formatter.setMinimumFractionDigits(2);
@@ -56,8 +56,13 @@ public class ProfileRepositoryImpl implements ProfileRepository {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Fare fare = dataSnapshot.getValue(Fare.class);
-
-                        interactor.responseDataUser(verifyGlide, user.getFirst_name(), user.getLast_name(),
+                        boolean searchImg;
+                        if (verifyGlide && searchImage){
+                            searchImg = true;
+                        } else {
+                            searchImg = false;
+                        }
+                        interactor.responseDataUser(searchImg, user.getFirst_name(), user.getLast_name(),
                                 user.getDni(), user.getPhone(), user.getEmail(), scoreAsDeliveryman,
                                 scoreAsUser, user.getMy_credit(), fare.getCurrency_code());
                     }
@@ -67,8 +72,6 @@ public class ProfileRepositoryImpl implements ProfileRepository {
 
                     }
                 });
-
-
             }
 
             @Override

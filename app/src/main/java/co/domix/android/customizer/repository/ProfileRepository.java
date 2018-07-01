@@ -5,6 +5,6 @@ package co.domix.android.customizer.repository;
  */
 
 public interface ProfileRepository {
-    void queryImageSeted(String uid);
+    void queryImageSeted(String uid, boolean searchImage);
     void trueImageSeted(String uid);
 }

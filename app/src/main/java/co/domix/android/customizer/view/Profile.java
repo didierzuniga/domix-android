@@ -49,6 +49,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
     private CircleImageView ivProfile;
     private LinearLayout editFirstName, editLastName, editCellphone, editDni;
     private TextView firstname, lastname, cellphone, dni, email, myCredit, rateAsDomi, rateAsUser;
+    private boolean searchImg;
     private StorageReference storageReference;
     private Button btnUploadPhoto, btnChoosePhoto;
     private DomixApplication app;
@@ -68,6 +69,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
         app = (DomixApplication) getApplicationContext();
         storageReference = FirebaseStorage.getInstance().getReference();
 
+        searchImg = true;
         progressBarProfile = (ProgressBar) findViewById(R.id.progressBarProfile);
         editFirstName = (LinearLayout) findViewById(R.id.idEditFirstName);
         editLastName = (LinearLayout) findViewById(R.id.idEditLastName);
@@ -85,8 +87,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
         showProgressBar();
 
         ivProfile = (CircleImageView) findViewById(R.id.imageProfile);
-        btnChoosePhoto = (Button) findViewById(R.id.choosePhoto);
-        btnChoosePhoto.setOnClickListener(new View.OnClickListener() {
+        ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent();
@@ -96,6 +97,17 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
                 verifyGlid = false;
             }
         });
+//        btnChoosePhoto = (Button) findViewById(R.id.choosePhoto);
+//        btnChoosePhoto.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent();
+//                i.setType("image/*");
+//                i.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(Intent.createChooser(i, ""), 1);
+//                verifyGlid = false;
+//            }
+//        });
 
         btnUploadPhoto = (Button) findViewById(R.id.buttonRefresh);
         btnUploadPhoto.setOnClickListener(new View.OnClickListener() {
@@ -218,13 +230,12 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
             executeGlide();
         } else {
             hideProgressBar();
-            ivProfile.setImageResource(R.drawable.ic_add_photo);
         }
     }
 
     @Override
     public void queryVerifyGlide() {
-        presenter.queryImageSeted(app.uId);
+        presenter.queryImageSeted(app.uId, searchImg);
     }
 
     @Override
@@ -244,6 +255,7 @@ public class Profile extends AppCompatActivity implements ProfileView, Navigatio
                 .centerCrop()
                 .into(ivProfile);
         hideProgressBar();
+        searchImg = false;
     }
 
     @Override

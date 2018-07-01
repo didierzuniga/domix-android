@@ -18,8 +18,8 @@ public class ProfilePresenterImpl implements ProfilePresenter {
         interactor = new ProfileInteractorImpl(this);
     }
     @Override
-    public void queryImageSeted(String uid) {
-        interactor.queryImageSeted(uid);
+    public void queryImageSeted(String uid, boolean searchImage) {
+        interactor.queryImageSeted(uid, searchImage);
     }
 
     @Override

@@ -25,8 +25,8 @@ public class ProfileInteractorImpl implements ProfileInteractor {
     }
 
     @Override
-    public void queryImageSeted(String uid) {
-        repository.queryImageSeted(uid);
+    public void queryImageSeted(String uid, boolean searchImage) {
+        repository.queryImageSeted(uid, searchImage);
     }
 
     @Override

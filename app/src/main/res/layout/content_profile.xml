@@ -45,6 +45,7 @@
                 android:id="@+id/imageProfile"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
+                android:src="@drawable/ic_add_photo"
                 android:layout_centerInParent="true"
                 app:civ_border_width="2dp"
                 app:civ_border_color="#d7d7d7"
@@ -63,14 +64,14 @@
                 android:layout_marginRight="50dp"
                 android:visibility="gone"
                 android:text="@string/button_upload"/>
-            <Button
-                android:id="@+id/choosePhoto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginTop="5dp"
-                android:text="@string/text_choose_from_gallery"/>
+            <!--<Button-->
+                <!--android:id="@+id/choosePhoto"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="50dp"-->
+                <!--android:layout_marginRight="50dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:text="@string/text_choose_from_gallery"/>-->
 
             <LinearLayout
                 android:id="@+id/idEditFirstName"
@@ -97,7 +98,7 @@
                 android:id="@+id/idEditLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -118,7 +119,7 @@
                 android:id="@+id/idEditCellphone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -139,7 +140,7 @@
                 android:id="@+id/idEditDni"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -159,7 +160,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -186,7 +187,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -213,7 +214,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -258,7 +259,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/colorTextCardView"
                 android:orientation="horizontal" />
 

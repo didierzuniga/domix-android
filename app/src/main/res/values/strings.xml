@@ -44,7 +44,7 @@
     <string name="text_description">Descripción:</string>
     <string name="text_proffer">Costo del domicilio</string>
     <string name="text_city">Ciudad:</string>
-    <string name="text_requested">Solicitado:</string>
+    <string name="text_requested">Hora de solicitud:</string>
     <string name="text_domiciliary_attend_you">Datos del domiciliario que te atenderá</string>
     <string name="text_comming_soon">Esperando un domiciliario...</string>
     <string name="text_name_domiciliary">Domiciliario</string>

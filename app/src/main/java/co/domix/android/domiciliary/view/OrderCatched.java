@@ -123,10 +123,14 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
-            startService(new Intent(this, CounterButtonImHere.class));
+            if (!shaPref.getBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), false)){
+                startService(new Intent(this, CounterButtonImHere.class));
+            }
         } else {
             startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
-            startService(new Intent(this, CounterButtonImHere.class));
+            if (!shaPref.getBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), false)){
+                startService(new Intent(this, CounterButtonImHere.class));
+            }
         }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(

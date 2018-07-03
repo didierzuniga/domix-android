@@ -11,7 +11,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -98,10 +101,19 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
                                   int minDistanceBetweenRequiredForCyclist, int minDistanceBetweenRequiredForOther) {
         minDistanceForCyclist = minDistanceBetweenRequiredForCyclist;
         minDistanceForOther = minDistanceBetweenRequiredForOther;
+        String agoConverted = "";
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss");
+            Date dateObj = sdf.parse(ago);
+            agoConverted = new SimpleDateFormat("K:mm a").format(dateObj);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         listica = new ArrayList<String>();
         String idOrderStr = String.valueOf(idOrder);
         listica.add(idOrderStr);
-        listica.add(ago);
+        listica.add(agoConverted);
         listica.add(from);
         listica.add(to);
         listica.add(description1);
@@ -170,13 +182,6 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
         boolean matchForAnyOrder = false;
         for (Route route : routes) {
             int newDistance = route.distance.value;
-//            Log.w("jjj", "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-//            Log.w("jjj", "ID Order: "+listica.get(0));
-//            Log.w("jjj", "Distance: "+newDistance);
-//            Log.w("jjj", "ID Order: "+listica.get(2));
-//            Log.w("jjj", "Coordinate To: "+listica.get(7));
-//            Log.w("jjj", "Size order: "+listica.get(8));
-//            Log.w("jjj", "Distance Between: "+listica.get(9));
             if (vehicleSelected == 1){
                 if ((Integer.valueOf(listica.get(9)) + route.distance.value) <= minDistanceForCyclist){
                     matchForAnyOrder = true;

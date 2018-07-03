@@ -1,6 +1,7 @@
 package co.domix.android.domiciliary.repository;
 
 import android.app.Activity;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,15 +16,23 @@ import com.google.firebase.database.ValueEventListener;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import co.domix.android.R;
+import co.domix.android.api.RetrofitDatetimeAdapter;
+import co.domix.android.api.RetrofitDatetimeService;
 import co.domix.android.domiciliary.interactor.DomiciliaryInteractor;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.model.Fare;
 import co.domix.android.model.Order;
 import co.domix.android.model.Parameter;
+import co.domix.android.model.Time;
 import co.domix.android.model.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * Created by unicorn on 11/13/2017.
@@ -33,6 +42,7 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
 
     private int countChild = 0, minDistanceBetweenRequiredForCyclist, minDistanceBetweenRequiredForOther;
     private String i;
+    private int stampNow;
     private boolean catchedOrderAvailable, orderStill;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");
@@ -53,13 +63,13 @@ public class DomiciliaryRepositoryImpl implements DomiciliaryRepository {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Order order = snapshot.getValue(Order.class);
+                    final Order order = snapshot.getValue(Order.class);
                     boolean catched = order.isX_catched();
                     if (!catched){
                         countChild++;
-                        final int idOrder = order.getX_id();
-                        final String ago = order.getRelativeTimeStamp();
                         final String country = order.getX_country();
+                        final int idOrder = order.getX_id();
+                        final String ago = order.getX_time();
                         final String from = order.getX_name_from();
                         final String to = order.getX_name_to();
                         final int sizeOrder = order.getX_dimension_selected();

@@ -48,6 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
     private byte dimenSelected, payMethod;
     private String couString, uidCurrentUser, country, city, from, to, latFrom, lonFrom, latTo, lonTo, description1,
                     description2, dateNow, timeNow;
+    private int stamp;
     private UserPresenter presenter;
     private UserInteractor interactor;
 
@@ -123,6 +124,7 @@ public class UserRepositoryImpl implements UserRepository {
             public void onResponse(Call<Time> call, Response<Time> response) {
                 dateNow = response.body().getDate();
                 timeNow = response.body().getTime();
+                stamp = response.body().getTimestamp();
             }
 
             @Override
@@ -166,7 +168,7 @@ public class UserRepositoryImpl implements UserRepository {
                 Order order = new Order(uidCurrentUser, countFinal, country, city, from, to,
                         latFrom + ", " +lonFrom, latTo + ", " + lonTo,
                         disbetween, description1, description2, dimenSelected, payMethod,
-                        vvPaymentCash, credit, dateNow, timeNow, new Date().getTime());
+                        vvPaymentCash, credit, dateNow, timeNow, stamp);
                 if (credit > 0){
                     referenceUser.child(uidCurrentUser).child("my_credit").setValue(updateCreditUser);
                 }

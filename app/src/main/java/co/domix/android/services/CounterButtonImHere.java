@@ -38,6 +38,8 @@ public class CounterButtonImHere extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), true);
+        editor.commit();
         countDown = new CountDownTimer(2 * 60 * 1000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {

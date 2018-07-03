@@ -45,7 +45,7 @@
     <string name="text_description">Description:</string>
     <string name="text_proffer">Delivery cost</string>
     <string name="text_city">City:</string>
-    <string name="text_requested">Requested by:</string>
+    <string name="text_requested">Requested time:</string>
     <string name="text_domiciliary_attend_you">Domiciliary that will attend you</string>
     <string name="text_comming_soon">Waiting for a deliveryman...</string>
     <string name="text_name_domiciliary">Domiciliary</string>

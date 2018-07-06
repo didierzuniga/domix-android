@@ -22,7 +22,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/GOOGLE_MAPS_KEY" />
+            android:value="@string/GOOGLE_MAPS_KEY_DEBUG" />
 
         <service android:name=".services.NotificationService" />
         <service android:name=".services.CoordinateServiceDeliveryman" />

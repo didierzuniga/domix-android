@@ -35,6 +35,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.silvestrpredko.dotprogressbar.DotProgressBar;
+import com.github.silvestrpredko.dotprogressbar.DotProgressBarBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -63,6 +65,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
     private int countIndex, idOrderToSend;
     private boolean fieldsWasFill;
     private ProgressBar progressBarDomiciliary;
+    private DotProgressBar waitingDeliveriesImage;
     private Switch switchAB;
     private android.app.AlertDialog alertDialog;
     private TextInputEditText firstName, lastName, phone;
@@ -97,6 +100,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
         progressBarDomiciliary = (ProgressBar) findViewById(R.id.prgBarDomiciliary);
         lnrShowData = (LinearLayout) findViewById(R.id.lnrShowData);
         waitinDeliveries = (TextView) findViewById(R.id.txtVieWaitingDeliveries);
+        waitingDeliveriesImage = (DotProgressBar) findViewById(R.id.dot_progress_bar);
         btnViewMap = (Button) findViewById(R.id.btnViewMap);
         btnAcceptDelivery = (Button) findViewById(R.id.btnAcceptRequest);
         btnDismissDelivery = (Button) findViewById(R.id.btnDismissRequest);
@@ -139,10 +143,12 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
                         editor.commit();
                         lnrSpiVehicle.setVisibility(View.GONE);
                         waitinDeliveries.setVisibility(View.VISIBLE);
+                        waitingDeliveriesImage.setVisibility(View.VISIBLE);
                         queryPersonalDataFill();
                     }
                 } else {
                     waitinDeliveries.setVisibility(View.GONE);
+                    waitingDeliveriesImage.setVisibility(View.GONE);
                     lnrShowData.setVisibility(View.GONE);
                     lnrSpiVehicle.setVisibility(View.VISIBLE);
                     editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
@@ -174,6 +180,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
                 onStart();
                 switchAB.setChecked(false);
                 waitinDeliveries.setVisibility(View.GONE);
+                waitingDeliveriesImage.setVisibility(View.GONE);
                 lnrShowData.setVisibility(View.GONE);
                 lnrSpiVehicle.setVisibility(View.VISIBLE);
             }
@@ -279,6 +286,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
         tvDescription1.setText(dictionary.get(countIndex).get(4).toString());
         tvDescription2.setText(dictionary.get(countIndex).get(5).toString());
         waitinDeliveries.setVisibility(View.GONE);
+        waitingDeliveriesImage.setVisibility(View.GONE);
         lnrShowData.setVisibility(View.VISIBLE);
     }
 
@@ -305,6 +313,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
         lnrShowData.setVisibility(View.VISIBLE);
         ToastsKt.toastLong(this, getString(R.string.toast_order_has_been_taken));
         waitinDeliveries.setVisibility(View.VISIBLE);
+        waitingDeliveriesImage.setVisibility(View.VISIBLE);
         lnrShowData.setVisibility(View.GONE);
     }
 
@@ -347,6 +356,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
                 editor.commit();
                 lnrSpiVehicle.setVisibility(View.VISIBLE);
                 waitinDeliveries.setVisibility(View.GONE);
+                waitingDeliveriesImage.setVisibility(View.GONE);
                 switchAB.setChecked(false);
                 new AlertDialog.Builder(this)
                         .setPositiveButton(getString(R.string.message_yes), new DialogInterface.OnClickListener() {
@@ -455,7 +465,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, G
         tvDimensions = (TextView) findViewById(R.id.txtVieDimensions);
         tvDescription1 = (TextView) findViewById(R.id.txtVieDescription1);
         tvDescription2 = (TextView) findViewById(R.id.txtVieDescription2);
-        waitinDeliveries = (TextView) findViewById(R.id.txtVieWaitingDeliveries);
+//        waitinDeliveries = (TextView) findViewById(R.id.txtVieWaitingDeliveries);
     }
 
     @Override

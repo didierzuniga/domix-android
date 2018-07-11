@@ -14,18 +14,12 @@ public class PayToCancel extends Service {
     public static final String ACTION_COUNTER_BUTTON = CounterButtonImHere.class.getName() + "CounterButton";
     private CountDownTimer countDown;
     public static final String COUNTER = "counter_button";
-    private SharedPreferences shaPref;
-    private SharedPreferences.Editor editor;
 
     public void onCreate() {
         super.onCreate();
-        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
-        editor = shaPref.edit();
     }
 
     private void finishTime(boolean timeout) {
-        editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), timeout);
-        editor.commit();
         Intent intent = new Intent(ACTION_COUNTER_BUTTON);
         intent.putExtra(COUNTER, timeout);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

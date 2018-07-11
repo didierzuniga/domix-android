@@ -1,16 +1,24 @@
 package co.domix.android.user.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -59,6 +67,7 @@ import co.domix.android.directionModule.DirectionFinder;
 import co.domix.android.directionModule.DirectionFinderListener;
 import co.domix.android.directionModule.Route;
 import co.domix.android.services.IncomingDeliveryman;
+import co.domix.android.services.PayToCancel;
 import co.domix.android.user.presenter.RequestedPresenter;
 import co.domix.android.user.presenter.RequestedPresenterImpl;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -87,6 +96,8 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private StorageReference storageReference;
+    private SharedPreferences shaPref;
+    private SharedPreferences.Editor editor;
     private DomixApplication app;
     private RequestedPresenter presenter;
 
@@ -103,6 +114,9 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+        editor = shaPref.edit();
+
         app = (DomixApplication) getApplicationContext();
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -117,7 +131,12 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         buttonCanceled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogCancel();
+                // Si el usuario cancela muestra mensaje que s hará cobro de tarifa minima
+                if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), false)){
+                    dialogShowChargeInfo();
+                } else {
+                    dialogCancel(false);
+                }
             }
         });
 
@@ -127,11 +146,36 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
                 .addApi(LocationServices.API)
                 .build();
         enableLocationUpdates();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), true);
+                        editor.commit();
+                    }
+                }, new IntentFilter(PayToCancel.ACTION_COUNTER_BUTTON)
+        );
     }
 
     @Override
     public void onBackPressed() {
         Toast.makeText(this, getResources().getString(R.string.toast_can_not_backpressed), Toast.LENGTH_SHORT).show();
+    }
+
+    private void dialogShowChargeInfo(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.message_cancel_request_after_two_minute);
+        builder.setPositiveButton(R.string.message_accept,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialogCancel(true);
+                    }
+                }
+        )
+                .setNegativeButton(R.string.message_back, null);
+        builder.create().show();
     }
 
     private void enableLocationUpdates() {
@@ -231,6 +275,11 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     @Override
     public void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            startService(new Intent(this, PayToCancel.class));
+        } else {
+            startService(new Intent(this, PayToCancel.class));
+        }
         idDomiciliary = id;
         executeGlide();
         if (!rate.equals("0.00") || !rate.equals("0,00")){
@@ -277,12 +326,14 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     }
 
     @Override
-    public void dialogCancel() {
-        presenter.dialogCancel(app.uId, app.idOrder, this);
+    public void dialogCancel(boolean afterTwoMinutes) {
+        presenter.dialogCancel(afterTwoMinutes, app.uId, app.idOrder, this);
     }
 
     @Override
     public void resultGoUserActivity() {
+        editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), true);
+        editor.commit();
         app.idOrder = 0;
         Intent intent = new Intent(this, User.class);
         startActivity(intent);
@@ -291,6 +342,8 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     @Override
     public void goRateUser() {
+        editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), true);
+        editor.commit();
         Intent intent = new Intent(this, UserScore.class);
         startActivity(intent);
         finish();
@@ -328,6 +381,13 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         textViewWaitingDomiciliary.setVisibility(View.VISIBLE);
         linearParent.setVisibility(View.GONE);
         if (validateDomiciliaryRealtime) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                stopService(new Intent(this, PayToCancel.class));
+            } else {
+                stopService(new Intent(this, PayToCancel.class));
+            }
+            editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), false);
+            editor.commit();
             validateDomiciliaryRealtime = false;
             m2.remove();
             g = 0;

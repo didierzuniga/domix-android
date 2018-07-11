@@ -2,16 +2,14 @@ package co.domix.android.services;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import co.domix.android.R;
 
-public class CounterButtonImHere extends Service {
+public class PayToCancel extends Service {
 
     public static final String ACTION_COUNTER_BUTTON = CounterButtonImHere.class.getName() + "CounterButton";
     private CountDownTimer countDown;
@@ -37,8 +35,6 @@ public class CounterButtonImHere extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        editor.putBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), true);
-        editor.commit();
         countDown = new CountDownTimer(2 * 60 * 1000, 100) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -60,7 +56,9 @@ public class CounterButtonImHere extends Service {
         return null;
     }
 
-    public void onDestroy(){
+    @Override
+    public void onDestroy() {
         super.onDestroy();
+        countDown.cancel();
     }
 }

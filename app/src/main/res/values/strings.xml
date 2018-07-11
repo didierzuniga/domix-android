@@ -9,6 +9,7 @@
     <string name="const_sharedPref_key_searchDelivery">searchDelivery</string>
     <string name="const_sharedPref_key_button_i_am_here">buttonImHere</string>
     <string name="const_sharedPref_key_created_service_count_im_here">serviceCreatedImHere</string>
+    <string name="const_sharedPref_key_charge_after_two_minutte">serviceChargeAfterMinute</string>
 
     <string name="notification_incoming_order_title">¡Nuevo servicio!</string>
     <string name="notification_incoming_order_text">Hay un nuevo servicio disponible</string>
@@ -354,7 +355,10 @@
     <string name="message_location_deactivate">Activa la ubicación de precisión alta</string>
     <string name="message_yes">Si</string>
     <string name="message_no">No</string>
+    <string name="message_accept">Aceptar</string>
+    <string name="message_back">Regresar</string>
     <string name="message_cancel_request">¿Quieres cancelar la solicitud?</string>
+    <string name="message_cancel_request_after_two_minute">Si cancelas, se te cargará la tarifa mínima</string>
     <string name="message_finish_request">¿Haz finalizado el servicio?</string>
 
     <!--DRAWER NAVIGATION-->

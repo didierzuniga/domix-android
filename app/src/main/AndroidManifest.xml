@@ -126,6 +126,10 @@
         <activity android:name=".customizer.view.PaymentMethod" />
         <activity android:name=".customizer.view.AmountToPay" />
 
+        <service
+            android:name=".services.PayToCancel"
+            android:enabled="false"
+            android:exported="false"></service>
     </application>
 
 </manifest>

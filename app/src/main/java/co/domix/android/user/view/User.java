@@ -295,6 +295,8 @@ public class User extends AppCompatActivity implements UserView, GoogleApiClient
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), false);
+                        editor.commit();
                         hideProgressBar();
                         Intent intent = new Intent(User.this, Requested.class);
                         startActivity(intent);

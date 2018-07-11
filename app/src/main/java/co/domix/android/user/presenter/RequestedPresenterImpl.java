@@ -30,8 +30,8 @@ public class RequestedPresenterImpl implements RequestedPresenter {
     }
 
     @Override
-    public void dialogCancel(String uid, int idOrder, Requested requested) {
-        interactor.dialogCancel(uid, idOrder, requested);
+    public void dialogCancel(boolean afterTwoMinutes, String uid, int idOrder, Requested requested) {
+        interactor.dialogCancel(afterTwoMinutes, uid, idOrder, requested);
     }
 
     @Override

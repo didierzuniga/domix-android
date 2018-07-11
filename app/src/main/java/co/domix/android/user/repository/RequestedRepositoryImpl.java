@@ -94,20 +94,26 @@ public class RequestedRepositoryImpl implements RequestedRepository {
     }
 
     @Override
-    public void dialogCancel(final String uid, final int idOrder, final Activity activity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setMessage(R.string.message_cancel_request);
-        builder.setPositiveButton(R.string.message_yes,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finallyListener = true;
-                        removeOrder(uid, idOrder, activity);
+    public void dialogCancel(boolean afterTwoMinutes, final String uid, final int idOrder, final Activity activity) {
+        if (afterTwoMinutes){
+            // Tratar el cargo de la tarifa minima al solicitante
+            finallyListener = true;
+            removeOrder(uid, idOrder, activity);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setMessage(R.string.message_cancel_request);
+            builder.setPositiveButton(R.string.message_yes,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finallyListener = true;
+                            removeOrder(uid, idOrder, activity);
+                        }
                     }
-                }
-        )
-                .setNegativeButton(R.string.message_no, null);
-        builder.create().show();
+            )
+                    .setNegativeButton(R.string.message_no, null);
+            builder.create().show();
+        }
     }
 
     @Override

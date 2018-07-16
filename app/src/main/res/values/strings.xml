@@ -352,7 +352,7 @@
     <string name="font_shrikhand_regular">fonts/Shrikhand-Regular.ttf</string>
     <string name="font_cabin_regular">fonts/Cabin-Regular.ttf</string>
 
-    <string name="message_location_deactivate">Activa la ubicación de precisión alta</string>
+    <string name="message_location_deactivate">¿Activar la ubicación de precisión alta?</string>
     <string name="message_yes">Si</string>
     <string name="message_no">No</string>
     <string name="message_accept">Aceptar</string>

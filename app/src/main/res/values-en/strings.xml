@@ -288,7 +288,7 @@
     <string name="button_dismiss_delivery">Dismiss</string>
     <string name="button_refresh">Refresh</string>
     <string name="button_watch_video">Watch video</string>
-    <string name="button_pick_location">Situate</string>
+    <string name="button_pick_location">Pick</string>
     <string name="button_next">Next</string>
     <string name="button_pay">Pay Out</string>
     <string name="button_reset_password">Restore</string>
@@ -353,11 +353,11 @@
     <string name="font_shrikhand_regular">fonts/Shrikhand-Regular.ttf</string>
     <string name="font_cabin_regular">fonts/Cabin-Regular.ttf</string>
 
-    <string name="message_location_deactivate">Activate high precision location</string>
+    <string name="message_location_deactivate">Activate high precision location?</string>
     <string name="message_yes">Yes</string>
     <string name="message_no">No</string>
-    <string name="message_accept">Aceptar</string>
-    <string name="message_back">Regresar</string>
+    <string name="message_accept">Accept</string>
+    <string name="message_back">Back</string>
     <string name="message_cancel_request">Do you want to cancel the order?</string>
     <string name="message_cancel_request_after_two_minute">If canceled, the minimum rate will be charged</string>
     <string name="message_finish_request">Have you completed the service?</string>

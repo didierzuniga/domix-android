@@ -126,7 +126,14 @@
         </activity>
         <activity android:name=".customizer.view.PaymentMethod" />
         <activity android:name=".customizer.view.AmountToPay" />
-
+        <activity
+            android:name=".customizer.view.AddCreditCard"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".customizer.view.PaymentMethod">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.customizer.view.PaymentMethod" />
+        </activity>
     </application>
 
 </manifest>

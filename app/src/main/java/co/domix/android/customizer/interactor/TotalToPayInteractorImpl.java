@@ -47,7 +47,6 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
             int payUIvaOverCommission = (int) (payUTotalCommission * taxe);
             int payUTotalCommissionWithIva = payUTotalCommission + payUIvaOverCommission;
             payTaxe = formatMiles.format(payUTotalCommissionWithIva);
-//            payTaxe = String.valueOf(payUTotalCommissionWithIva);
 
             int saldo = pagado - (fareToPayDomix + payUTotalCommissionWithIva);
             if (saldo >= 0){

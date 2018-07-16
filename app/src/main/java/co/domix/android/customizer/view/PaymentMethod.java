@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,6 +26,7 @@ public class PaymentMethod extends AppCompatActivity implements PaymentMethodVie
 
     private FirebaseAuth firebaseAuth;
     private Button buttonNext;
+    private TextView addCreditCard;
     private RadioGroup radioGroup;
     private DomixApplication app;
 
@@ -40,6 +42,13 @@ public class PaymentMethod extends AppCompatActivity implements PaymentMethodVie
         app = (DomixApplication) getApplicationContext();
         buttonNext = (Button) findViewById(R.id.goNext);
         buttonNext.setEnabled(false);
+        addCreditCard = (TextView) findViewById(R.id.goAddCreditCard);
+        addCreditCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goAddCreditCard();
+            }
+        });
 
         radioGroup = (RadioGroup) findViewById(R.id.rdGroup);
 
@@ -79,6 +88,11 @@ public class PaymentMethod extends AppCompatActivity implements PaymentMethodVie
         toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.colorPrimaryLight)); //Change menu hamburguer color
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void goAddCreditCard(){
+        Intent intent = new Intent(this, AddCreditCard.class);
+        startActivity(intent);
     }
 
     @Override

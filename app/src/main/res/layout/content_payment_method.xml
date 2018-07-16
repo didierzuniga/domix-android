@@ -26,16 +26,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:gravity="center"
         android:orientation="vertical">
 
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="28sp"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:text="Tarjetas de crédito"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ninguna"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/goAddCreditCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/colorSecundaryDark"
+            android:text="Agregar tarjeta de crédito"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:background="@color/colorTextCardView"
+            android:orientation="horizontal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
             android:text="@string/text_pay_through"/>
 
         <RadioGroup
@@ -43,12 +76,13 @@
             android:id="@+id/rdGroup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
             <RadioButton android:id="@+id/methEfecty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
+                android:textColor="@color/editTextColorGrey"
                 android:drawableRight="@drawable/ic_efecty"
                 android:drawablePadding="10dp"
                 android:text="@string/text_method_payment_efecty"/>
@@ -56,7 +90,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/editTextColorGrey"
                 android:drawableRight="@drawable/ic_pse"
                 android:drawablePadding="10dp"
                 android:text="@string/text_method_payment_pse"/>
@@ -64,7 +99,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/editTextColorGrey"
                 android:drawableRight="@drawable/ic_methods"
                 android:drawablePadding="10dp"
                 android:text="@string/text_method_payment_creditcard"/>
@@ -72,9 +108,13 @@
 
         <Button
             android:id="@+id/goNext"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:background="@drawable/corner_radius_select_destine"
             android:text="@string/button_next"/>
 
     </LinearLayout>

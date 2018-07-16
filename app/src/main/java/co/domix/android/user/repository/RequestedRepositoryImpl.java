@@ -16,6 +16,10 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import co.domix.android.R;
 import co.domix.android.model.Coordinate;
 import co.domix.android.model.Counter;
@@ -33,7 +37,7 @@ public class RequestedRepositoryImpl implements RequestedRepository {
     private static final String COUNTER_FIELD_PATERN = "counter";
     private String idDomiciliaryListen, idDomiciliaryUpdate;
     private double latDomiciliary, lonDomiciliary;
-    private boolean finallyListener = false, orderHasBenCompleted = false, orderHasBenCatched;
+    private boolean finallyListener = false, orderHasBenCompleted = false, orderHasBenCatched, thereCoordinate;
     private RequestedPresenter presenter;
 
     public RequestedRepositoryImpl(RequestedPresenter presenter) {
@@ -54,26 +58,27 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                 if (finallyListener){
                     referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
                 } else {
-                    Order order = dataSnapshot.getValue(Order.class);
-                    boolean completed = order.isX_completed();
-                    Double scoredDomi = order.getX_score_deliveryman();
-                    if (!completed) {
-                        String oriLa = order.x_latitude_from.toString();
-                        String oriLo = order.x_longitude_from.toString();
-                        String desLa = order.x_latitude_to.toString();
-                        String desLo = order.x_longitude_to.toString();
-                        presenter.responseCoordinatesFromTo(oriLa, oriLo, desLa, desLo);
-                        if (order.isX_catched()) {
-                            orderHasBenCompleted = false;
-                            idDomiciliaryListen = order.getD_id();
-                            getDataDomiciliary(idDomiciliaryListen);
-                        } else {
-                            orderHasBenCompleted = true;
-                            presenter.resultNotCatched();
+                    try {
+                        Order order = dataSnapshot.getValue(Order.class);
+                        boolean completed = order.isX_completed();
+                        Double scoredDomi = order.getX_score_deliveryman();
+                        if (!completed) {
+                            String origenCoordinate = order.x_coordinate_from.toString();
+                            String destineCoordinate = order.x_coordinate_to.toString();
+                            presenter.responseCoordinatesFromTo(origenCoordinate, destineCoordinate);
+                            if (order.isX_catched()) {
+                                orderHasBenCompleted = false;
+                                idDomiciliaryListen = order.getD_id();
+                                getDataDomiciliary(idDomiciliaryListen);
+                            } else {
+                                orderHasBenCompleted = true;
+                                presenter.resultNotCatched();
+                            }
+                        } else if (completed == true && scoredDomi == null) {
+                            presenter.goRateUser();
+                            referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
                         }
-                    } else if (completed == true && scoredDomi == null) {
-                        presenter.goRateUser();
-                        referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
+                    } catch (Exception e){
                     }
                 }
 //                Aqui no coloco Remove para que escuche domiciliario entrante
@@ -89,24 +94,55 @@ public class RequestedRepositoryImpl implements RequestedRepository {
     }
 
     @Override
-    public void dialogCancel(final int idOrder, final Activity activity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setMessage(R.string.message_cancel_request);
-        builder.setPositiveButton(R.string.message_yes,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finallyListener = true;
-                        removeOrder(idOrder, activity);
+    public void dialogCancel(boolean afterTwoMinutes, final String uid, final int idOrder, final Activity activity) {
+        if (afterTwoMinutes){
+            // Tratar el cargo de la tarifa minima al solicitante
+            finallyListener = true;
+            removeOrder(uid, idOrder, activity);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setMessage(R.string.message_cancel_request);
+            builder.setPositiveButton(R.string.message_yes,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finallyListener = true;
+                            removeOrder(uid, idOrder, activity);
+                        }
                     }
-                }
-        )
-                .setNegativeButton(R.string.message_no, null);
-        builder.create().show();
+            )
+                    .setNegativeButton(R.string.message_no, null);
+            builder.create().show();
+        }
     }
 
     @Override
-    public void removeOrder(int idOrder, Activity activity) {
+    public void removeOrder(final String uid, int idOrder, Activity activity) {
+        referenceOrder.child(String.valueOf(idOrder)).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Order order = dataSnapshot.getValue(Order.class);
+
+                referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        referenceUser.child(uid).child("my_credit").setValue(order.getX_credit_used() + user.getMy_credit());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         referenceOrder.child(String.valueOf(idOrder)).removeValue();
         deductCounters();
     }
@@ -144,17 +180,21 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                 } else {
                     Order order = dataSnapshot.getValue(Order.class);
                     orderHasBenCatched = false;
-                    boolean completed = order.isX_completed();
-                    if (!completed) {
-                        if (order.isX_catched()) {
-                            orderHasBenCatched = true;
-                            idDomiciliaryUpdate = order.getD_id();
-                            requestCoordinates(order.getD_id(), activity);
+                    try {
+                        boolean completed = order.isX_completed();
+                        if (!completed) {
+                            if (order.isX_catched()) {
+                                orderHasBenCatched = true;
+                                idDomiciliaryUpdate = order.getD_id();
+                                requestCoordinates(order.getD_id(), activity);
+                            }
+                        } else {
+                            orderHasBenCompleted = true;
+                            referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
+                            removeCoordDomiciliary(idDomiciliaryUpdate);
                         }
-                    } else {
-                        orderHasBenCompleted = true;
-                        referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
-                        removeCoordDomiciliary(idDomiciliaryUpdate);
+                    } catch (Exception e){
+
                     }
                 }
             }
@@ -177,35 +217,62 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                     @Override
                     public void run() {
                         try{
-                            referenceCoordenatesDomi.child(idDomiciliary).addValueEventListener(new ValueEventListener() {
+                            referenceCoordenatesDomi.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onDataChange(DataSnapshot dataSnapshotx) {
-                                    if (!orderHasBenCompleted && orderHasBenCatched) {
-                                        Coordinate coordinate = dataSnapshotx.getValue(Coordinate.class);
-                                        String lt = coordinate.getLatitude();
-                                        String ln = coordinate.getLongitude();
-                                        latDomiciliary = Double.valueOf(lt);
-                                        lonDomiciliary = Double.valueOf(ln);
-                                        presenter.responseCoordDomiciliary(latDomiciliary, lonDomiciliary);
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                                        if (snapshot.getKey().equals(idDomiciliary)){
+                                            thereCoordinate = true;
+                                            break;
+                                        } else {
+                                            thereCoordinate = false;
+                                        }
+                                    }
+
+                                    if (thereCoordinate){
+                                        referenceCoordenatesDomi.child(idDomiciliary).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshotx) {
+                                                if (!orderHasBenCompleted && orderHasBenCatched) {
+                                                    Coordinate coordinate = dataSnapshotx.getValue(Coordinate.class);
+                                                    String lt = coordinate.getLatitude();
+                                                    String ln = coordinate.getLongitude();
+                                                    latDomiciliary = Double.valueOf(lt);
+                                                    lonDomiciliary = Double.valueOf(ln);
+                                                    presenter.responseCoordDomiciliary(latDomiciliary, lonDomiciliary);
+                                                } else {
+                                                    referenceCoordenatesDomi.child(idDomiciliary).removeEventListener(this);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                // Error DB
+                                            }
+                                        });
                                     } else {
-                                        referenceCoordenatesDomi.child(idDomiciliary).removeEventListener(this);
+                                        presenter.repeatUpdateDomi();
                                     }
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                    // Error DB
+
                                 }
                             });
                         } catch (Exception e){}
                     }
-                }, 15000);
+                }, 3000);
             }
         });
     }
 
     @Override
     public void getDataDomiciliary(final String uidDomiciliary) {
+        final NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        formatter.setMaximumFractionDigits(1);
+        formatter.setMinimumFractionDigits(1);
+        formatter.setRoundingMode(RoundingMode.HALF_UP);
         try{
             referenceUser.child(uidDomiciliary).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -213,9 +280,9 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                     User user = dataSnapshot.getValue(User.class);
                     String fullName = user.getFirst_name()+" "+user.getLast_name();
                     String cellPhone = user.getPhone();
-                    String rate = String.format("%.2f", user.getScore_as_deliveryman());
+                    Float rate = new Float(formatter.format(user.getScore_as_deliveryman()));
                     int usedVehicle = user.getTransport_used();
-                    presenter.responseDomiciliaryCatched(uidDomiciliary, rate, fullName,
+                    presenter.responseDomiciliaryCatched(uidDomiciliary, String.valueOf(rate), fullName,
                             cellPhone, usedVehicle);
                 }
 

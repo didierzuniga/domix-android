@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.domix.android.customizer.view.Pay">
+    tools:context="co.domix.android.customizer.view.History"
+    tools:showIn="@layout/activity_history">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -19,10 +20,19 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-    
-    <FrameLayout
-        android:id="@+id/container"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:padding="5dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerOrderHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -15,6 +15,8 @@ import co.domix.android.customizer.interactor.TotalToPayInteractor;
 import co.domix.android.customizer.presenter.TotalToPayPresenter;
 import co.domix.android.model.Fare;
 import co.domix.android.model.Order;
+import co.domix.android.model.User;
+import co.domix.android.model.Wallet;
 
 /**
  * Created by unicorn on 1/14/2018.
@@ -22,10 +24,11 @@ import co.domix.android.model.Order;
 
 public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
-    String country = "CO";
-    private int totalToPayCash;
-    private int payUFullRate, minPayment;
-    private float nationalTaxe, payUCommission, fareDomix;
+    private String country, currencyCode, userId;
+    private int payUFullRate, minPayment, fareToPayDomix, pagado;
+    private float nationalTaxe, payUCommission, fareDomix, fareDomixForCyclist;
+    private boolean areThereOrders;
+    private List<String> listOrders = new ArrayList<String>();
     private TotalToPayPresenter presenter;
     private TotalToPayInteractor interactor;
 
@@ -37,41 +40,49 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceOrder = database.getReference("order");
     DatabaseReference referenceFare = database.getReference("fare");
+    DatabaseReference referenceUser = database.getReference("user");
+    DatabaseReference referenceWallet = database.getReference("wallet");
 
     @Override
     public void queryOrderToPay(final String uid) {
-        referenceOrder.addListenerForSingleValueEvent(new ValueEventListener() {
+        areThereOrders = false;
+        userId = uid;
+        referenceWallet.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> listOrders = new ArrayList<String>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Order order = snapshot.getValue(Order.class);
-                    if ((order.getD_id()).equals(uid)) {
-                        if (!order.isX_paid_out()){
-                            country = order.getX_country();
-                            listOrders.add(snapshot.getKey()); //ID to save
-                            totalToPayCash += order.getX_money_to_pay();
-                        }
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Wallet wallet = snapshot.getValue(Wallet.class);
+                    if ((snapshot.getKey()).equals(uid)){
+                        areThereOrders = true;
+                        country = wallet.getCountry_code();
+                        fareToPayDomix = wallet.getTo_domix();
+                        pagado = wallet.getCharged();
+                        listOrders = wallet.getOrder_id();
+                        break;
                     }
                 }
-                referenceFare.child(country).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Fare fare = dataSnapshot.getValue(Fare.class);
-                        nationalTaxe = fare.getNational_tax();
-                        fareDomix = fare.getFare_domix();
-                        payUCommission = fare.getPayu_commission();
-                        payUFullRate = fare.getPayu_full_rate();
-                        minPayment = fare.getMin_payment();
-                        interactor.responseTotalToPay(totalToPayCash, nationalTaxe, fareDomix, minPayment,
-                                                      payUCommission, payUFullRate, country);
-                    }
+                if (areThereOrders) {
+                    referenceFare.child(country).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Fare fare = dataSnapshot.getValue(Fare.class);
+                            currencyCode = fare.getCurrency_code();
+                            nationalTaxe = fare.getNational_tax();
+                            payUCommission = fare.getPayu_commission();
+                            payUFullRate = fare.getPayu_full_rate();
+                            minPayment = fare.getMin_payment();
+                            interactor.responseTotalToPay(currencyCode, fareToPayDomix,
+                                    pagado, nationalTaxe, minPayment, payUCommission, payUFullRate, country, listOrders);
+                        }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                } else {
+                    presenter.thereAreNotOrders();
+                }
             }
 
             @Override
@@ -79,5 +90,13 @@ public class TotalToPayRepositoryImpl implements TotalToPayRepository {
 
             }
         });
+    }
+
+    @Override
+    public void goPayU(List<String> list, int balance) {
+        for (int i = 0; i < list.size(); i++) {
+            referenceOrder.child(String.valueOf(list.get(i))).child("x_paid_out").setValue(true);
+        }
+        referenceUser.child(userId).child("positive_balance").setValue(balance);
     }
 }

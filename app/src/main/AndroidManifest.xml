@@ -24,8 +24,13 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GOOGLE_MAPS_KEY_DEBUG" />
 
-        <service android:name=".domiciliary.service.NotificationService" />
-        <service android:name=".domiciliary.service.CoordinateService" />
+        <service android:name=".services.NotificationService" />
+        <service android:name=".services.CoordinateServiceDeliveryman" />
+        <service android:name=".services.LocationService" />
+        <service android:name=".services.IncomingDeliveryman" />
+        <service android:name=".services.CoordinateServiceDeliverymanGoogleAPI" />
+        <service android:name=".services.CounterButtonImHere" />
+        <service android:name=".services.PayToCancel" />
 
         <activity
             android:name=".login.view.Splash"
@@ -95,14 +100,6 @@
                 android:value="co.domix.android.home.view.Home" />
         </activity>
         <activity
-            android:name=".customizer.view.Pay"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:parentActivityName=".home.view.Home">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="co.domix.android.home.view.Home" />
-        </activity>
-        <activity
             android:name=".customizer.view.History"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:parentActivityName=".home.view.Home">
@@ -119,6 +116,24 @@
                 android:value="co.domix.android.home.view.Home" />
         </activity>
         <activity android:name=".login.view.Signup" />
+        <activity
+            android:name=".customizer.view.EditProfile"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".customizer.view.Profile">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.customizer.view.Profile" />
+        </activity>
+        <activity android:name=".customizer.view.PaymentMethod" />
+        <activity android:name=".customizer.view.AmountToPay" />
+        <activity
+            android:name=".customizer.view.AddCreditCard"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:parentActivityName=".customizer.view.PaymentMethod">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="co.domix.android.customizer.view.PaymentMethod" />
+        </activity>
     </application>
 
 </manifest>

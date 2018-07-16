@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.util.Log;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.home.presenter.HomePresenter;

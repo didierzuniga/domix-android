@@ -1,11 +1,22 @@
 package co.domix.android.home.view;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,28 +29,39 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.customizer.view.History;
-import co.domix.android.customizer.view.Pay;
+import co.domix.android.customizer.view.PaymentMethod;
 import co.domix.android.customizer.view.Profile;
 import co.domix.android.customizer.view.Setting;
 import co.domix.android.domiciliary.view.Domiciliary;
 import co.domix.android.home.presenter.HomePresenter;
 import co.domix.android.home.presenter.HomePresenterImpl;
 import co.domix.android.login.view.Login;
+import co.domix.android.services.LocationService;
 import co.domix.android.user.view.User;
+import co.domix.android.utils.ToastsKt;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeView {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeView, GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks {
+
 
     private FirebaseAuth firebaseAuth;
+    private GoogleApiClient apiClient;
+    private LocationManager locationManager;
     private LinearLayout linearRoot, linearNotInternet;
     private ProgressBar progressBar;
     private AlertDialog alert = null;
     private Button buttonGoUser, buttonGoDomiciliary, buttonRefresh;
+    private SharedPreferences shaPref;
+    private SharedPreferences.Editor editor;
     private HomePresenter presenter;
     public DomixApplication app;
 
@@ -50,6 +72,9 @@ public class Home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_home));
+
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+        editor = shaPref.edit();
 
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Shrikhand-Regular.ttf");
         presenter = new HomePresenterImpl(this);
@@ -86,6 +111,12 @@ public class Home extends AppCompatActivity
             }
         });
 
+        apiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .build();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -112,7 +143,9 @@ public class Home extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_profile) {
+        if (id == R.id.nav_home) {
+            onStart();
+        } else if (id == R.id.nav_profile) {
             goProfile();
         } else if (id == R.id.nav_history) {
             goHistory();
@@ -161,7 +194,7 @@ public class Home extends AppCompatActivity
 
     @Override
     public void goPayment() {
-        Intent intent = new Intent(this, Pay.class);
+        Intent intent = new Intent(this, PaymentMethod.class);
         startActivity(intent);
     }
 
@@ -216,8 +249,100 @@ public class Home extends AppCompatActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        presenter.verifyLocationAndInternet(this);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        presenter.verifyLocationAndInternet(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    101);
+        } else {
+            Location lastLocation =
+                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
+            updateUI(lastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 101) {
+            if (grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Permiso concedido
+                @SuppressWarnings("MissingPermission")
+                Location lastLocation =
+                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
+                updateUI(lastLocation);
+            } else {
+                //Permiso denegado:
+                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
+            }
+        }
+    }
+
+    private void updateUI(Location loc) {
+        if (loc != null) {
+            SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+            SharedPreferences.Editor editor = location.edit();
+            editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
+            editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
+            editor.commit();
+        } else {
+            try {
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    // Unknown Latitude and Longitude
+                    // Available GPS but not recognize coordenates
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Desactivado curiosamente el GPS")
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                }
+                            }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Home.super.finish();
+                        }
+                    });
+                    alert = builder.create();
+                    alert.show();
+                }
+            } catch (Exception e){
+                ToastsKt.toastShort(this, "Ocurrió un error con tu GPS");
+            }
+
+        }
     }
 }

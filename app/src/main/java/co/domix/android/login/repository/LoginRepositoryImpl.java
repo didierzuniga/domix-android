@@ -19,6 +19,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import co.domix.android.login.interactor.LoginInteractor;
 import co.domix.android.login.presenter.LoginPresenter;
 import co.domix.android.model.Counter;
 import co.domix.android.model.Order;
@@ -64,8 +65,9 @@ public class LoginRepositoryImpl implements LoginRepository {
                                 }
                             }
                         } else {
-                            presenter.signinError(task.getException().toString());
+                            presenter.signinError(task.getException().getMessage());
                         }
+
                     }
                 });
     }

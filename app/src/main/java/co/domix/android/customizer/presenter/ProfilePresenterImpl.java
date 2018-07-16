@@ -18,14 +18,14 @@ public class ProfilePresenterImpl implements ProfilePresenter {
         interactor = new ProfileInteractorImpl(this);
     }
     @Override
-    public void queryImageSeted(String uid) {
-        interactor.queryImageSeted(uid);
+    public void queryImageSeted(String uid, boolean searchImage) {
+        interactor.queryImageSeted(uid, searchImage);
     }
 
     @Override
-    public void responseDataUser(boolean verifyGlide, String firstname, String lastname, String email, String scoreAsDomi,
-                                 String scoreAsUser) {
-        view.responseDataUser(verifyGlide, firstname, lastname, email, scoreAsDomi, scoreAsUser);
+    public void responseDataUser(boolean verifyGlide, String firstname, String lastname, String dni,
+                                 String phone, String email, String scoreAsDomi, String scoreAsUser, String credit) {
+        view.responseDataUser(verifyGlide, firstname, lastname, dni, phone, email, scoreAsDomi, scoreAsUser, credit);
     }
 
     @Override

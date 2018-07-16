@@ -1,16 +1,24 @@
 package co.domix.android.user.view;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,6 +29,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -43,6 +54,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -53,8 +66,11 @@ import co.domix.android.R;
 import co.domix.android.directionModule.DirectionFinder;
 import co.domix.android.directionModule.DirectionFinderListener;
 import co.domix.android.directionModule.Route;
+import co.domix.android.services.IncomingDeliveryman;
+import co.domix.android.services.PayToCancel;
 import co.domix.android.user.presenter.RequestedPresenter;
 import co.domix.android.user.presenter.RequestedPresenterImpl;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by unicorn on 11/12/2017.
@@ -64,14 +80,14 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks, DirectionFinderListener {
 
-    private LinearLayout linearRateDomiciliary, linearNameDomiciliary, linearCellphoneDomiciliary, linearParent;
-    private TextView textViewTitle, textViewWaitingDomiciliary, textViewRateDomiciliary,
-                     textViewSelectedDomiciliary, textViewDataDomiciliary;
+    private LinearLayout linearParent;
+    private TextView textViewWaitingDomiciliary, textViewRateDomiciliary,
+            textViewSelectedDomiciliary, textViewDataDomiciliary;
     private ImageView ivVehicle;
+    private CircleImageView ivDeliveryman;
     private String idDomiciliary;
     private Button buttonCanceled;
     private boolean locDomi, validateDomiciliaryRealtime = false, initialize = false;
-    private double oriLat, oriLon, desLat, desLon;
     private Marker m2;
     private byte g = 0;
     private GoogleMap mMap;
@@ -79,6 +95,9 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     private LocationRequest locRequest;
     private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
+    private StorageReference storageReference;
+    private SharedPreferences shaPref;
+    private SharedPreferences.Editor editor;
     private DomixApplication app;
     private RequestedPresenter presenter;
 
@@ -91,27 +110,33 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         presenter = new RequestedPresenterImpl(this);
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        app = (DomixApplication) getApplicationContext();
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+        editor = shaPref.edit();
 
-        linearRateDomiciliary = (LinearLayout) findViewById(R.id.rate_domiciliary);
-        linearNameDomiciliary = (LinearLayout) findViewById(R.id.name_domiciliary);
-        linearCellphoneDomiciliary = (LinearLayout) findViewById(R.id.cellphone_domiciliary);
+        app = (DomixApplication) getApplicationContext();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
         linearParent = (LinearLayout) findViewById(R.id.linearParent);
         textViewWaitingDomiciliary = (TextView) findViewById(R.id.waiting_domiciliary);
         textViewRateDomiciliary = (TextView) findViewById(R.id.rateDomiciliary);
         ivVehicle = (ImageView) findViewById(R.id.ivVehicleUsed);
+        ivDeliveryman = (CircleImageView) findViewById(R.id.imageProfileDeliveryman);
         textViewSelectedDomiciliary = (TextView) findViewById(R.id.selectedDomiciliary);
         textViewDataDomiciliary = (TextView) findViewById(R.id.dataDomiciliary);
         buttonCanceled = (Button) findViewById(R.id.buttonCanceledRequest);
         buttonCanceled.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogCancel();
+                // Si el usuario cancela muestra mensaje que s hará cobro de tarifa minima
+                if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), false)){
+                    dialogShowChargeInfo();
+                } else {
+                    dialogCancel(false);
+                }
             }
         });
 
@@ -121,11 +146,36 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
                 .addApi(LocationServices.API)
                 .build();
         enableLocationUpdates();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), true);
+                        editor.commit();
+                    }
+                }, new IntentFilter(PayToCancel.ACTION_COUNTER_BUTTON)
+        );
     }
 
     @Override
     public void onBackPressed() {
         Toast.makeText(this, getResources().getString(R.string.toast_can_not_backpressed), Toast.LENGTH_SHORT).show();
+    }
+
+    private void dialogShowChargeInfo(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.message_cancel_request_after_two_minute);
+        builder.setPositiveButton(R.string.message_accept,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialogCancel(true);
+                    }
+                }
+        )
+                .setNegativeButton(R.string.message_back, null);
+        builder.create().show();
     }
 
     private void enableLocationUpdates() {
@@ -225,8 +275,14 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     @Override
     public void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            startService(new Intent(this, PayToCancel.class));
+        } else {
+            startService(new Intent(this, PayToCancel.class));
+        }
         idDomiciliary = id;
-        if (!rate.equals("0.00")){
+        executeGlide();
+        if (!rate.equals("0.00") || !rate.equals("0,00")){
             textViewRateDomiciliary.setText(rate);
         } else {
             textViewRateDomiciliary.setText(getString(R.string.text_new));
@@ -258,13 +314,26 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         });
     }
 
+    public void executeGlide() {
+        Glide.with(this)
+                .using(new FirebaseImageLoader())
+                .load(storageReference.child("image_profile/" + idDomiciliary + "/img1.png"))
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .override(500, 500)
+                .centerCrop()
+                .into(ivDeliveryman);
+    }
+
     @Override
-    public void dialogCancel() {
-        presenter.dialogCancel(app.idOrder, this);
+    public void dialogCancel(boolean afterTwoMinutes) {
+        presenter.dialogCancel(afterTwoMinutes, app.uId, app.idOrder, this);
     }
 
     @Override
     public void resultGoUserActivity() {
+        editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), true);
+        editor.commit();
         app.idOrder = 0;
         Intent intent = new Intent(this, User.class);
         startActivity(intent);
@@ -273,20 +342,18 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     @Override
     public void goRateUser() {
+        editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), true);
+        editor.commit();
         Intent intent = new Intent(this, UserScore.class);
         startActivity(intent);
         finish();
     }
 
     @Override
-    public void resultCoordinatesFromTo(String oriLa, String oriLo, String desLa, String desLo) {
-        oriLat = Double.valueOf(oriLa);
-        oriLon = Double.valueOf(oriLo);
-        desLat = Double.valueOf(desLa);
-        desLon = Double.valueOf(desLo);
+    public void resultCoordinatesFromTo(String origenCoordinate, String destineCoordinate) {
         try {
-            String uno = oriLa + ", " + oriLo;
-            String dos = desLa + ", " + desLo;
+            String uno = origenCoordinate;
+            String dos = destineCoordinate;
             if (initialize == false) {
                 new DirectionFinder(this, uno, dos).execute();
                 initialize = true;
@@ -304,7 +371,6 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     @Override
     public void responseCoordDomiciliary(double latDomiciliary, double lonDomiciliary) {
         domiLocated(latDomiciliary, lonDomiciliary);
-        //updateDomiPosition();
     }
 
     @Override
@@ -314,9 +380,14 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         textViewDataDomiciliary.setText("");
         textViewWaitingDomiciliary.setVisibility(View.VISIBLE);
         linearParent.setVisibility(View.GONE);
-//        linearNameDomiciliary.setVisibility(View.GONE);
-//        linearCellphoneDomiciliary.setVisibility(View.GONE);
         if (validateDomiciliaryRealtime) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                stopService(new Intent(this, PayToCancel.class));
+            } else {
+                stopService(new Intent(this, PayToCancel.class));
+            }
+            editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), false);
+            editor.commit();
             validateDomiciliaryRealtime = false;
             m2.remove();
             g = 0;
@@ -326,7 +397,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     @Override
     public void domiLocated(double latDomiciliary, double lonDomiciliary) {
-// Aqui obtengo Lat,Lon del domiciliario en FirebaseDatabase
+        // Aqui obtengo Lat,Lon del domiciliario en FirebaseDatabase
         LatLng yourPo = new LatLng(latDomiciliary, lonDomiciliary);
         MarkerOptions b = new MarkerOptions().icon(BitmapDescriptorFactory
                 .fromResource(R.drawable.ic_domiciliary));
@@ -375,7 +446,6 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
 
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
-//        progressDialog.dismiss();
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
@@ -430,6 +500,7 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
         super.onResume();
         listenForUpdate();
     }
+
 
     @Override
     protected void onStop() {

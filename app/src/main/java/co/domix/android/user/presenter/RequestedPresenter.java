@@ -9,11 +9,12 @@ import co.domix.android.user.view.Requested;
 public interface RequestedPresenter {
     void listenForUpdate(int idOrder, Requested requested);
     void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle);
-    void dialogCancel(int idOrder, Requested requested);
+    void dialogCancel(boolean afterTwoMinutes, String uid, int idOrder, Requested requested);
     void resultGoUserActivity();
     void goRateUser();
-    void responseCoordinatesFromTo(String oriLa, String oriLo, String desLa, String desLo);
+    void responseCoordinatesFromTo(String origenCoordinate, String destineCoordinate);
     void updateDomiPosition(int idOrder, Requested requested);
     void responseCoordDomiciliary(double latDomiciliary, double lonDomiciliary);
     void resultNotCatched();
+    void repeatUpdateDomi();
 }

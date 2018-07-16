@@ -5,8 +5,8 @@ package co.domix.android.customizer.interactor;
  */
 
 public interface ProfileInteractor {
-    void queryImageSeted(String uid);
+    void queryImageSeted(String uid, boolean searchImage);
     void trueImageSeted(String uid);
-    void responseDataUser(boolean verifyGlide, String firstname, String lastname, String email,
-                          String scoreAsDomi, String scoreAsUser);
+    void responseDataUser(boolean verifyGlide, String firstname, String lastname, String dni, String phone,
+                          String email, float scoreAsDomi, float scoreAsUser, int credit, String currency);
 }

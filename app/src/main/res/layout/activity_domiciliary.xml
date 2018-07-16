@@ -41,6 +41,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
         android:id="@+id/scrVieDomiciliary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorBackground"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -61,6 +62,11 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                 android:textSize="20sp"
                 android:visibility="gone"
                 android:textStyle="italic" />
+            <com.github.silvestrpredko.dotprogressbar.DotProgressBar
+                android:id="@+id/dot_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/lnrSpiVehicle"
@@ -111,14 +117,19 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.4"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/txtVieAgo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_requested"
                             android:textColor="@color/colorTextCardView"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+                        <TextView
+                            android:id="@+id/txtVieAgo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:textSize="16sp" />
 
                     </LinearLayout>
@@ -156,18 +167,22 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
                         android:paddingTop="10dp">
 
                         <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_from"
+                            android:textColor="@color/colorTextCardView"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+                        <TextView
                             android:id="@+id/txtVieFrom"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingRight="8dp"
-                            android:text="@string/text_from"
-                            android:textColor="@color/colorTextCardView"
                             android:textSize="16sp" />
 
                     </LinearLayout>
@@ -175,18 +190,22 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
                         android:paddingTop="10dp">
 
                         <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_to"
+                            android:textColor="@color/colorTextCardView"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+                        <TextView
                             android:id="@+id/txtVieTo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingRight="8dp"
-                            android:text="@string/text_to"
-                            android:textColor="@color/colorTextCardView"
                             android:textSize="16sp"/>
 
                     </LinearLayout>
@@ -212,41 +231,25 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                     android:background="@drawable/corner_radius_select_destine"
                     android:orientation="vertical">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/txtVieDimensions"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_size_order"
                             android:textColor="@color/colorTextCardView"
+                            android:textStyle="bold"
                             android:textSize="16sp"/>
-
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@color/colorTextCardView"
-                        android:orientation="horizontal" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
                         <TextView
-                            android:id="@+id/txtVieDescription1"
+                            android:id="@+id/txtVieDimensions"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/text_make_initial_point"
-                            android:textColor="@color/colorTextCardView"
                             android:textSize="16sp"/>
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -259,14 +262,48 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/txtVieDescription2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_make_initial_point"
+                            android:textColor="@color/colorTextCardView"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+                        <TextView
+                            android:id="@+id/txtVieDescription1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"/>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/colorTextCardView"
+                        android:orientation="horizontal" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/text_make_final_point"
                             android:textColor="@color/colorTextCardView"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+                        <TextView
+                            android:id="@+id/txtVieDescription2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:textSize="16sp"/>
 
                     </LinearLayout>

@@ -8,9 +8,7 @@ import android.app.Activity;
 
 public interface DomiciliaryRepository {
     void searchDeliveries(String lat, String lon);
-    void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed);
-    void updateDataDomiciliary(String uidCurrentUser, String i);
-    void queryForFullnameAndPhone(String uid);
+    void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed, String country);
+    void queryPersonalDataFill(String uid);
     void queryUserRate(String idOrder);
-    void sendContactData(String uid, String firstName, String lastName, String phone);
 }

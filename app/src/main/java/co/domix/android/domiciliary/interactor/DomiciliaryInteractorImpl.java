@@ -11,7 +11,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -30,7 +33,8 @@ import co.domix.android.domiciliary.repository.DomiciliaryRepositoryImpl;
 public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, DirectionFinderListener {
 
     private LocationManager locationManager;
-    private int countForDictionary, distMin, countIndex, countIndexTemp, countChilds, vehicleSelected, minDistanceBetweenRequired;
+    private int countForDictionary, distMin, countIndex, countIndexTemp, countChilds, vehicleSelected,
+                minDistanceForCyclist, minDistanceForOther;
     private List<String> listica;
     private Hashtable<Integer, List> diccionario;
     private List<Marker> originMarkers = new ArrayList<>(), destinationMarkers = new ArrayList<>();
@@ -91,30 +95,39 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     }
 
     @Override
-    public void goCompareDistance(int idOrder, String ago, String from, String to, int sizeOrder, String description1,
-                                  String description2, String oriLat, String oriLon, String desLat,
-                                  String desLon, String latDomi, String lonDomi, int distanceBetween, int minDistanceRequired) {
-        minDistanceBetweenRequired = minDistanceRequired;
+    public void goCompareDistance(int idOrder, String ago, String country, String from, String to,
+                                  int sizeOrder, String description1, String description2, String origenCoordinate,
+                                  String destineCoordinate, String latDomi, String lonDomi, int distanceBetween,
+                                  int minDistanceBetweenRequiredForCyclist, int minDistanceBetweenRequiredForOther) {
+        minDistanceForCyclist = minDistanceBetweenRequiredForCyclist;
+        minDistanceForOther = minDistanceBetweenRequiredForOther;
+        String agoConverted = "";
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss");
+            Date dateObj = sdf.parse(ago);
+            agoConverted = new SimpleDateFormat("K:mm a").format(dateObj);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         listica = new ArrayList<String>();
         String idOrderStr = String.valueOf(idOrder);
         listica.add(idOrderStr);
-        listica.add(ago);
+        listica.add(agoConverted);
         listica.add(from);
         listica.add(to);
         listica.add(description1);
         listica.add(description2);
-        listica.add(oriLat);
-        listica.add(oriLon);
-        listica.add(desLat);
-        listica.add(desLon);
+        listica.add(origenCoordinate);//6
+        listica.add(destineCoordinate);//7
         listica.add(String.valueOf(sizeOrder));
         listica.add(String.valueOf(distanceBetween));
+        listica.add(country);
 
         diccionario.put(countForDictionary, listica);
         try {
-            String uno = oriLat + ", " + oriLon;
-            String dos = latDomi + ", " + lonDomi;
+            String uno = latDomi + ", " + lonDomi;
+            String dos = listica.get(6);
             new DirectionFinder(this, uno, dos).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -128,18 +141,14 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
     }
 
     @Override
-    public void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed) {
-        repository.sendDataDomiciliary(activity, idOrderToSend, uid, transportUsed);
+    public void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed,
+                                    String country) {
+        repository.sendDataDomiciliary(activity, idOrderToSend, uid, transportUsed, country);
     }
 
     @Override
-    public void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity) {
-        repository.sendContactData(uid, firstName, lastName, phone);
-    }
-
-    @Override
-    public void queryForFullnameAndPhone(String uid) {
-        repository.queryForFullnameAndPhone(uid);
+    public void queryPersonalDataFill(String uid) {
+        repository.queryPersonalDataFill(uid);
     }
 
     @Override
@@ -174,7 +183,7 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
         for (Route route : routes) {
             int newDistance = route.distance.value;
             if (vehicleSelected == 1){
-                if ((Integer.valueOf(listica.get(11)) + route.distance.value) <= minDistanceBetweenRequired){
+                if ((Integer.valueOf(listica.get(9)) + route.distance.value) <= minDistanceForCyclist){
                     matchForAnyOrder = true;
                     if (distMin != 0) {
                         if (distMin > newDistance) {
@@ -186,14 +195,16 @@ public class DomiciliaryInteractorImpl implements DomiciliaryInteractor, Directi
                     }
                 }
             } else {
-                matchForAnyOrder = true;
-                if (distMin != 0) {
-                    if (distMin > newDistance) {
+                if ((Integer.valueOf(listica.get(9)) + route.distance.value) <= minDistanceForOther){
+                    matchForAnyOrder = true;
+                    if (distMin != 0) {
+                        if (distMin > newDistance) {
+                            distMin = newDistance;
+                            countIndex = countIndexTemp;
+                        }
+                    } else {
                         distMin = newDistance;
-                        countIndex = countIndexTemp;
                     }
-                } else {
-                    distMin = newDistance;
                 }
             }
             countIndexTemp++;

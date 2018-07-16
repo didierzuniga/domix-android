@@ -1,4 +1,4 @@
-package co.domix.android.domiciliary.service;
+package co.domix.android.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -29,22 +29,30 @@ import co.domix.android.model.Order;
 
 public class NotificationService extends Service {
 
-    private SharedPreferences location;
+    private int identifyOrder;
+    private boolean isServiceActive;
+    private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference referenceOrder = database.getReference("order");
 
     public void queryForNewOrder(){
+        identifyOrder = 100;
         referenceOrder.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Order order = snapshot.getValue(Order.class);
                     if (!order.isX_catched()) {
-                        if (location.getBoolean("IsServiceActive", false)){
-                            createNotification();
-                        } else {
-                            referenceOrder.removeEventListener(this);
+                        if (order.getX_id() > identifyOrder) {
+                            identifyOrder = order.getX_id();
+//                            if (shaPref.getBoolean("IsServiceActive", false)) {
+                            if (isServiceActive) {
+                                createNotification();
+                                break; // This line is for test
+                            } else {
+                                referenceOrder.removeEventListener(this);
+                            }
                         }
                     }
                 }
@@ -55,7 +63,6 @@ public class NotificationService extends Service {
 
             }
         });
-
     }
 
 
@@ -76,9 +83,8 @@ public class NotificationService extends Service {
                 .setSmallIcon(R.drawable.logo_white)
                 .setLargeIcon((((BitmapDrawable)getResources()
                         .getDrawable(R.drawable.ic_isotipo_domix)).getBitmap()))
-                .setContentTitle("Nuevo")
-                .setContentText("Hay una nueva solicitud de domicilio")
-                .setTicker("¡Nuevo domicilio!");
+                .setContentTitle(getString(R.string.notification_incoming_order_title))
+                .setContentText(getString(R.string.notification_incoming_order_text));
 
         Intent intent = new Intent(this, Domiciliary.class);
         PendingIntent contIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -94,17 +100,19 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
-        editor = location.edit();
-        editor.putBoolean("IsServiceActive", true);
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+        editor = shaPref.edit();
+//        editor.putBoolean("IsServiceActive", true);
+        isServiceActive = true;
         editor.commit();
         queryForNewOrder();
     }
 
     @Override
     public void onDestroy() {
-        editor.putBoolean("IsServiceActive", false);
-        editor.putBoolean("backFromServiceNotification", true);
+//        editor.putBoolean("IsServiceActive", false);
+        isServiceActive = false;
+        editor.putBoolean(getString(R.string.const_sharedPref_key_backfromServiceNotification), true);
         editor.commit();
         super.onDestroy();
     }

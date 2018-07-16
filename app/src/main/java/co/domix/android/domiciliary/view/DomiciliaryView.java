@@ -13,18 +13,14 @@ public interface DomiciliaryView {
     void showNotInternet();
     void showProgressBar();
     void hideProgressBar();
-
     void searchDeliveries();
     void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex);
     void showResultNotOrder();
     void goPreviewRouteOrder();
     void responseOrderHasBeenTaken();
     void responseGoOrderCatched(String idOrder);
-    void queryForFullnameAndPhone();
-    void openDialogSendContactData();
-    void sendContactData(String firstName, String lastName, String phone);
-    void contactDataSent();
+    void queryPersonalDataFill();
     void queryUserRate(String idOrder);
     void responseQueryRate(String rate);
-    void responseForFullnameAndPhone(boolean result);
+    void responseQueryPersonalDataFill(boolean fillData);
 }

@@ -1,12 +1,23 @@
 package co.domix.android.login.view;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ServiceCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -18,13 +29,20 @@ import co.domix.android.domiciliary.view.OrderCatched;
 import co.domix.android.home.view.Home;
 import co.domix.android.login.presenter.SplashPresenter;
 import co.domix.android.login.presenter.SplashPresenterImpl;
+import co.domix.android.services.LocationService;
 import co.domix.android.user.view.Requested;
 import co.domix.android.user.view.UserScore;
+import co.domix.android.utils.ToastsKt;
 
-public class Splash extends AppCompatActivity implements SplashView {
+public class Splash extends AppCompatActivity implements SplashView, ActivityCompat.OnRequestPermissionsResultCallback {
+
+    private LocationManager locManager;
+    private Location loc;
 
     private ProgressBar progressBar;
     private AlertDialog alert = null;
+    private SharedPreferences shaPref;
+    private SharedPreferences.Editor editor;
     private DomixApplication app;
     private SplashPresenter presenter;
 
@@ -49,7 +67,6 @@ public class Splash extends AppCompatActivity implements SplashView {
         progressBar.setVisibility(View.GONE);
     }
 
-    @Override
     public void queryStatePosition(String uid) {
         presenter.queryStatePosition(uid, this);
     }
@@ -144,26 +161,48 @@ public class Splash extends AppCompatActivity implements SplashView {
         });
     }
 
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Permiso concedido
+                    presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    ToastsKt.toastLong(Splash.this, "¡Ops!, sin tu permiso nos sería imposible brindarte el servicio");
+                    finish();
+                }
+                return;
+            }
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(Splash.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+        } else {
+            presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         showProgressBar();
-        presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
+//        Lo quité para que no se replique infinitamente la lectura de location, lo puse en onStart
+//        presenter.verifyNetworkAndInternet(this, app.isOnline(), app.firebaseUser, app.uId);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
     }
 
     @Override

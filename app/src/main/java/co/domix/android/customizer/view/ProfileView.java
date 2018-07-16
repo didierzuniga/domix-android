@@ -5,11 +5,17 @@ package co.domix.android.customizer.view;
  */
 
 public interface ProfileView {
-    void responseDataUser(boolean verifyGlide, String firstname, String lastname, String email, String scoreAsDomi,
-                          String scoreAsUser);
+    void responseDataUser(boolean verifyGlide, String firstname, String lastname, String dnidentification, String phone,
+                          String email, String scoreAsDomi, String scoreAsUser, String credit);
     void queryVerifyGlide();
     void putTrueImage();
     void executeGlide();
     void showProgressBar();
     void hideProgressBar();
+    void goHome();
+    void goProfile();
+    void goHistory();
+    void goSetting();
+    void goPayment();
+    void logOut();
 }

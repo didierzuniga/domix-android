@@ -53,8 +53,9 @@ public class DomiciliaryPresenterImpl implements DomiciliaryPresenter {
     }
 
     @Override
-    public void sendDataDomiciliary(Domiciliary domiciliary, int idOrderToSend, String uid, int transportUsed) {
-        interactor.sendDataDomiciliary(domiciliary, idOrderToSend, uid, transportUsed);
+    public void sendDataDomiciliary(Domiciliary domiciliary, int idOrderToSend, String uid, int transportUsed,
+                                    String country) {
+        interactor.sendDataDomiciliary(domiciliary, idOrderToSend, uid, transportUsed, country);
     }
 
 //    @Override
@@ -90,18 +91,8 @@ public class DomiciliaryPresenterImpl implements DomiciliaryPresenter {
     }
 
     @Override
-    public void queryForFullnameAndPhone(String uid) {
-        interactor.queryForFullnameAndPhone(uid);
-    }
-
-    @Override
-    public void sendContactData(String uid, String firstName, String lastName, String phone, Domiciliary domiciliary) {
-        interactor.sendContactData(uid, firstName, lastName, phone, domiciliary);
-    }
-
-    @Override
-    public void contactDataSent() {
-        view.contactDataSent();
+    public void queryPersonalDataFill(String uid) {
+        interactor.queryPersonalDataFill(uid);
     }
 
     @Override
@@ -115,8 +106,8 @@ public class DomiciliaryPresenterImpl implements DomiciliaryPresenter {
     }
 
     @Override
-    public void responseForFullnameAndPhone(boolean result) {
-        view.responseForFullnameAndPhone(result);
+    public void responseQueryPersonalDataFill(boolean fillData) {
+        view.responseQueryPersonalDataFill(fillData);
     }
 
 

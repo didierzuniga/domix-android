@@ -12,4 +12,10 @@ public interface SettingView {
     void errorChangePassword();
     void failedCredential();
     void goLogin();
+    void goHome();
+    void goProfile();
+    void goHistory();
+    void goSetting();
+    void goPayment();
+    void logOut();
 }

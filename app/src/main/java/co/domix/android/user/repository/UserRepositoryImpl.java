@@ -13,10 +13,13 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import co.domix.android.R;
 import co.domix.android.api.RetrofitDatetimeAdapter;
 import co.domix.android.api.RetrofitDatetimeService;
 import co.domix.android.model.Time;
@@ -38,12 +41,14 @@ import retrofit2.Retrofit;
 public class UserRepositoryImpl implements UserRepository {
 
     public Double fare;
+    private boolean countryAvailable = false;
     private Timer timer;
-    private int couForResponse, countFinal, vvPaymentCash, disbetween;
+    private int couForResponse, countFinal, vvPaymentCash, credit, updateCreditUser, disbetween;
     private Double scoreAuthor, scoreDomiciliary;
     private byte dimenSelected, payMethod;
     private String couString, uidCurrentUser, country, city, from, to, latFrom, lonFrom, latTo, lonTo, description1,
                     description2, dateNow, timeNow;
+    private int stamp;
     private UserPresenter presenter;
     private UserInteractor interactor;
 
@@ -59,17 +64,19 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void requestForFullnameAndPhone(String uid) {
+    public void queryPersonalDataFill(String uid) {
         referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                if (user.getFirst_name() == null &&
-                        user.getLast_name() == null &&
-                        user.getPhone() == null) {
-                    presenter.responseForFullnameAndPhone(false);
+                if (user.getFirst_name() == null ||
+                        user.getLast_name() == null ||
+                        user.getDni() == null ||
+                        user.getPhone() == null ||
+                        user.isImage_profile() == false){
+                    presenter.responseQueryPersonalDataFill(false);
                 } else {
-                    presenter.responseForFullnameAndPhone(true);
+                    presenter.responseQueryPersonalDataFill(true);
                 }
             }
 
@@ -81,19 +88,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity) {
-        referenceUser.child(uid).child("first_name").setValue(firstName);
-        referenceUser.child(uid).child("last_name").setValue(lastName);
-        referenceUser.child(uid).child("phone").setValue(phone);
-        presenter.contactDataSent();
-    }
-
-    @Override
     public void request(String uid, String email, final String countryCode, final String cityCode,
-                        final String fromm, final String too, int disBetweenPoints, final String descriptionOne, final String descriptionTwo,
-                        final byte dimenSelect, final byte payMeth, int paymentCash, final Activity activity) {
+                        final String fromm, final String too, int disBetweenPoints, final String descriptionOne,
+                        final String descriptionTwo, final byte dimenSelect, final byte payMeth, int paymentCash,
+                        int creditUsed, int updateCredit, final Activity activity) {
         SharedPreferences location = activity
-                .getSharedPreferences("domx_prefs", Context.MODE_PRIVATE);
+                .getSharedPreferences(activity.getString(R.string.const_sharedpreference_file_name), Context.MODE_PRIVATE);
         uidCurrentUser = uid;
         country = countryCode;
         city = cityCode;
@@ -109,6 +109,8 @@ public class UserRepositoryImpl implements UserRepository {
         dimenSelected = dimenSelect;
         payMethod = payMeth;
         vvPaymentCash = paymentCash;
+        credit = creditUsed;
+        updateCreditUser = updateCredit;
         scoreAuthor = null;
         scoreDomiciliary = null;
 
@@ -122,6 +124,7 @@ public class UserRepositoryImpl implements UserRepository {
             public void onResponse(Call<Time> call, Response<Time> response) {
                 dateNow = response.body().getDate();
                 timeNow = response.body().getTime();
+                stamp = response.body().getTimestamp();
             }
 
             @Override
@@ -163,23 +166,59 @@ public class UserRepositoryImpl implements UserRepository {
         public void run() {
             if (timeNow != null){
                 Order order = new Order(uidCurrentUser, countFinal, country, city, from, to,
-                        latFrom, lonFrom, latTo, lonTo, disbetween, description1, description2, dimenSelected, payMethod,
-                        vvPaymentCash, dateNow, timeNow, new Date().getTime());
+                        latFrom + ", " +lonFrom, latTo + ", " + lonTo,
+                        disbetween, description1, description2, dimenSelected, payMethod,
+                        vvPaymentCash, credit, dateNow, timeNow, stamp);
+                if (credit > 0){
+                    referenceUser.child(uidCurrentUser).child("my_credit").setValue(updateCreditUser);
+                }
                 referenceOrder.child(couString).setValue(order);
                 timer.cancel();
                 presenter.responseSuccessRequest(couForResponse);
             }
         }
-
     }
 
     @Override
-    public void requestFare(final String codeCountry) {
+    public void requestFareAndMyCredit(final String codeCountry, final String uid) {
         referenceFare.child(codeCountry).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Fare fare = dataSnapshot.getValue(Fare.class);
-                interactor.responseFare(fare.getFare_per_meter(), fare.getMin_fare_cost());
+                final Fare fare = dataSnapshot.getValue(Fare.class);
+
+                referenceUser.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+
+                        interactor.responseFareAndMyCredit(fare.getCurrency_code(), fare.getFare_per_meter(),
+                                                           fare.getMin_fare_cost(), user.getMy_credit());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void countriesAvailable() {
+        final List<String> listCountries = new ArrayList<String>();
+        referenceFare.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    listCountries.add(snapshot.getKey());
+                }
+                interactor.responseForCountriesAvailable(listCountries);
             }
 
             @Override

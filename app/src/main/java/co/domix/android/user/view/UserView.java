@@ -5,19 +5,19 @@ package co.domix.android.user.view;
  */
 
 public interface UserView {
-    void responseForFullnameAndPhone(boolean result);
+    void responseQueryPersonalDataFill(boolean fillData);
+    void messageDataNotFill(boolean showAlert);
     void alertNoGps();
-    void openDialogSendContactData();
-    void sendContactData(String firstName, String lastName, String phone);
     void resultErrorRequest();
-    void contactDataSent();
     void goPickMap();
     void responseFromName(String from);
     void responseToName(String to);
     void responseEmptyFields(String toastMessage);
-    void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen, int distanceBetweenPoints);
+    void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen,
+                      int distanceBetweenPoints, int myCredit);
     void responseSuccessRequest(int getCountFull);
 
+    void countryNotAvailable();
     void showNotInternet();
     void showYesInternet();
     void showProgressBar();

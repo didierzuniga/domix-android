@@ -2,6 +2,9 @@ package co.domix.android.customizer.interactor;
 
 import android.util.Log;
 
+import java.text.DecimalFormat;
+import java.util.List;
+
 import co.domix.android.customizer.presenter.TotalToPayPresenter;
 import co.domix.android.customizer.repository.TotalToPayRepository;
 import co.domix.android.customizer.repository.TotalToPayRepositoryImpl;
@@ -28,46 +31,61 @@ public class TotalToPayInteractorImpl implements TotalToPayInteractor {
     }
 
     @Override
-    public void responseTotalToPay(int totalToPayCash, double taxe, double fareDomix, int minPayment,
-                                   double payUCommission, int payURate, String country) {
-        String showCountry = "";
-        if (country.equals("CO")){
-            showCountry = "COP";
-        } else if (country.equals("CL")){
-            showCountry = "CLP";
-        } else if (country.equals("MX")){
-            showCountry = "MXN";
-        }
-
-        int commissionDomix = (int) (totalToPayCash * fareDomix);
+    public void responseTotalToPay(String currencyCode, int fareToPayDomix, int pagado, double taxe,
+                                   int minPayment, double payUCommission, int payURate, String country,
+                                   List<String> listOrders) {
+        DecimalFormat formatMiles = new DecimalFormat("###,###.##");
         String payTaxe;
         String payTotalToDomix;
+        int balanceToUpdate = -1;
         String miniPayment = "";
         boolean enableButtonPay;
-        if (totalToPayCash != 0) {
+        if (fareToPayDomix != 0) {
 
-            int payUCommissionCost = (int) (commissionDomix * payUCommission);
+            int payUCommissionCost = (int) (fareToPayDomix * payUCommission);
             int payUTotalCommission = payUCommissionCost + payURate;
             int payUIvaOverCommission = (int) (payUTotalCommission * taxe);
             int payUTotalCommissionWithIva = payUTotalCommission + payUIvaOverCommission;
+            payTaxe = formatMiles.format(payUTotalCommissionWithIva);
 
-            payTaxe = String.valueOf(payUTotalCommissionWithIva) + " " + showCountry;
-            payTotalToDomix = String.valueOf(commissionDomix + payUTotalCommissionWithIva) + " " + showCountry;
-            if ((commissionDomix + payUTotalCommissionWithIva) >= minPayment){
-                enableButtonPay = true;
-            } else {
-                miniPayment = String.valueOf(minPayment) + " " +showCountry;
+            int saldo = pagado - (fareToPayDomix + payUTotalCommissionWithIva);
+            if (saldo >= 0){
+                // Enviar a positive_balance --saldo--
+                // Y mostrar 0 total a pagar
+                balanceToUpdate = saldo;
+                payTotalToDomix = "0.00 ";
+                miniPayment = String.valueOf(minPayment);
                 enableButtonPay = false;
+
+            } else {
+                //Enviar a positive_balance -- 0 --
+                balanceToUpdate = 0;
+                payTotalToDomix = formatMiles.format(saldo * -1);
+//                payTotalToDomix = String.valueOf(saldo * -1);
+                if ((saldo * -1) >= minPayment){
+                    enableButtonPay = true;
+                } else {
+                    miniPayment = String.valueOf(minPayment);
+                    enableButtonPay = false;
+                }
             }
         } else {
-            payTaxe = "0.00 " + showCountry;
-            payTotalToDomix = "0.00 " + showCountry;
+            payTaxe = "0.00 ";
+            payTotalToDomix = "0.00 ";
             enableButtonPay = false;
         }
-        presenter.responseTotalToPayCash(String.valueOf(commissionDomix) + " " + showCountry,
+        presenter.responseTotalToPayCash(formatMiles.format(fareToPayDomix),
                                         payTaxe,
                                         payTotalToDomix,
                                         miniPayment,
-                                        enableButtonPay);
+                                        enableButtonPay,
+                                        balanceToUpdate,
+                                        listOrders,
+                                        currencyCode);
+    }
+
+    @Override
+    public void goPayU(List<String> list, int balance) {
+        repository.goPayU(list, balance);
     }
 }

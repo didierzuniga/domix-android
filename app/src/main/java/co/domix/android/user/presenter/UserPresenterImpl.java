@@ -20,6 +20,21 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
+    public void queryPersonalDataFill(String uid) {
+        interactor.queryPersonalDataFill(uid);
+    }
+
+    @Override
+    public void responseQueryPersonalDataFill(boolean fillData) {
+        view.responseQueryPersonalDataFill(fillData);
+    }
+
+    @Override
+    public void messageDataNotFill(boolean showAlert) {
+        view.messageDataNotFill(showAlert);
+    }
+
+    @Override
     public void verifyLocationAndInternet(User user) {
         interactor.verifyLocationAndInternet(user);
     }
@@ -30,41 +45,17 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
-    public void requestForFullnameAndPhone(String uid) {
-        interactor.requestForFullnameAndPhone(uid);
-    }
-
-    @Override
-    public void requestGeolocationAndDistance(String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, User user) {
-        interactor.requestGeolocationAndDistance(latFrom, lonFrom, latTo, lonTo, whatAddress, user);
-    }
-
-    @Override
-    public void responseForFullnameAndPhone(boolean result) {
-        view.responseForFullnameAndPhone(result);
-    }
-
-    @Override
-    public void sendContactData(String uid, String firstName, String lastName, String phone, User user) {
-        interactor.sendContactData(uid, firstName, lastName, phone, user);
-    }
-
-    @Override
-    public void contactDataSent() {
-        view.contactDataSent();
-    }
-
-    @Override
-    public void openDialogSendContactData() {
-        view.openDialogSendContactData();
+    public void requestGeolocationAndDistance(String uid, String latFrom, String lonFrom, String latTo,
+                                              String lonTo, int whatAddress, User user) {
+        interactor.requestGeolocationAndDistance(uid, latFrom, lonFrom, latTo, lonTo, whatAddress, user);
     }
 
     @Override
     public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                         String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
-                        byte payMethod, int paymentCash, User user) {
+                        byte payMethod, int paymentCash, int creditUsed, int updateCredit, User user) {
         interactor.request(fieldsWasFill, uid, email, country, city, from, to, disBetweenPoints, description1, description2,
-                dimenSelected, payMethod, paymentCash, user);
+                dimenSelected, payMethod, paymentCash, creditUsed, updateCredit, user);
     }
 
     @Override
@@ -88,13 +79,24 @@ public class UserPresenterImpl implements UserPresenter {
     }
 
     @Override
-    public void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen, int distanceBetweenPoints) {
-        view.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, distanceBetweenPoints);
+    public void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen,
+                             int distanceBetweenPoints, int myCredit) {
+        view.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, distanceBetweenPoints, myCredit);
     }
 
     @Override
     public void resultErrorRequest() {
         view.resultErrorRequest();
+    }
+
+    @Override
+    public void countryNotAvailable() {
+        view.countryNotAvailable();
+    }
+
+    @Override
+    public void countriesAvailable() {
+        interactor.countriesAvailable();
     }
 
     @Override

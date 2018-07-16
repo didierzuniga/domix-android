@@ -27,8 +27,8 @@ public class RequestedInteractorImpl implements RequestedInteractor {
     }
 
     @Override
-    public void dialogCancel(int idOrder, Activity activity) {
-        repository.dialogCancel(idOrder, activity);
+    public void dialogCancel(boolean afterTwoMinutes, String uid, int idOrder, Activity activity) {
+        repository.dialogCancel(afterTwoMinutes, uid, idOrder, activity);
     }
 
     @Override

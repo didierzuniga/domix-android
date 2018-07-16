@@ -30,8 +30,8 @@ public class RequestedPresenterImpl implements RequestedPresenter {
     }
 
     @Override
-    public void dialogCancel(int idOrder, Requested requested) {
-        interactor.dialogCancel(idOrder, requested);
+    public void dialogCancel(boolean afterTwoMinutes, String uid, int idOrder, Requested requested) {
+        interactor.dialogCancel(afterTwoMinutes, uid, idOrder, requested);
     }
 
     @Override
@@ -45,8 +45,8 @@ public class RequestedPresenterImpl implements RequestedPresenter {
     }
 
     @Override
-    public void responseCoordinatesFromTo(String oriLa, String oriLo, String desLa, String desLo) {
-        view.resultCoordinatesFromTo(oriLa, oriLo, desLa, desLo);
+    public void responseCoordinatesFromTo(String origenCoordinate, String destineCoordinate) {
+        view.resultCoordinatesFromTo(origenCoordinate, destineCoordinate);
     }
 
     @Override
@@ -62,5 +62,10 @@ public class RequestedPresenterImpl implements RequestedPresenter {
     @Override
     public void resultNotCatched() {
         view.resultNotCatched();
+    }
+
+    @Override
+    public void repeatUpdateDomi() {
+        view.updateDomiPosition();
     }
 }

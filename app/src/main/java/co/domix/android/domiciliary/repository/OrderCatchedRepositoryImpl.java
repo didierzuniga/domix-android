@@ -14,12 +14,18 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
+import co.domix.android.domiciliary.interactor.OrderCatchedInteractor;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenter;
 import co.domix.android.model.Counter;
+import co.domix.android.model.Fare;
 import co.domix.android.model.Order;
 import co.domix.android.model.User;
+import co.domix.android.model.Wallet;
 
 /**
  * Created by unicorn on 11/13/2017.
@@ -27,18 +33,23 @@ import co.domix.android.model.User;
 
 public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
-    private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false, wasTaked = false;
+    private boolean finishedByDeliveryman = false, cancelledByDeliveryman= false, thereWallet;
+    private String date, country;
+    private int fareToPayDomix, paidOut;
     private OrderCatchedPresenter presenter;
-    private DomixApplication app;
+    private OrderCatchedInteractor interactor;
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceUser = database.getReference("user");
+    DatabaseReference referenceFare = database.getReference("fare");
     DatabaseReference referenceOrder = database.getReference("order");
+    DatabaseReference referenceWallet = database.getReference("wallet");
     DatabaseReference referenceCoord = database.getReference("coordinate");
     DatabaseReference referenceCounter = database.getReference("counter");
 
-    public OrderCatchedRepositoryImpl(OrderCatchedPresenter presenter) {
+    public OrderCatchedRepositoryImpl(OrderCatchedPresenter presenter, OrderCatchedInteractor interactor) {
         this.presenter = presenter;
+        this.interactor = interactor;
     }
 
     @Override
@@ -52,16 +63,16 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
                 String cityAuthor = order.getX_city();
                 String fromAuthor = order.getX_name_from();
                 String toAuthor = order.getX_name_to();
-                String titleAuthor = order.getX_description1();
-                String descriptionAuthor = order.getX_description2();
-                String oriLa = order.x_latitude_from.toString();
-                String oriLo = order.x_longitude_from.toString();
-                String desLa = order.x_latitude_to.toString();
-                String desLo = order.x_longitude_to.toString();
-                int moneyAuthor = order.getX_money_to_pay();
+                String description1 = order.getX_description1();
+                String description2 = order.getX_description2();
+                String origenCoordinate = order.getX_coordinate_from();
+                String destineCoordinate = order.getX_coordinate_to();
+                int moneyCash = order.getX_money_to_pay();
+                int moneyCredit = order.getX_credit_used();
+                int paymentMethod = order.getX_pay_method();
                 getNameAndPhoneAuthor(uidAuthor, countryAuthor, cityAuthor, fromAuthor, toAuthor,
-                        titleAuthor, descriptionAuthor, oriLa, oriLo,
-                        desLa, desLo, moneyAuthor);
+                        description1, description2, origenCoordinate, destineCoordinate, moneyCash,
+                        moneyCredit, paymentMethod);
                 verifyStatusOrder(uid, String.valueOf(idOrder), activity);
 //                referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
             }
@@ -74,22 +85,36 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
     }
 
     @Override
-    public void getNameAndPhoneAuthor(final String uidAuthor, final String countryAuthor, final String cityAuthor, final String fromAuthor,
-                                      final String toAuthor, final String titleAuthor, final String descriptionAuthor,
-                                      final String oriLa, final String oriLo, final String desLa,
-                                      final String desLo, final int moneyAuthor) {
+    public void getNameAndPhoneAuthor(final String uidAuthor, final String countryAuthor, final String cityAuthor,
+                                      final String fromAuthor, final String toAuthor, final String description1,
+                                      final String description2, final String origenCoordinate, final String destineCoordinate,
+                                      final int moneyCash, final int moneyCredit,
+                                      final int paymentMethod) {
         referenceUser.child(uidAuthor).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 String firstName = user.getFirst_name();
                 String lastName = user.getLast_name();
-                String fullName = firstName + " " + lastName;
-                String phone = user.getPhone();
-                presenter.responseUserRequested(fullName, phone, countryAuthor, cityAuthor, fromAuthor,
-                        toAuthor, titleAuthor, descriptionAuthor, oriLa,
-                        oriLo, desLa, desLo, moneyAuthor);
-                referenceUser.child(uidAuthor).removeEventListener(this);
+                final String fullName = firstName + " " + lastName;
+                final String phone = user.getPhone();
+                referenceFare.child(countryAuthor).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Fare fare = dataSnapshot.getValue(Fare.class);
+                        interactor.responseUserRequested(fullName, phone, fare.getCurrency_code(),
+                                                        cityAuthor, fromAuthor, toAuthor, description1,
+                                                        description2, origenCoordinate, destineCoordinate,
+                                                        moneyCash, moneyCredit, paymentMethod);
+                        referenceUser.child(uidAuthor).removeEventListener(this);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
 
             @Override
@@ -102,6 +127,7 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
     @Override
     public void dialogCancel(final String idOrder, String uid, final Activity activity) {
         referenceOrder.child(idOrder).child("d_id").removeValue();
+        referenceOrder.child(idOrder).child("x_applied_fare").removeValue();
         referenceOrder.child(idOrder).child("x_transportUsed").removeValue();
         referenceOrder.child(idOrder).child("x_catched").setValue(false);
         removeCoordDomiciliary(uid);
@@ -111,9 +137,73 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
     }
 
     @Override
-    public void dialogFinish(String idOrder) {
+    public void dialogFinish(final String idOrder, final String uid) {
+        thereWallet = false;
         finishedByDeliveryman = true;
+        referenceOrder.child(idOrder).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Order order = dataSnapshot.getValue(Order.class);
+                date = order.getX_date();
+                country = order.getX_country();
+                fareToPayDomix += (int) ((order.getX_money_to_pay() + order.getX_credit_used()) *
+                        order.getX_applied_fare());
+                if (order.getX_pay_method() == 1 || order.getX_pay_method() == 2){
+                    paidOut += order.getX_money_to_pay() + order.getX_credit_used();
+                } else if (order.getX_credit_used() > 0){
+                    paidOut += order.getX_credit_used();
+                }
+
+                referenceWallet.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            if ((snapshot.getKey()).equals(uid)){
+                                thereWallet = true;
+                                referenceWallet.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Wallet wallet = dataSnapshot.getValue(Wallet.class);
+                                        List<String> li = wallet.getOrder_id();
+                                        li.add(idOrder);
+                                        referenceWallet.child(uid).child("order_id").setValue(li);
+                                        referenceWallet.child(uid).child("to_domix").setValue(fareToPayDomix + wallet.getTo_domix());
+                                        referenceWallet.child(uid).child("charged").setValue(paidOut + wallet.getCharged());
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                                break;
+                            }
+                        }
+                        if (!thereWallet){
+                            List<String> li = new ArrayList<String>();
+                            li.add(idOrder);
+                            referenceWallet.child(uid).child("order_id").setValue(li);
+                            referenceWallet.child(uid).child("to_domix").setValue(fareToPayDomix);
+                            referenceWallet.child(uid).child("charged").setValue(paidOut);
+                            referenceWallet.child(uid).child("date").setValue(date);
+                            referenceWallet.child(uid).child("country_code").setValue(country);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         referenceOrder.child(idOrder).child("x_completed").setValue(true);
+
         //Remove coordinates???
         modifyCounterRealtimeAndDone();
     }
@@ -129,21 +219,29 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
         referenceOrder.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean wasTakedByDeliveryman = false;
+                long countTotalOrders = dataSnapshot.getChildrenCount();
+                long counter = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    counter++;
                     Order order = snapshot.getValue(Order.class);
-                    if (uid.equals(order.getD_id()) && !(order.isX_completed())) {
-                        wasTaked = true;
-                    } else {
-                        if (wasTaked){
-                            if (finishedByDeliveryman || cancelledByDeliveryman){
-                                referenceOrder.removeEventListener(this);
+
+
+                    if (!finishedByDeliveryman && !cancelledByDeliveryman){
+                        if (!wasTakedByDeliveryman){
+                            if (uid.equals(order.getD_id()) && !(order.isX_completed())) {
+                                wasTakedByDeliveryman = true;
                             } else {
-                                presenter.showToastUserCancelledOrder();
-                                presenter.responseBackDomiciliaryActivity();
-                                removeCoordDomiciliary(uid);
-                                referenceOrder.removeEventListener(this);
+                                if (counter == countTotalOrders) {
+                                    presenter.showToastUserCancelledOrder();
+                                    presenter.responseBackDomiciliaryActivity();
+                                    removeCoordDomiciliary(uid);
+                                    referenceOrder.removeEventListener(this);
+                                }
                             }
                         }
+                    } else {
+                        referenceOrder.removeEventListener(this);
                     }
                 }
             }
@@ -153,36 +251,6 @@ public class OrderCatchedRepositoryImpl implements OrderCatchedRepository {
 
             }
         });
-
-
-//        isActiveOrder = false;
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).onDisconnect());
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getKey());
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getParent());
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getRoot());
-//        Log.w("jjj", "-> "+referenceOrder.child(idorder).getRef());
-//
-//        referenceOrder.child(idorder).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Order order = dataSnapshot.getValue(Order.class);
-//                if (!(order.isX_completed())) {
-//                    isActiveOrder = true;
-//                } else {
-//                    referenceOrder.removeEventListener(this);
-//                }
-//                if (!isActiveOrder) {
-//                    Toast.makeText(activity, R.string.toast_user_has_cancelled_order, Toast.LENGTH_SHORT).show();
-//                    presenter.responseBackDomiciliaryActivity();
-//                    removeCoordDomiciliary(uid);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
     @Override

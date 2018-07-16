@@ -7,10 +7,10 @@ import android.app.Activity;
  */
 
 public interface UserRepository {
-    void requestForFullnameAndPhone(String uid);
-    void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity);
+    void queryPersonalDataFill(String uid);
     void request(String uid, String email, String country, String city, String from, String to,
                  int disBetweenPoints, String description1, String description2, byte dimenSelected, byte payMethod,
-                 int paymentCash, Activity activity);
-    void requestFare(String codeCountry);
+                 int paymentCash, int creditUsed, int updateCredit, Activity activity);
+    void requestFareAndMyCredit(String codeCountry, String uid);
+    void countriesAvailable();
 }

@@ -9,16 +9,19 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,35 +35,37 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.Polyline;
+import com.github.silvestrpredko.dotprogressbar.DotProgressBar;
+import com.github.silvestrpredko.dotprogressbar.DotProgressBarBuilder;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
-import co.domix.android.directionModule.DirectionFinder;
-import co.domix.android.directionModule.DirectionFinderListener;
-import co.domix.android.directionModule.Route;
+import co.domix.android.customizer.view.Profile;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenter;
 import co.domix.android.domiciliary.presenter.DomiciliaryPresenterImpl;
-import co.domix.android.domiciliary.service.NotificationService;
+import co.domix.android.services.LocationService;
 import co.domix.android.utils.ToastsKt;
 
 /**
  * Created by unicorn on 11/12/2017.
  */
 
-public class Domiciliary extends AppCompatActivity implements DomiciliaryView, LocationListener {
+public class Domiciliary extends AppCompatActivity implements DomiciliaryView, GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks {
 
-    protected LocationManager locationManager;
-    private String la, lo;
-    private int distMin, countForDictionary, countIndex, countIndexTemp, countChilds, idOrderToSend;
+    private GoogleApiClient apiClient;
+    private LocationManager locationManager;
+    private String country; //la, lo
+    private int countIndex, idOrderToSend;
     private boolean fieldsWasFill;
     private ProgressBar progressBarDomiciliary;
+    private DotProgressBar waitingDeliveriesImage;
     private Switch switchAB;
     private android.app.AlertDialog alertDialog;
     private TextInputEditText firstName, lastName, phone;
@@ -72,7 +77,7 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     private int vehSelected;
     private ScrollView scrollView;
     private AlertDialog alert = null;
-    private SharedPreferences location;
+    private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private DomiciliaryPresenter presenter;
     private DomixApplication app;
@@ -87,40 +92,29 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         app = (DomixApplication) getApplicationContext();
         presenter = new DomiciliaryPresenterImpl(this);
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-
         switchAB = (Switch) findViewById(R.id.switchAB);
+        switchAB.setChecked(false);
         lnrSpiVehicle = (LinearLayout) findViewById(R.id.lnrSpiVehicle);
         lnrNotInternet = (LinearLayout) findViewById(R.id.lnrNotInternet);
         scrollView = (ScrollView) findViewById(R.id.scrVieDomiciliary);
         progressBarDomiciliary = (ProgressBar) findViewById(R.id.prgBarDomiciliary);
         lnrShowData = (LinearLayout) findViewById(R.id.lnrShowData);
         waitinDeliveries = (TextView) findViewById(R.id.txtVieWaitingDeliveries);
+        waitingDeliveriesImage = (DotProgressBar) findViewById(R.id.dot_progress_bar);
         btnViewMap = (Button) findViewById(R.id.btnViewMap);
         btnAcceptDelivery = (Button) findViewById(R.id.btnAcceptRequest);
         btnDismissDelivery = (Button) findViewById(R.id.btnDismissRequest);
 
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
-        editor = location.edit();
-        editor.putBoolean("SearchDelivery", false);
-        editor.putBoolean("IsServiceActive", false);
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+        editor = shaPref.edit();
+        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
+//        editor.putBoolean("IsServiceActive", false);
         editor.commit();
 
-        if (location.getBoolean("backFromServiceNotification", false)) {
+        if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_backfromServiceNotification), false)) {
             switchAB.setChecked(false);
             switchAB.setChecked(true);
-            editor.putBoolean("backFromServiceNotification", false);
+            editor.putBoolean(getString(R.string.const_sharedPref_key_backfromServiceNotification), false);
             editor.commit();
         }
 
@@ -141,20 +135,24 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    if (vehSelected == 0){
+                    if (vehSelected == 0) {
                         ToastsKt.toastShort(Domiciliary.this, getString(R.string.toast_must_choise_vehicle));
                         switchAB.setChecked(false);
                     } else {
-                        editor.putBoolean("SearchDelivery", true);
+                        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), true);
                         editor.commit();
                         lnrSpiVehicle.setVisibility(View.GONE);
                         waitinDeliveries.setVisibility(View.VISIBLE);
-                        queryForFullnameAndPhone();
+                        waitingDeliveriesImage.setVisibility(View.VISIBLE);
+                        queryPersonalDataFill();
                     }
                 } else {
-                    editor.putBoolean("SearchDelivery", false);
+                    waitinDeliveries.setVisibility(View.GONE);
+                    waitingDeliveriesImage.setVisibility(View.GONE);
+                    lnrShowData.setVisibility(View.GONE);
+                    lnrSpiVehicle.setVisibility(View.VISIBLE);
+                    editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
                     editor.commit();
-                    Domiciliary.super.recreate();
                 }
             }
         });
@@ -169,9 +167,10 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         btnAcceptDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                lnrShowData.setVisibility(View.GONE);
                 showProgressBar();
-                presenter.sendDataDomiciliary(Domiciliary.this, idOrderToSend, app.uId, vehSelected);
+                scrollView.setVisibility(View.GONE);
+//                lnrShowData.setVisibility(View.GONE);
+                presenter.sendDataDomiciliary(Domiciliary.this, idOrderToSend, app.uId, vehSelected, country);
             }
         });
 
@@ -180,9 +179,10 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
             public void onClick(View v) {
                 onStart();
                 switchAB.setChecked(false);
-                switchAB.setChecked(true);
-                waitinDeliveries.setVisibility(View.VISIBLE);
+                waitinDeliveries.setVisibility(View.GONE);
+                waitingDeliveriesImage.setVisibility(View.GONE);
                 lnrShowData.setVisibility(View.GONE);
+                lnrSpiVehicle.setVisibility(View.VISIBLE);
             }
         });
         buttonRefresh = (Button) findViewById(R.id.btnRefreshDomiciliary);
@@ -193,13 +193,20 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
                 presenter.verifyLocationAndInternet(Domiciliary.this);
             }
         });
+
+        apiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .build();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        editor.putBoolean("SearchDelivery", false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
         editor.commit();
+        finish();
     }
 
     @Override
@@ -249,32 +256,37 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
 
     @Override
     public void searchDeliveries() {
-        presenter.searchDeliveries(la, lo, vehSelected);
+        presenter.searchDeliveries(shaPref.getString(getString(R.string.const_sharedPref_key_lat_device), ""),
+                                                      shaPref.getString(getString(R.string.const_sharedPref_key_lon_device), ""),
+                                                      vehSelected);
     }
 
     @Override
-    public void showResultOrder(Hashtable<Integer, List> dictionary, int countIndex) {
+    public void showResultOrder(Hashtable<Integer, List> dictionary, int countIndx) {
         diccionario = dictionary;
+        countIndex = countIndx;
+        country = dictionary.get(countIndex).get(10).toString();
         queryUserRate(dictionary.get(countIndex).get(0).toString());
         idOrderToSend = Integer.valueOf(dictionary.get(countIndex).get(0).toString());
         String sizeOrder = "";
-        if ((dictionary.get(countIndex).get(10).toString()).equals("0")){
+        if ((dictionary.get(countIndex).get(8).toString()).equals("0")){
             sizeOrder = getString(R.string.text_letter);
-        } else if ((dictionary.get(countIndex).get(10).toString()).equals("1")){
+        } else if ((dictionary.get(countIndex).get(8).toString()).equals("1")){
             sizeOrder = getString(R.string.text_bag);
-        } else if ((dictionary.get(countIndex).get(10).toString()).equals("2")){
+        } else if ((dictionary.get(countIndex).get(8).toString()).equals("2")){
             sizeOrder = getString(R.string.text_trunk);
-        } else if ((dictionary.get(countIndex).get(10).toString()).equals("3")){
+        } else if ((dictionary.get(countIndex).get(8).toString()).equals("3")){
             sizeOrder = getString(R.string.text_grid);
         }
 
-        tvAgo.append(" " + dictionary.get(countIndex).get(1).toString());
-        tvFrom.append(" " + dictionary.get(countIndex).get(2).toString());
-        tvDimensions.append(" " + sizeOrder);
-        tvTo.append(" " + dictionary.get(countIndex).get(3).toString());
-        tvDescription1.append(" " + dictionary.get(countIndex).get(4).toString());
-        tvDescription2.append(" " + dictionary.get(countIndex).get(5).toString());
+        tvAgo.setText(dictionary.get(countIndex).get(1).toString());
+        tvFrom.setText(dictionary.get(countIndex).get(2).toString());
+        tvDimensions.setText(" " + sizeOrder);
+        tvTo.setText(dictionary.get(countIndex).get(3).toString());
+        tvDescription1.setText(dictionary.get(countIndex).get(4).toString());
+        tvDescription2.setText(dictionary.get(countIndex).get(5).toString());
         waitinDeliveries.setVisibility(View.GONE);
+        waitingDeliveriesImage.setVisibility(View.GONE);
         lnrShowData.setVisibility(View.VISIBLE);
     }
 
@@ -286,13 +298,11 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
 
     @Override
     public void goPreviewRouteOrder() {
-        editor.putBoolean("SearchDelivery", false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
         editor.commit();
         Intent intent = new Intent(this, PreviewRouteOrder.class);
-        intent.putExtra("latFrom", diccionario.get(countIndex).get(6).toString());
-        intent.putExtra("latTo", diccionario.get(countIndex).get(8).toString());
-        intent.putExtra("lonFrom", diccionario.get(countIndex).get(7).toString());
-        intent.putExtra("lonTo", diccionario.get(countIndex).get(9).toString());
+        intent.putExtra("coordinateFromView", diccionario.get(countIndex).get(6).toString());
+        intent.putExtra("coordinateToView", diccionario.get(countIndex).get(7).toString());
         startActivity(intent);
     }
 
@@ -303,86 +313,23 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         lnrShowData.setVisibility(View.VISIBLE);
         ToastsKt.toastLong(this, getString(R.string.toast_order_has_been_taken));
         waitinDeliveries.setVisibility(View.VISIBLE);
+        waitingDeliveriesImage.setVisibility(View.VISIBLE);
         lnrShowData.setVisibility(View.GONE);
     }
 
     @Override
     public void responseGoOrderCatched(String idOrder) {
         hideProgressBar();
-        editor.putBoolean("SearchDelivery", false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
         app.idOrder = Integer.valueOf(idOrder);
-        editor.putString("latFrom", diccionario.get(countIndex).get(6).toString());
-        editor.putString("latTo", diccionario.get(countIndex).get(8).toString());
-        editor.putString("lonFrom", diccionario.get(countIndex).get(7).toString());
-        editor.putString("lonTo", diccionario.get(countIndex).get(9).toString());
-        editor.commit();
         Intent intent = new Intent(this, OrderCatched.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
-    public void queryForFullnameAndPhone() {
-        distMin = 0;
-        countForDictionary = 0;
-        countIndex = 0;
-        countIndexTemp = 0;
-        presenter.queryForFullnameAndPhone(app.uId);
-    }
-
-    @Override
-    public void openDialogSendContactData() {
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View view = layoutInflater.inflate(R.layout.dialog_send_user_contact, null);
-        alertDialog = new android.app.AlertDialog.Builder(this).create();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        btnSendFullnameAndPhone = (Button) view.findViewById(R.id.btnSendContactData);
-        btnBack = (Button) view.findViewById(R.id.btnBack);
-        firstName = (TextInputEditText) view.findViewById(R.id.firstName);
-        lastName = (TextInputEditText) view.findViewById(R.id.lastName);
-        phone = (TextInputEditText) view.findViewById(R.id.phone);
-
-        firstName.setInputType(
-                InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_FLAG_CAP_WORDS
-        );
-        lastName.setInputType(
-                InputType.TYPE_CLASS_TEXT |
-                        InputType.TYPE_TEXT_FLAG_CAP_WORDS
-        );
-
-        btnSendFullnameAndPhone.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String getFirst_name = firstName.getText().toString();
-                String getLast_name = lastName.getText().toString();
-                String getPhone = phone.getText().toString();
-                if (getFirst_name.equals("") || getLast_name.equals("") || getPhone.equals("")) {
-                    Toast.makeText(Domiciliary.this, R.string.toast_please_complete_all_files, Toast.LENGTH_SHORT).show();
-                } else {
-                    alertDialog.dismiss();
-                    sendContactData(getFirst_name, getLast_name, getPhone);
-                }
-            }
-        });
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog.setView(view);
-        alertDialog.show();
-    }
-
-    @Override
-    public void sendContactData(String firstName, String lastName, String phone) {
-        presenter.sendContactData(app.uId, firstName, lastName, phone, this);
-    }
-
-    @Override
-    public void contactDataSent() {
-        onStart();
-        Toast.makeText(this, R.string.toast_sent_contact_data, Toast.LENGTH_SHORT).show();
+    public void queryPersonalDataFill() {
+        presenter.queryPersonalDataFill(app.uId);
     }
 
     @Override
@@ -402,11 +349,27 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     }
 
     @Override
-    public void responseForFullnameAndPhone(boolean result) {
-        if (location.getBoolean("SearchDelivery", false)) {
-            fieldsWasFill = result;
-            if (!fieldsWasFill) {
-                openDialogSendContactData();
+    public void responseQueryPersonalDataFill(boolean fillData) {
+        if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false)) {
+            if (!fillData) {
+                editor.putBoolean(getString(R.string.const_sharedPref_key_searchDelivery), false);
+                editor.commit();
+                lnrSpiVehicle.setVisibility(View.VISIBLE);
+                waitinDeliveries.setVisibility(View.GONE);
+                waitingDeliveriesImage.setVisibility(View.GONE);
+                switchAB.setChecked(false);
+                new AlertDialog.Builder(this)
+                        .setPositiveButton(getString(R.string.message_yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(Domiciliary.this, Profile.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.message_no), null)
+                        .setMessage(getString(R.string.text_message_fill_in_data))
+                        .show();
             } else {
                 searchDeliveries();
             }
@@ -414,9 +377,86 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
     }
 
     @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    101);
+        } else {
+            Location lastLocation =
+                    LocationServices.FusedLocationApi.getLastLocation(apiClient);
+            updateUI(lastLocation);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 101) {
+            if (grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Permiso concedido
+                @SuppressWarnings("MissingPermission")
+                Location lastLocation =
+                        LocationServices.FusedLocationApi.getLastLocation(apiClient);
+                updateUI(lastLocation);
+            } else {
+                //Permiso denegado:
+                //Deberíamos deshabilitar toda la funcionalidad relativa a la localización.
+            }
+        }
+    }
+
+    private void updateUI(Location loc) {
+        if (loc != null) {
+            SharedPreferences location = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+            SharedPreferences.Editor editor = location.edit();
+            editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(loc.getLatitude()));
+            editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(loc.getLongitude()));
+            editor.commit();
+        } else {
+            try {
+                if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    // Unknown Latitude and Longitude
+                    // Available GPS but not recognize coordenates
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Desactivado curiosamente el GPS")
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                }
+                            }).setNegativeButton(R.string.message_no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Domiciliary.super.finish();
+                        }
+                    });
+                    alert = builder.create();
+                    alert.show();
+                }
+            } catch (Exception e){
+                ToastsKt.toastShort(this, "Ocurrió un error con tu GPS");
+            }
+
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
-        stopService(new Intent(this, NotificationService.class));
+        presenter.verifyLocationAndInternet(this);
 
         lnrShowData = (LinearLayout) findViewById(R.id.lnrShowData);
         tvAgo = (TextView) findViewById(R.id.txtVieAgo);
@@ -425,54 +465,21 @@ public class Domiciliary extends AppCompatActivity implements DomiciliaryView, L
         tvDimensions = (TextView) findViewById(R.id.txtVieDimensions);
         tvDescription1 = (TextView) findViewById(R.id.txtVieDescription1);
         tvDescription2 = (TextView) findViewById(R.id.txtVieDescription2);
-        waitinDeliveries = (TextView) findViewById(R.id.txtVieWaitingDeliveries);
+//        waitinDeliveries = (TextView) findViewById(R.id.txtVieWaitingDeliveries);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        la = "";
-        lo = "";
-        presenter.verifyLocationAndInternet(this);
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Domiciliary.super.recreate();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if ((location.getBoolean("SearchDelivery", false))) {
-            startService(new Intent(this, NotificationService.class));
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        la = String.valueOf(location.getLatitude());
-        lo = String.valueOf(location.getLongitude());
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 }

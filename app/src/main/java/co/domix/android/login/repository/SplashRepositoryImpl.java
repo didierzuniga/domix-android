@@ -2,6 +2,7 @@ package co.domix.android.login.repository;
 
 import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,7 +50,7 @@ public class SplashRepositoryImpl extends AppCompatActivity implements SplashRep
                     scoreAuthor = order.getX_score_author();
                     if (uid.equals(uidAuthor)) {
                         withoutOrder = 1;
-                        if (completed == false) {
+                        if (!completed) {
                             presenter.goOrderRequested(orderId);
                         } else if (scoreDomiciliary == null) {
                             presenter.goUserScore(orderId);
@@ -58,10 +59,12 @@ public class SplashRepositoryImpl extends AppCompatActivity implements SplashRep
                         }
                     } else if (uid.equals(uidDomiciliary)) {
                         withoutOrder = 1;
-                        if (completed == false) {
+                        if (!completed) {
                             presenter.goOrderCatched(orderId);
+                            break;
                         } else if (scoreAuthor == null) {
                             presenter.goDomiciliaryScore(orderId);
+                            break;
                         } else {
                             presenter.goHome();
                         }

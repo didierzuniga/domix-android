@@ -7,23 +7,24 @@ import co.domix.android.user.view.User;
  */
 
 public interface UserPresenter {
+    void queryPersonalDataFill(String uid);
+    void responseQueryPersonalDataFill(boolean fillData);
+    void messageDataNotFill(boolean showAlert);
     void verifyLocationAndInternet(User user);
     void alertNoGps();
-    void requestForFullnameAndPhone(String uid);
-    void requestGeolocationAndDistance(String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, User user);
-    void responseForFullnameAndPhone(boolean result);
-    void sendContactData(String uid, String firstName, String lastName, String phone, User user);
-    void contactDataSent();
-    void openDialogSendContactData();
+    void requestGeolocationAndDistance(String uid, String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, User user);
     void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                  String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
-                 byte payMethod, int paymentCash, User user);
+                 byte payMethod, int paymentCash, int creditUsed, int updateCredit, User user);
     void responseSuccessRequest(int getCountFull);
     void responseFromName(String from);
     void responseToName(String to);
     void responseEmptyFields(String toastMessage);
-    void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen, int distanceBetweenPoints);
+    void responseCash(int priceInCash, String countryO, String countryOrigen, String cityOrigen,
+                      int distanceBetweenPoints, int myCredit);
     void resultErrorRequest();
+    void countryNotAvailable();
+    void countriesAvailable();
     void showNotInternet();
     void showYesInternet();
     void showProgressBar();

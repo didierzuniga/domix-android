@@ -8,9 +8,20 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.util.Log;
 
+import com.google.android.gms.location.places.GeoDataApi;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceDetectionApi;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
@@ -29,16 +40,24 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
 
     private LocationManager locationManager;
     private DomixApplication app;
-    private int minFare, priceInCash;
-    private double fareToApply;
-    private String coordsFromPrice, coordsToPrice, cityOrigen, countryOrigen, countryO;
+    private boolean countryAvailable = false;
+    private int minFare, priceInCash, myCredit, routeInt;
+    private float fareToApply, routeDouble;
+    private String coordsFromPrice, coordsToPrice, cityOrigen, countryOrigen, currencyCode, userID,
+                   countryFrom, countryTo;
     private List<Address> geocodeMatches = null;
+    private List<String> countriesOk;
     private UserPresenter presenter;
     private UserRepository repository;
 
     public UserInteractorImpl(UserPresenter presenter) {
         this.presenter = presenter;
         repository = new UserRepositoryImpl(presenter, this);
+    }
+
+    @Override
+    public void queryPersonalDataFill(String uid) {
+        repository.queryPersonalDataFill(uid);
     }
 
     @Override
@@ -76,43 +95,59 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     }
 
     @Override
-    public void requestForFullnameAndPhone(String uid) {
-        repository.requestForFullnameAndPhone(uid);
-    }
-
-    @Override
-    public void requestGeolocationAndDistance(String latFrom, String lonFrom, String latTo, String lonTo, int whatAddress, Activity activity) {
+    public void requestGeolocationAndDistance(String uid, String latFrom, String lonFrom, String latTo,
+                                              String lonTo, int whatAddress, Activity activity) {
+        userID = uid;
         if (whatAddress == 0){
-            if (!latFrom.equals(null) || !lonFrom.equals(null)){
+            if (!latFrom.equals("") || !lonFrom.equals("")){
                 String arr [] = getGeolocation(latFrom, lonFrom, activity);
                 coordsFromPrice = arr[3];
+                countryFrom = arr[0];
                 presenter.responseFromName(arr[2]);
             }
         } else if (whatAddress == 1){
-            if (!latTo.equals(null) || !lonTo.equals(null)){
+            if (!latTo.equals("") || !lonTo.equals("")){
                 String arr [] = getGeolocation(latTo, lonTo, activity);
                 coordsToPrice = arr[3];
+                countryTo = arr[0];
                 countryOrigen = arr[0];
                 cityOrigen = arr[1];
-                repository.requestFare(arr[0]);
                 presenter.responseToName(arr[2]);
             }
         }
 
         if (coordsFromPrice != null && coordsToPrice != null) {
-            try {
-                new DirectionFinder(this, coordsFromPrice, coordsToPrice).execute();
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+            for (int i = 0; i < countriesOk.size(); i++ ){
+                if (countryFrom.equals(countriesOk.get(i)) && countryTo.equals(countriesOk.get(i))){
+                    countryAvailable = true;
+                    try {
+                        new DirectionFinder(this, coordsFromPrice, coordsToPrice).execute();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+
+            if (!countryAvailable){
+                presenter.countryNotAvailable();
             }
         }
     }
 
+    @Override
+    public void responseForCountriesAvailable(List<String> countries) {
+        countriesOk = new ArrayList<String>();
+        countriesOk = countries;
+    }
+
+    @Override
+    public void countriesAvailable() {
+        repository.countriesAvailable();
+    }
+
     public String [] getGeolocation(String latFrom, String lonFrom, Activity activity){
         String arr [] = new String[4];
-//        if (!latFrom.equals("") || !lonFrom.equals("")){
-//
-//        }
         double latitFrom = Double.valueOf(latFrom);
         double longiFrom = Double.valueOf(lonFrom);
         try {
@@ -131,14 +166,9 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     }
 
     @Override
-    public void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity) {
-        repository.sendContactData(uid, firstName, lastName, phone, activity);
-    }
-
-    @Override
     public void request(boolean fieldsWasFill, String uid, String email, String country, String city,
                         String from, String to, int disBetweenPoints, String description1, String description2, byte dimenSelected,
-                        byte payMethod, int paymentCash, Activity activity) {
+                        byte payMethod, int paymentCash, int creditUsed, int updateCredit, Activity activity) {
         if (from.equals("")) {
             presenter.responseEmptyFields(activity.getString(R.string.toast_indicate_starting_point));
         } else if (to.equals("")) {
@@ -147,22 +177,37 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
             presenter.responseEmptyFields(activity.getString(R.string.toast_enter_description1));
         } else if (description2.equals("")) {
             presenter.responseEmptyFields(activity.getString(R.string.toast_enter_description2));
-        } else if (String.valueOf(paymentCash).equals("")) {
-            presenter.responseEmptyFields(activity.getString(R.string.toast_enter_payment_amount));
+        } else if (paymentCash == 0 && creditUsed == 0) {
+            presenter.responseEmptyFields(activity.getString(R.string.toast_country_not_available));
         } else {
             if (fieldsWasFill) {
                 repository.request(uid, email, country, city, from, to, disBetweenPoints, description1, description2,
-                                    dimenSelected, payMethod, paymentCash, activity);
+                                    dimenSelected, payMethod, paymentCash, creditUsed, updateCredit, activity);
             } else {
-                presenter.openDialogSendContactData();
+                presenter.messageDataNotFill(fieldsWasFill);
             }
         }
     }
 
     @Override
-    public void responseFare(double fare, int minFareCost) {
+    public void responseFareAndMyCredit(String currency, float fare, int minFareCost, int credit) {
+        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        formatter.setMaximumFractionDigits(1);
+        formatter.setMinimumFractionDigits(1);
+        formatter.setRoundingMode(RoundingMode.HALF_UP);
+
+        currencyCode = currency;
         fareToApply = fare;
         minFare = minFareCost;
+        myCredit = credit;
+        routeDouble = routeInt * fareToApply;
+        Float dos = new Float(formatter.format(routeDouble / 1000));
+        priceInCash = (int) (dos * 1000);
+        if (priceInCash < minFare) {
+            priceInCash = minFare;
+        }
+        presenter.responseCash(priceInCash, currencyCode, countryOrigen, cityOrigen, routeInt, myCredit);
+
     }
 
     @Override
@@ -173,22 +218,8 @@ public class UserInteractorImpl implements UserInteractor, DirectionFinderListen
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
         for (Route route : routes) {
-            double priceDouble = route.distance.value * fareToApply;
-            String dos = String.format("%.1f", priceDouble / 1000);
-            double tres = Double.valueOf(dos);
-            priceInCash = (int) (tres * 1000);
-            if (countryOrigen.equals("CO")) {
-                countryO = "COP";
-            } else if (countryOrigen.equals("CL")) {
-                countryO = "CLP";
-            } else if (countryOrigen.equals("MX")){
-                countryO = "MXN";
-            }
-
-            if (priceInCash < minFare) {
-                priceInCash = minFare;
-            }
-            presenter.responseCash(priceInCash, countryO, countryOrigen, cityOrigen, route.distance.value);
+            routeInt = route.distance.value;
+            repository.requestFareAndMyCredit(countryOrigen, userID);
         }
     }
 }

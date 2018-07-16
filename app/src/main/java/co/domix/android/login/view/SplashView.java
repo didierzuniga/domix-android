@@ -7,7 +7,7 @@ package co.domix.android.login.view;
 public interface SplashView {
     void showProgressBar();
     void hideProgressBar();
-    void queryStatePosition(String uid);
+//    void queryStatePosition(String uid);
     void goOrderCatched(int idOrder);
     void goOrderRequested(int idOrder);
     void goUserScore(int idOrder);

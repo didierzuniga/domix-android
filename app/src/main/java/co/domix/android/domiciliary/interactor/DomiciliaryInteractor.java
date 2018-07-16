@@ -9,12 +9,12 @@ import android.app.Activity;
 public interface DomiciliaryInteractor {
     void verifyLocationAndInternet(Activity activity);
     void searchDeliveries(String lat, String lon, int vehSelected);
-    void goCompareDistance(int idOrder, String ago, String from, String to, int sizeOrder, String description1,
-                           String description2, String oriLat, String oriLon, String desLat,
-                           String desLon, String latDomi, String lonDomi, int distanceBetween, int minDistanceRequired);
+    void goCompareDistance(int idOrder, String ago, String country, String from, String to, int sizeOrder,
+                           String description1, String description2, String origenCoordinate,
+                           String destineCoordinate, String latDomi, String lonDomi, int distanceBetween,
+                           int minDistanceBetweenRequiredForCyclist, int minDistanceBetweenRequiredForOther);
     void countChild(int countChild);
-    void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed);
-    void sendContactData(String uid, String firstName, String lastName, String phone, Activity activity);
-    void queryForFullnameAndPhone(String uid);
+    void sendDataDomiciliary(Activity activity, int idOrderToSend, String uid, int transportUsed, String country);
+    void queryPersonalDataFill(String uid);
     void queryUserRate(String idOrder);
 }

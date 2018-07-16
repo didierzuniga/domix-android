@@ -1,13 +1,22 @@
 package co.domix.android.domiciliary.view;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -16,11 +25,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import co.domix.android.DomixApplication;
 import co.domix.android.R;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenter;
 import co.domix.android.domiciliary.presenter.OrderCatchedPresenterImpl;
-import co.domix.android.domiciliary.service.CoordinateService;
+import co.domix.android.services.CoordinateServiceDeliveryman;
+import co.domix.android.services.CoordinateServiceDeliverymanGoogleAPI;
+import co.domix.android.services.CounterButtonImHere;
+import co.domix.android.utils.ToastsKt;
 
 /**
  * Created by unicorn on 11/13/2017.
@@ -30,14 +45,14 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     private DomixApplication app;
     private TextView textViewRequestedBy, textViewPhoneRequestedBy, textViewFrom, textViewTo,
-            textViewDescription1, textViewDescription2, textViewMoneyToPay;
-    private String countryO;
-    private double oriLat, oriLon, desLat, desLon;
+            textViewDescription1, textViewDescription2, textViewMoneyToPay, txtDeliverymanNotReceives,
+            txtWouldReceive, txtDeliverymanReceives;
+    private String oriCoordinate, desCoordinate;
     private Button cancelService, finishService, btnViewMap;
     private ImageButton call;
     private ProgressBar progressBar;
     private ScrollView scrollview;
-    private SharedPreferences location;
+    private SharedPreferences shaPref;
     private SharedPreferences.Editor editor;
     private OrderCatchedPresenter presenter;
 
@@ -51,11 +66,11 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         app = (DomixApplication) getApplicationContext();
-        startService(new Intent(this, CoordinateService.class));
+
+        shaPref = getSharedPreferences(getString(R.string.const_sharedpreference_file_name), MODE_PRIVATE);
+        editor = shaPref.edit();
 
         presenter = new OrderCatchedPresenterImpl(this);
-        location = getSharedPreferences("domx_prefs", MODE_PRIVATE);
-        editor = location.edit();
 
         progressBar = (ProgressBar) findViewById(R.id.progressCatched);
         scrollview = (ScrollView) findViewById(R.id.scrollCatched);
@@ -66,6 +81,10 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
         textViewTo = (TextView) findViewById(R.id.txtVieTo);
         textViewDescription1 = (TextView) findViewById(R.id.txtVieDescription1);
         textViewDescription2 = (TextView) findViewById(R.id.txtVieDescription2);
+        textViewMoneyToPay = (TextView) findViewById(R.id.d_moneyToPay);
+        txtDeliverymanNotReceives = (TextView) findViewById(R.id.idDeliverymanNotReceives);
+        txtDeliverymanReceives = (TextView) findViewById(R.id.idDeliverymanReceives);
+        txtWouldReceive = (TextView) findViewById(R.id.idWouldReceive);
         textViewMoneyToPay = (TextView) findViewById(R.id.d_moneyToPay);
 
         getUserRequest();
@@ -97,6 +116,31 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
                 dialogFinish();
             }
         });
+
+        if (shaPref.getBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false)){
+            finishService.setVisibility(View.VISIBLE);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+            if (!shaPref.getBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), false)){
+                startService(new Intent(this, CounterButtonImHere.class));
+            }
+        } else {
+            startService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+            if (!shaPref.getBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), false)){
+                startService(new Intent(this, CounterButtonImHere.class));
+            }
+        }
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        finishService.setVisibility(View.VISIBLE);
+                    }
+                }, new IntentFilter(CounterButtonImHere.ACTION_COUNTER_BUTTON)
+        );
     }
 
     @Override
@@ -121,32 +165,30 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     @Override
     public void responseUserRequested(String nameAuthor, String cellphoneAuthor, String countryAuthor, String cityAuthor,
-                                      String fromAuthor, String toAuthor, String titleAuthor,
-                                      String descriptionAuthor, String oriLa, String oriLo,
-                                      String desLa, String desLo, int moneyAuthor) {
-        if (countryAuthor.equals("CO")){
-            countryO = "COP";
-        } else if (countryAuthor.equals("CL")){
-            countryO = "CLP";
+                                      String fromAuthor, String toAuthor, String description1,
+                                      String description2, String origenCoordinate, String destineCoordinate,
+                                      int totalCostDelivery, boolean cashReceivesDeliveryman, int moneyCash) {
+        if (cashReceivesDeliveryman){
+            txtWouldReceive.setVisibility(View.VISIBLE);
+            txtDeliverymanReceives.setVisibility(View.VISIBLE);
+            txtDeliverymanReceives.setText(" " + moneyCash);
+        } else {
+            txtDeliverymanNotReceives.setVisibility(View.VISIBLE);
         }
         textViewRequestedBy.setText(nameAuthor);
         textViewPhoneRequestedBy.setText(cellphoneAuthor);
-        textViewDescription1.setText(titleAuthor);
-        textViewDescription2.setText(descriptionAuthor);
-        textViewMoneyToPay.setText(String.valueOf(moneyAuthor)+" "+countryO);
-        oriLat = Double.valueOf(oriLa);
-        oriLon = Double.valueOf(oriLo);
-        desLat = Double.valueOf(desLa);
-        desLon = Double.valueOf(desLo);
+        textViewDescription1.setText(description1);
+        textViewDescription2.setText(description2);
+        textViewMoneyToPay.setText(String.valueOf(totalCostDelivery)+" "+countryAuthor);
+        oriCoordinate = origenCoordinate;
+        desCoordinate = destineCoordinate;
     }
 
     @Override
     public void goPreviewRouteOrder() {
         Intent intent = new Intent(this, PreviewRouteOrder.class);
-        intent.putExtra("latFrom", location.getString("latFrom", ""));
-        intent.putExtra("latTo", location.getString("latTo", ""));
-        intent.putExtra("lonFrom", location.getString("lonFrom", ""));
-        intent.putExtra("lonTo", location.getString("lonTo", ""));
+        intent.putExtra("coordinateFromView", oriCoordinate);
+        intent.putExtra("coordinateToView", desCoordinate);
         startActivity(intent);
     }
 
@@ -169,7 +211,7 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
                     public void onClick(DialogInterface dialog, int which) {
                         scrollview.setVisibility(View.GONE);
                         showProgressBar();
-                        presenter.dialogFinish(String.valueOf(app.idOrder));
+                        presenter.dialogFinish(String.valueOf(app.idOrder), app.uId);
                     }
                 }
         )
@@ -189,18 +231,42 @@ public class OrderCatched extends AppCompatActivity implements OrderCatchedView 
 
     @Override
     public void responseBackDomiciliaryActivity() {
-        stopService(new Intent(this, CoordinateService.class));
+        editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), false);
+        editor.commit();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+        } else {
+            stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+        }
         Intent intent = new Intent(this, Domiciliary.class);
         startActivity(intent);
-        super.finish();
+        finish();
     }
 
     @Override
     public void goRateDomiciliary() {
+        editor.putBoolean(getString(R.string.const_sharedPref_key_button_i_am_here), false);
+        editor.putBoolean(getString(R.string.const_sharedPref_key_created_service_count_im_here), false);
+        editor.commit();
         hideProgressBar();
-        stopService(new Intent(this, CoordinateService.class));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+        } else {
+            stopService(new Intent(this, CoordinateServiceDeliverymanGoogleAPI.class));
+        }
         Intent intent = new Intent(this, DomiciliaryScore.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

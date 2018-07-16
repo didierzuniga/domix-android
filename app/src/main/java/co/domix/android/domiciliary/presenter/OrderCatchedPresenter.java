@@ -9,11 +9,11 @@ import co.domix.android.domiciliary.view.OrderCatched;
 public interface OrderCatchedPresenter {
     void getUserRequest(int idOrder, String uid, OrderCatched orderCatched);
     void responseUserRequested(String nameAuthor, String cellphoneAuthor, String countryAuthor, String cityAuthor,
-                             String fromAuthor, String toAuthor, String titleAuthor,
-                             String descriptionAuthor, String oriLa, String oriLo, String desLa,
-                             String desLo, int moneyAuthor);
+                               String fromAuthor, String toAuthor, String titleAuthor, String descriptionAuthor,
+                               String origenCoordinate, String destineCoordinate, int totalCostDelivery,
+                               boolean cashReceivesDeliveryman, int moneyCash);
     void dialogCancel(String idOrder, String uid, OrderCatched orderCatched);
-    void dialogFinish(String idOrder);
+    void dialogFinish(String idOrder, String uid);
     void showToastDeliverymanCancelledOrder();
     void showToastUserCancelledOrder();
     void responseBackDomiciliaryActivity();

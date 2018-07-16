@@ -27,11 +27,12 @@ public class OrderCatchedPresenterImpl implements OrderCatchedPresenter {
 
     @Override
     public void responseUserRequested(String nameAuthor, String cellphoneAuthor, String countryAuthor, String cityAuthor,
-                                    String fromAuthor, String toAuthor, String titleAuthor,
-                                    String descriptionAuthor, String oriLa, String oriLo,
-                                    String desLa, String desLo, int moneyAuthor) {
+                                    String fromAuthor, String toAuthor, String titleAuthor, String descriptionAuthor,
+                                      String origenCoordinate, String destineCoordinate, int totalCostDelivery,
+                                      boolean cashReceivesDeliveryman, int moneyCash) {
         view.responseUserRequested(nameAuthor, cellphoneAuthor, countryAuthor, cityAuthor, fromAuthor,
-                toAuthor, titleAuthor, descriptionAuthor, oriLa, oriLo, desLa, desLo, moneyAuthor);
+                                    toAuthor, titleAuthor, descriptionAuthor, origenCoordinate, destineCoordinate,
+                                    totalCostDelivery, cashReceivesDeliveryman, moneyCash);
     }
 
     @Override
@@ -40,8 +41,8 @@ public class OrderCatchedPresenterImpl implements OrderCatchedPresenter {
     }
 
     @Override
-    public void dialogFinish(String idOrder) {
-        interactor.dialogFinish(idOrder);
+    public void dialogFinish(String idOrder, String uid) {
+        interactor.dialogFinish(idOrder, uid);
     }
 
     @Override

@@ -63,16 +63,15 @@ tools:context="co.domix.android.user.view.User">
             android:id="@+id/uiRequestService"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
                 android:layout_marginTop="15dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:padding="5dp"
                 android:background="@drawable/corner_radius_select_destine"
                 android:orientation="vertical">
                 <RelativeLayout
@@ -115,11 +114,8 @@ tools:context="co.domix.android.user.view.User">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
                 android:layout_marginTop="15dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:padding="5dp"
                 android:background="@drawable/corner_radius_select_destine"
                 android:orientation="vertical">
                 <RelativeLayout
@@ -163,9 +159,6 @@ tools:context="co.domix.android.user.view.User">
                 android:layout_height="wrap_content"
                 android:weightSum="1"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:paddingLeft="10px"
                 android:background="@drawable/corner_radius_select_destine"
                 android:orientation="horizontal">
                 <Spinner
@@ -179,10 +172,9 @@ tools:context="co.domix.android.user.view.User">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
-                android:weightSum="1"
-                android:paddingLeft="10dp">
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -209,10 +201,23 @@ tools:context="co.domix.android.user.view.User">
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lnrSwiCredit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/swiCredit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lnrPaymentMethod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:paddingLeft="15dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -243,8 +248,6 @@ tools:context="co.domix.android.user.view.User">
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="50dp"
                 android:orientation="vertical">

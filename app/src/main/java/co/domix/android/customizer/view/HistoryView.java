@@ -8,4 +8,10 @@ import android.support.v7.widget.RecyclerView;
 
 public interface HistoryView {
     void listOrder(RecyclerView rv);
+    void goHome();
+    void goProfile();
+    void goHistory();
+    void goSetting();
+    void goPayment();
+    void logOut();
 }

@@ -349,6 +349,19 @@
     <string name="title_type_email">Enter your email associated with Domix</string>
     <string name="title_delivery_detail">Delivery details</string>
 
+    <!--AddCreditCard-->
+    <string name="title_add_card">Add credit card</string>
+    <string name="text_creditcard_number">Card number</string>
+    <string name="text_mm_yy">MM/YY</string>
+    <string name="text_put_creditcard_number_valid">Enter a valid card number</string>
+    <string name="text_invalid_date">Invalid date</string>
+    <string name="text_code_visacard">CVV</string>
+    <string name="text_code_mastercard">CVC</string>
+    <string name="text_code_express">CID</string>
+    <string name="text_code_discover">CID</string>
+
+
+
     <string name="font_montserrat_regular">fonts/Montserrat-Regular.ttf</string>
     <string name="font_shrikhand_regular">fonts/Shrikhand-Regular.ttf</string>
     <string name="font_cabin_regular">fonts/Cabin-Regular.ttf</string>

@@ -257,7 +257,7 @@ public class AddCreditCard extends AppCompatActivity {
 
                 }
                 mLastInput = expireDate.getText().toString();
-                return;
+
             }
 
             if (expireDate.length() == 5){

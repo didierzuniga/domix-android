@@ -11,14 +11,43 @@
     <string name="const_sharedPref_key_created_service_count_im_here">serviceCreatedImHere</string>
     <string name="const_sharedPref_key_charge_after_two_minutte">serviceChargeAfterMinute</string>
 
+    <!--Splash-->
+    <string name="message_location_deactivate">¿Activar la ubicación de precisión alta?</string>
+    <string name="message_yes">Si</string>
+    <string name="message_no">No</string>
+    <string name="text_no_internet_connection">No hay conexión a Internet</string>
+
+    <!--Login-->
+    <string name="hint_email">Correo</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="button_text_login">Ingresar</string>
+    <string name="text_forgot_password"><u>Olvidé mi contraseña</u></string>
+    <string name="text_dont_have_account">¿No tienes una cuenta?</string>
+    <string name="text_create_here"><u>Crea una aquí</u></string>
+    <string name="message_curiosly_no_detected_your_gps">Hubo un problema con tu GPS, ¿deseas habilitarlo nuevamente?</string>
+
+    <!--Signup-->
+    <string name="text_registro">Registro</string>
+    <string name="button_back">Volver</string>
+    <string name="button_text_createaccount">Únete</string>
+    <string name="text_terms_and_conditions">Términos y condiciones de uso</string>
+    <string name="text_agree">Acepto</string>
+    <string name="text_do_not_agree">No acepto</string>
+
+    <!--Home-->
+    <string name="title_home">Inicio</string>
+    <string name="button_be_user">Solicitar</string>
+    <string name="button_be_domiciliary">Entregar</string>
+
+
+
     <string name="notification_incoming_order_title">¡Nuevo servicio!</string>
     <string name="notification_incoming_order_text">Hay un nuevo servicio disponible</string>
     <string name="notification_incoming_deliveryman_title">¡Encontramos un domiliciario!</string>
     <string name="notification_incoming_deliveryman_text">Un domiciliario ha tomado tu orden</string>
 
-    <string name="hint_email">Correo</string>
-    <string name="hint_password">Contraseña</string>
-    <string name="hint_confirm_password">Confirmar contraseña</string>
+
     <string name="hint_new_password">Nueva contraseña</string>
     <string name="hint_order_title">Título:</string>
     <string name="hint_order_description">Descripción:</string>
@@ -32,8 +61,7 @@
     <string name="hint_option_for_deliveryman">Opción para domiciliario</string>
     <string name="hint_dni">Documento de identificación</string>
 
-    <string name="text_dont_have_account">¿No tienes una cuenta?</string>
-    <string name="text_create_here"><u>Crea una aquí</u></string>
+
     <string name="text_welcome_user">Bienvenido</string>
     <string name="text_what_do_you_want_to_do">¿Que quieres hacer?</string>
     <string name="text_from">Desde:</string>
@@ -64,13 +92,12 @@
     <string name="text_promotions_drawer">Promociones</string>
     <string name="text_notifications_drawer">Notificaciones</string>
     <string name="text_setup_drawer">Configuración</string>
-    <string name="text_registro">Registro</string>
+
     <string name="text_contact_user">Diligencia los campos</string>
     <string name="text_choose_from_gallery">Galería</string>
     <string name="text_make_your_order">¡Haz tu pedido!</string>
     <string name="text_looking_order_near">Buscando domicilios cerca...</string>
     <string name="text_make_payment">Realizar pago</string>
-    <string name="text_no_internet_connection">No hay conexión a Internet</string>
     <string name="text_your_rating">Tu Calificación: </string>
     <string name="text_user_with">Usuario </string>
     <string name="text_domiciliary_with">Domiciliario </string>
@@ -87,15 +114,13 @@
     <string name="text_my_rate">Mi puntaje</string>
     <string name="text_as_deliveryman">Como domiciliario:</string>
     <string name="text_as_user">Como usuario:</string>
-    <string name="text_forgot_password"><u>Olvidé mi contraseña</u></string>
+
     <string name="text_active_notifications">Permitir notificaciones</string>
     <string name="text_delete_account">Borrar mi cuenta en Domix</string>
     <string name="text_change_password">Cambiar mi contraseña</string>
     <string name="text_confirm_identity">Confirmar credenciales de cuenta</string>
     <string name="text_notice_before_delete_account">Ten en cuenta que al eliminar tu cuenta en Domix, perderás tu historial de actividad, acceso a la plataforma, y tus datos de contacto serán eliminados</string>
-    <string name="text_terms_and_conditions">Términos y condiciones de uso</string>
-    <string name="text_agree">Acepto</string>
-    <string name="text_do_not_agree">No acepto</string>
+
     <string name="text_minimum_amount">El pago mínimo es de</string>
     <string name="text_letter">Sobre (Carta u Oficio)</string>
     <string name="text_bag">Baúl o maletero (30x30x30 cms)</string>
@@ -272,11 +297,10 @@
             (Solicitud de servicio de entrega), deberán hacerlo al correo de soporte@domix.co
     </string>
 
-    <string name="button_text_login">Ingresar</string>
-    <string name="button_text_createaccount">Únete</string>
+
+
     <string name="button_text_request">Solicitar</string>
-    <string name="button_be_user">Solicitar</string>
-    <string name="button_be_domiciliary">Entregar</string>
+
     <string name="button_see_route_to_follow">Ver ruta</string>
     <string name="button_take_service">Tomar servicio</string>
     <string name="button_cancel_delivery">Cancelar solicitud</string>
@@ -293,7 +317,7 @@
     <string name="button_reset_password">Restablecer</string>
     <string name="button_sent_rate">Enviar</string>
     <string name="button_upload">Subir</string>
-    <string name="button_back">Volver</string>
+
     <string name="button_change_password">Cambiar</string>
     <string name="button_delete_account">Borrar cuenta</string>
     <string name="button_confirm">Confirmar</string>
@@ -331,8 +355,10 @@
     <string name="toast_not_near_delivery">No hay domicilios cerca a tu ubicación</string>
     <string name="toast_choose_payment_method">Selecciona un método de pago</string>
     <string name="toast_country_not_available">Una de las ubicaciones está en un país no permitido</string>
+    <string name="toast_impossible_give_permission">¡Ops!, sin tu permiso nos sería imposible brindarte el servicio</string>
+    <string name="toast_ocurred_an_error_with_gps">Ocurrió un error con tu GPS</string>
 
-    <string name="title_home">Inicio</string>
+
     <string name="title_requested">Tu solicitud</string>
     <string name="title_activity_tester">TesterActivity</string>
     <string name="title_activity_maps">Map</string>
@@ -363,9 +389,7 @@
     <string name="font_shrikhand_regular">fonts/Shrikhand-Regular.ttf</string>
     <string name="font_cabin_regular">fonts/Cabin-Regular.ttf</string>
 
-    <string name="message_location_deactivate">¿Activar la ubicación de precisión alta?</string>
-    <string name="message_yes">Si</string>
-    <string name="message_no">No</string>
+
     <string name="message_accept">Aceptar</string>
     <string name="message_back">Regresar</string>
     <string name="message_cancel_request">¿Quieres cancelar la solicitud?</string>

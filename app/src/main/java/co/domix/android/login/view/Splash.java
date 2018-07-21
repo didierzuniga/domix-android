@@ -172,7 +172,7 @@ public class Splash extends AppCompatActivity implements SplashView, ActivityCom
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    ToastsKt.toastLong(Splash.this, "¡Ops!, sin tu permiso nos sería imposible brindarte el servicio");
+                    ToastsKt.toastLong(Splash.this, getString(R.string.toast_impossible_give_permission));
                     finish();
                 }
                 return;

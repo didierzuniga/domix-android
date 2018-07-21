@@ -23,6 +23,7 @@ import java.util.Locale;
 import co.domix.android.R;
 import co.domix.android.model.Coordinate;
 import co.domix.android.model.Counter;
+import co.domix.android.model.Fare;
 import co.domix.android.model.Order;
 import co.domix.android.model.User;
 import co.domix.android.user.presenter.RequestedPresenter;
@@ -47,6 +48,7 @@ public class RequestedRepositoryImpl implements RequestedRepository {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference referenceOrder = database.getReference(ORDER_FIELD_PATERN);
     DatabaseReference referenceUser = database.getReference("user");
+    DatabaseReference referenceFare = database.getReference("fare");
     DatabaseReference referenceCounter = database.getReference(COUNTER_FIELD_PATERN);
     DatabaseReference referenceCoordenatesDomi = database.getReference("coordinate");
 
@@ -59,7 +61,8 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                     referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
                 } else {
                     try {
-                        Order order = dataSnapshot.getValue(Order.class);
+                        final Order order = dataSnapshot.getValue(Order.class);
+                        final int totalCostDelivery = order.getX_credit_used() + order.getX_money_to_pay();
                         boolean completed = order.isX_completed();
                         Double scoredDomi = order.getX_score_deliveryman();
                         if (!completed) {
@@ -76,7 +79,33 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                             }
                         } else if (completed == true && scoredDomi == null) {
                             presenter.goRateUser();
+                            Log.w("jjj", "goRate");
                             referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
+//                            Codigo para remunerar al usuario on un porcentaje del costo del servicio
+                            referenceUser.child(order.getA_id()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    final User user = dataSnapshot.getValue(User.class);
+                                    referenceFare.child(order.getX_country()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            Fare fare = dataSnapshot.getValue(Fare.class);
+                                            int resultEarnedCredit = (int)(totalCostDelivery * fare.getPrctg_earned_credit());
+                                            referenceUser.child(order.getA_id().toString()).child("my_credit").setValue(resultEarnedCredit + user.getMy_credit());
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
                         }
                     } catch (Exception e){
                     }

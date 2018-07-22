@@ -275,12 +275,22 @@ public class AddCreditCard extends AppCompatActivity {
                     checkedExpiredDate = false;
                     willBeEnableButton(checkedNumCreditCard, checkedExpiredDate, checkedSecureCode);
                 }
-
             } else {
                 checkedExpiredDate = false;
                 invalidExpDate.setVisibility(View.GONE);
                 willBeEnableButton(checkedNumCreditCard, checkedExpiredDate, checkedSecureCode);
             }
+
+            expireDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus){
+                        if (expireDate.length() < 5){
+                            invalidExpDate.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            });
         }
     };
 

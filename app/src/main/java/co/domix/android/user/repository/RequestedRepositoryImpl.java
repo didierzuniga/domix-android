@@ -78,10 +78,8 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                                 presenter.resultNotCatched();
                             }
                         } else if (completed == true && scoredDomi == null) {
-                            presenter.goRateUser();
-                            Log.w("jjj", "goRate");
                             referenceOrder.child(String.valueOf(idOrder)).removeEventListener(this);
-//                            Codigo para remunerar al usuario on un porcentaje del costo del servicio
+//                            Codigo para remunerar al usuario con un porcentaje del costo del servicio
                             referenceUser.child(order.getA_id()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -92,6 +90,7 @@ public class RequestedRepositoryImpl implements RequestedRepository {
                                             Fare fare = dataSnapshot.getValue(Fare.class);
                                             int resultEarnedCredit = (int)(totalCostDelivery * fare.getPrctg_earned_credit());
                                             referenceUser.child(order.getA_id().toString()).child("my_credit").setValue(resultEarnedCredit + user.getMy_credit());
+                                            presenter.goRateUser(resultEarnedCredit, fare.getCurrency_code());
                                         }
 
                                         @Override

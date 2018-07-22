@@ -41,6 +41,11 @@
     <string name="button_be_domiciliary">Deliver</string>
     <string name="title_home">Home</string>
 
+    <!--User-->
+    <string name="text_accumulated_beam">Accumulated beam</string>
+
+    <!--Domiciliary-->
+    <string name="text_choose_type_of_vehicle">Choose the type of vehicle</string>
 
     <string name="notification_incoming_order_title">New service!</string>
     <string name="notification_incoming_order_text">There is a new service available</string>

@@ -40,8 +40,8 @@ public class RequestedPresenterImpl implements RequestedPresenter {
     }
 
     @Override
-    public void goRateUser() {
-        view.goRateUser();
+    public void goRateUser(int resultEarnedCredit, String currencyCode) {
+        view.goRateUser(resultEarnedCredit, currencyCode);
     }
 
     @Override

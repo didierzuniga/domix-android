@@ -341,10 +341,12 @@ public class Requested extends AppCompatActivity implements RequestedView, OnMap
     }
 
     @Override
-    public void goRateUser() {
+    public void goRateUser(int resultEarnedCredit, String currencyCode) {
         editor.putBoolean(getString(R.string.const_sharedPref_key_charge_after_two_minutte), true);
         editor.commit();
         Intent intent = new Intent(this, UserScore.class);
+        intent.putExtra("earnedCredit", resultEarnedCredit);
+        intent.putExtra("currencyCode", currencyCode);
         startActivity(intent);
         finish();
     }

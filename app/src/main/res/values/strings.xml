@@ -40,6 +40,11 @@
     <string name="button_be_user">Solicitar</string>
     <string name="button_be_domiciliary">Entregar</string>
 
+    <!--User-->
+    <string name="text_accumulated_beam">Haz acumulado</string>
+
+    <!--Domiciliary-->
+    <string name="text_choose_type_of_vehicle">Selecciona el medio de transporte</string>
 
 
     <string name="notification_incoming_order_title">¡Nuevo servicio!</string>

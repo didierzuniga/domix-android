@@ -6,6 +6,7 @@
     <dimen name="subtitle">20dp</dimen>
     <dimen name="predata">18dp</dimen>
     <dimen name="data">18dp</dimen>
+    <dimen name="textSnackbar">22dp</dimen>
 
     <!--LOGIN-->
     <dimen name="login_margin_top_isotipo">100dp</dimen>

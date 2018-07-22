@@ -80,7 +80,7 @@ tools:context="co.domix.android.domiciliary.view.Domiciliary">
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Seleccionar medio de transporte"/>
+                    android:text="@string/text_choose_type_of_vehicle"/>
 
                 <Spinner
                     android:id="@+id/spiVehicle"

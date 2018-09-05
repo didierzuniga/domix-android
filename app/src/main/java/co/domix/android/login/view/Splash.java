@@ -46,7 +46,7 @@ public class Splash extends AppCompatActivity implements SplashView, ActivityCom
     private DomixApplication app;
     private SplashPresenter presenter;
 
-    //COMMENT
+    //COMM
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

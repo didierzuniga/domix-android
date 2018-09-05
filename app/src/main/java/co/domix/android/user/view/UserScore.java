@@ -27,6 +27,8 @@ public class UserScore extends AppCompatActivity implements UserScoreView {
     private ProgressBar progressBar;
     private Button buttonSendScoreUserToDomi;
     private RatingBar ratingBarUserToDomi;
+    private int earned;
+    private String currency;
     private DomixApplication app;
 
     @Override
@@ -39,6 +41,9 @@ public class UserScore extends AppCompatActivity implements UserScoreView {
 
         presenter = new UserScorePresenterImpl(this);
         app = (DomixApplication) getApplicationContext();
+
+        earned = (getIntent().getIntExtra("earnedCredit", 0));
+        currency = (getIntent().getStringExtra("currencyCode"));
 
         progressBar = (ProgressBar) findViewById(R.id.progressRateUser);
         ratingBarUserToDomi = (RatingBar) findViewById(R.id.ratingBarUserToDomi);
@@ -77,7 +82,9 @@ public class UserScore extends AppCompatActivity implements UserScoreView {
     public void responseBackHomeActivity() {
         hideProgressBar();
         app.idOrder = 0;
-        Intent intent = new Intent(this, Home.class);
+        Intent intent = new Intent(this, User.class);
+        intent.putExtra("earnedCredit", earned);
+        intent.putExtra("currencyCode", currency);
         startActivity(intent);
         finish();
     }

@@ -9,7 +9,7 @@ public interface RequestedView {
     void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle);
     void dialogCancel(boolean afterTwoMinutes);
     void resultGoUserActivity();
-    void goRateUser();
+    void goRateUser(int resultEarnedCredit, String currencyCode);
     void resultCoordinatesFromTo(String origenCoordinate, String destineCoordinate);
     void updateDomiPosition();
     void responseCoordDomiciliary(double latDomiciliary, double lonDomiciliary);

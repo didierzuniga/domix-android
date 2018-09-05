@@ -52,6 +52,7 @@
         <activity
             android:name=".user.view.User"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".home.view.Home">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

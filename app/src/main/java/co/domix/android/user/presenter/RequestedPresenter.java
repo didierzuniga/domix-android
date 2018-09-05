@@ -11,7 +11,7 @@ public interface RequestedPresenter {
     void responseDomiciliaryCatched(String id, String rate, String name, String cellPhone, int usedVehicle);
     void dialogCancel(boolean afterTwoMinutes, String uid, int idOrder, Requested requested);
     void resultGoUserActivity();
-    void goRateUser();
+    void goRateUser(int resultEarnedCredit, String currencyCode);
     void responseCoordinatesFromTo(String origenCoordinate, String destineCoordinate);
     void updateDomiPosition(int idOrder, Requested requested);
     void responseCoordDomiciliary(double latDomiciliary, double lonDomiciliary);

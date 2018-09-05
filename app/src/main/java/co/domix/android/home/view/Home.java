@@ -323,7 +323,7 @@ public class Home extends AppCompatActivity
                     // Unknown Latitude and Longitude
                     // Available GPS but not recognize coordenates
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("Desactivado curiosamente el GPS")
+                    builder.setMessage(getString(R.string.message_curiosly_no_detected_your_gps))
                             .setCancelable(false)
                             .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
                                 @Override
@@ -340,7 +340,7 @@ public class Home extends AppCompatActivity
                     alert.show();
                 }
             } catch (Exception e){
-                ToastsKt.toastShort(this, "Ocurrió un error con tu GPS");
+                ToastsKt.toastShort(this, getString(R.string.toast_ocurred_an_error_with_gps));
             }
 
         }

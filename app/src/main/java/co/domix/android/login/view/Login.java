@@ -46,7 +46,7 @@ public class Login extends AppCompatActivity implements LoginView, GoogleApiClie
     private LocationManager locationManager;
     private AlertDialog alert = null;
     private TextInputEditText emailField, passwordField, emailFieldForRestore;
-    private Button buttonSignin, buttonSignup, buttonRestore;
+    private Button buttonSignin, buttonSignup, buttonRestore, buttonBack;
     private TextView createHere, restorePassword;
     private ProgressBar progressBar;
     private AlertDialog alertDialog;
@@ -232,9 +232,17 @@ public class Login extends AppCompatActivity implements LoginView, GoogleApiClie
         alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        emailFieldForRestore = (TextInputEditText) view.findViewById(R.id.txtInpEmailForReset);
+        emailFieldForRestore = view.findViewById(R.id.txtInpEmailForReset);
 
-        buttonRestore = (Button) view.findViewById(R.id.btnResetPassword);
+        buttonBack = view.findViewById(R.id.btnBack);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
+
+        buttonRestore = view.findViewById(R.id.btnResetPassword);
         buttonRestore.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 presenter.restorePassword(emailFieldForRestore.getText().toString());
@@ -306,7 +314,7 @@ public class Login extends AppCompatActivity implements LoginView, GoogleApiClie
                     // Unknown Latitude and Longitude
                     // Available GPS but not recognize coordenates
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("Desactivado curiosamente el GPS")
+                    builder.setMessage(getString(R.string.message_curiosly_no_detected_your_gps))
                             .setCancelable(false)
                             .setPositiveButton(R.string.message_yes, new DialogInterface.OnClickListener() {
                                 @Override
@@ -323,7 +331,7 @@ public class Login extends AppCompatActivity implements LoginView, GoogleApiClie
                     alert.show();
                 }
             } catch (Exception e){
-                ToastsKt.toastShort(this, "Ocurrió un error con tu GPS");
+                ToastsKt.toastShort(this, getString(R.string.toast_ocurred_an_error_with_gps));
             }
 
         }

@@ -53,8 +53,6 @@ public class CoordinateServiceDeliveryman extends Service implements LocationLis
         }
         if (mLocationManager != null) {
             mLocationManager.addGpsStatusListener(this);
-        }
-        if (mLocationManager != null) {
             mLocationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
                     500,
@@ -78,8 +76,6 @@ public class CoordinateServiceDeliveryman extends Service implements LocationLis
     @Override
     public void onLocationChanged(Location location) {
         if (location != null){
-            Log.w("jjj", "Service - onLocationChanged - Lat-> "+location.getLatitude());
-            Log.w("jjj", "Service - onLocationChanged - Lon-> "+location.getLongitude());
             editor.putString(getString(R.string.const_sharedPref_key_lat_device), String.valueOf(location.getLatitude()));
             editor.putString(getString(R.string.const_sharedPref_key_lon_device), String.valueOf(location.getLongitude()));
             editor.commit();
@@ -116,6 +112,4 @@ public class CoordinateServiceDeliveryman extends Service implements LocationLis
         referenceCoord.child(app.uId).child("latitude").setValue(shaPref.getString(getString(R.string.const_sharedPref_key_lat_device), ""));
         referenceCoord.child(app.uId).child("longitude").setValue(shaPref.getString(getString(R.string.const_sharedPref_key_lon_device), ""));
     }
-
-
 }

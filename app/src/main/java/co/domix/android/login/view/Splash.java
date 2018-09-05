@@ -36,13 +36,8 @@ import co.domix.android.utils.ToastsKt;
 
 public class Splash extends AppCompatActivity implements SplashView, ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private LocationManager locManager;
-    private Location loc;
-
     private ProgressBar progressBar;
     private AlertDialog alert = null;
-    private SharedPreferences shaPref;
-    private SharedPreferences.Editor editor;
     private DomixApplication app;
     private SplashPresenter presenter;
 
@@ -172,7 +167,7 @@ public class Splash extends AppCompatActivity implements SplashView, ActivityCom
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    ToastsKt.toastLong(Splash.this, "¡Ops!, sin tu permiso nos sería imposible brindarte el servicio");
+                    ToastsKt.toastLong(Splash.this, getString(R.string.toast_impossible_give_permission));
                     finish();
                 }
                 return;

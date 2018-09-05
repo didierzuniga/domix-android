@@ -36,13 +36,8 @@ import co.domix.android.utils.ToastsKt;
 
 public class Splash extends AppCompatActivity implements SplashView, ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private LocationManager locManager;
-    private Location loc;
-
     private ProgressBar progressBar;
     private AlertDialog alert = null;
-    private SharedPreferences shaPref;
-    private SharedPreferences.Editor editor;
     private DomixApplication app;
     private SplashPresenter presenter;
 

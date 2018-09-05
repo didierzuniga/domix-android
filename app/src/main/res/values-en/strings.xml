@@ -59,7 +59,7 @@
     <string name="hint_order_title">Title:</string>
     <string name="hint_order_description">Description:</string>
     <string name="hint_payment">Service cost: </string>
-    <string name="hint_what_should_domiciliary">What should the domiciliary do here?</string>
+    <string name="hint_what_should_domiciliary">The delivery man must do ...</string>
     <string name="hint_select_initial_point">Select starting point</string>
     <string name="hint_select_final_point">Select endpoint</string>
     <string name="hint_option_for_deliveryman">Option for deliveryman</string>

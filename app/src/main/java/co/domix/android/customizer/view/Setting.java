@@ -129,7 +129,6 @@ public class Setting extends AppCompatActivity implements SettingView, Navigatio
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         View view = layoutInflater.inflate(R.layout.dialog_reauthenticate, null);
         alertDialog = new android.app.AlertDialog.Builder(this).create();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         editTextEmailReauthenticate = (TextInputEditText) view.findViewById(R.id.editTextEmalReauthenticate);
         editTextPasswordReauthenticate = (TextInputEditText) view.findViewById(R.id.editTextPasswordReauthenticate);
